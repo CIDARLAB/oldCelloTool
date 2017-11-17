@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="Partitioner">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="../external_jars/ant-contrib.jar"/>
+	<!-- Build -->
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+	<property name="source.dir" value="src"/>
+	<property name="build.dir" value="bin"/>
+	<property name="jars.dir" value="jars"/>
+    <path id="Partitioner.classpath">
+        <pathelement location="${build.dir}"/>
+        <pathelement location="../external_jars/commons-cli-1.4.jar"/>
+        <pathelement location="../external_jars/commons-csv-1.5.jar"/>
+        <pathelement location="../external_jars/json-simple-1.1.1.jar"/>
+    </path>
+	<!-- Init -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <copy includeemptydirs="false" todir="${build.dir}/">
+            <fileset dir="${source.dir}/">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+	<!-- Clean -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${jars.dir}"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project,build-jars" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" includeantruntime="false" source="${source}" target="${target}">
+            <src path="${source.dir}"/>
+            <classpath refid="Partitioner.classpath"/>
+        </javac>
+    </target>
+	<!-- Build-Jar Macro -->
+	<macrodef name="build_jar">
+		<attribute name="name"/>
+		<sequential>
+			<jar jarfile="${jars.dir}/@{name}.jar" basedir="${build.dir}/@{name}/">
+			</jar>
+		</sequential>
+	</macrodef>
+	<macrodef name="build_exec_jar">
+		<attribute name="name"/>
+		<sequential>
+			<jar jarfile="${jars.dir}/@{name}.jar" basedir="${build.dir}/@{name}/">
+				<manifest>
+					<attribute name="Main-Class" value="${main-class}"/>
+				</manifest>
+			</jar>
+		</sequential>
+	</macrodef>
+	<!-- Jars -->
+	<target name="build-jars"> 
+		<for param="file">
+			<path>
+				<dirset dir="${source.dir}" includes="*"/>
+			</path>
+			<sequential>
+				<var name="name" unset="true"/>
+				<basename file="@{file}" property="name" />
+				<!-- <echo message="@{file}, ${name}"/> -->
+				<echo message="Building jar for ${name}" />
+				<if>
+					<equals arg1="${name}" arg2="common"/> 
+				<then>
+					<build_jar name="${name}"/>
+				</then>
+				<else>
+					<!-- TODO: make executable jar -->
+					<build_jar name="${name}"/>
+				</else>
+				</if>
+			</sequential>
+		</for>  
+	</target>
+</project>
