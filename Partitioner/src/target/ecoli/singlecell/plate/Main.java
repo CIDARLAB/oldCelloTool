@@ -24,8 +24,8 @@ import common.CObject;
 import common.netlist.Netlist;
 import common.runtime.environment.RuntimeEnv;
 import common.stage.Stage;
-import target.TargetInfo;
-import target.TargetUtils;
+import common.target.TargetInfo;
+import common.target.TargetUtils;
 
 /**
  * @author: Vincent Mirian

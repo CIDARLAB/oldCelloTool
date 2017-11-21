@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package target.runtime.environment;
+package common.target.runtime.environment;
 
 
 import org.apache.commons.cli.Option;

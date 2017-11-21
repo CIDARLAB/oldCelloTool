@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package target;
+package common.target;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +32,7 @@ import org.json.simple.parser.ParseException;
 
 import common.Utils;
 import common.runtime.environment.RuntimeEnv;
-import target.runtime.environment.TargetArgString;
+import common.target.runtime.environment.TargetArgString;
 
 /**
  * @author: Vincent Mirian
