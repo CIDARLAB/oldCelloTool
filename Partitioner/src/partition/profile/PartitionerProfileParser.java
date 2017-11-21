@@ -31,6 +31,7 @@ import org.json.simple.parser.ParseException;
 
 import common.CObject;
 import common.CObjectCollection;
+import common.profile.AlgorithmProfile;
 
 /**
  * @author: Vincent Mirian

@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package partition.profile;
+package common.profile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +29,6 @@ import org.json.simple.JSONObject;
 import common.CObject;
 import common.CObjectCollection;
 import common.Pair;
-import common.profile.ProfileObject;
-import common.profile.ProfileUtils;
 
 
 /**

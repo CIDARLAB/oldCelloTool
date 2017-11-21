@@ -28,12 +28,12 @@ import partition.algorithm.PAlgorithmFactory;
 import partition.graph.PEdge;
 import partition.graph.PGraph;
 import partition.graph.PNode;
-import partition.profile.AlgorithmProfile;
 import partition.profile.PartitionerProfile;
 import common.CObject;
 import common.graph.graph.Edge;
 import common.graph.graph.Graph;
 import common.graph.graph.Vertex;
+import common.profile.AlgorithmProfile;
 import common.runtime.environment.RuntimeEnv;
 
 /**

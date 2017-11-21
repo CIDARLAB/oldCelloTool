@@ -21,10 +21,10 @@
 package partition.algorithm;
 
 import common.algorithm.Algorithm;
+import common.profile.AlgorithmProfile;
 import common.runtime.environment.RuntimeEnv;
 import partition.common.Partition;
 import partition.graph.PGraph;
-import partition.profile.AlgorithmProfile;
 
 /**
  * @author: Vincent Mirian

@@ -21,7 +21,7 @@
 package common.algorithm;
 
 import common.CObject;
-import partition.profile.AlgorithmProfile;
+import common.profile.AlgorithmProfile;
 
 /**
  * @author: Vincent Mirian

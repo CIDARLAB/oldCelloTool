@@ -23,6 +23,7 @@ package partition.profile;
 import org.json.simple.JSONObject;
 
 import common.CObjectCollection;
+import common.profile.AlgorithmProfile;
 import common.profile.ProfileObject;
 import common.profile.ProfileUtils;
 
