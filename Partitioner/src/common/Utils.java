@@ -21,6 +21,7 @@
 package common;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
@@ -112,9 +113,14 @@ public class Utils {
         rtn = String.valueOf(date.getTime());
 		return rtn;
 	}
-
+	
 	static public String getWorkingDirectory() {
-		String rtn = System.getProperty("line.separator").toString();
+		String rtn = System.getProperty("user.dir").toString();
+		return rtn;
+	}
+
+	static public String getFileSeparator() {
+		String rtn = File.separator;
 		return rtn;
 	}
 	
@@ -177,6 +183,5 @@ public class Utils {
 			throw new RuntimeException(name + " cannot be null!");
 		}
 		return rtn;
-	}
-	
+	}	
 }
