@@ -24,6 +24,8 @@ import common.CObject;
 import common.Utils;
 import common.netlist.Netlist;
 import common.runtime.environment.RuntimeEnv;
+import common.stage.StageConfiguration;
+import common.target.data.TargetData;
 
 /**
  * @author: Vincent Mirian
@@ -34,41 +36,66 @@ import common.runtime.environment.RuntimeEnv;
 // Object that aggregates the netlist, the stage configuration, target data and RuntimeEnv
 abstract public class RuntimeObject extends CObject{
 
-	public RuntimeObject(final Netlist netlist, final RuntimeEnv runEnv) {
+	public RuntimeObject(
+			final StageConfiguration stageConfiguration,
+			final TargetData targetData,
+			final Netlist netlist,
+			final RuntimeEnv runEnv
+			) {
 		super();
+		Utils.isNullRuntimeException(stageConfiguration, "stageConfiguration");
+		Utils.isNullRuntimeException(targetData, "targetData");
 		Utils.isNullRuntimeException(netlist, "netlist");
 		Utils.isNullRuntimeException(runEnv, "runEnv");
-		this.setNetlist(netlist);
-		this.setRuntimeEnv(runEnv);
+		this.stageConfiguration = stageConfiguration;
+		this.targetData = targetData;
+		this.netlist = netlist;
+		this.runEnv = runEnv;
+	}
+	
+	protected StageConfiguration getStageConfiguration() {
+		return this.stageConfiguration;
+	}
+	
+
+	protected TargetData getTargetData() {
+		return this.targetData;
 	}
 	
 	protected Netlist getNetlist() {
 		return this.netlist;
 	}
 	
-	private void setNetlist(final Netlist netlist) {
-		this.netlist = netlist;
-	}
 
 	protected RuntimeEnv getRuntimeEnv() {
 		return this.runEnv;
 	}
-	
+
+	/*private void setStageConfiguration(final StageConfiguration stageConfiguration) {
+		this.stageConfiguration = stageConfiguration;
+	}
+	private void setTargetData(final TargetData targetData) {
+		this.targetData = targetData;
+	}
+	private void setNetlist(final Netlist netlist) {
+		this.netlist = netlist;
+	}
 	private void setRuntimeEnv(final RuntimeEnv runEnv) {
 		this.runEnv = runEnv;
-	}
+	}*/
 
-	abstract protected void preprocessing();
+	abstract protected void initStageConfiguration();
+	abstract protected void readTargetData();
 	abstract protected void run();
-	abstract protected void postprocessing();
-	abstract protected String getOutputNetlist();
 	
 	public void execute() {
-		preprocessing();
-		run();
-		postprocessing();
+		this.initStageConfiguration();
+		this.readTargetData();
+		this.run();
 	}
 
-	private Netlist netlist;
-	private RuntimeEnv runEnv;
+	private final StageConfiguration stageConfiguration;
+	private final TargetData targetData;
+	private final Netlist netlist;
+	private final RuntimeEnv runEnv;
 }
