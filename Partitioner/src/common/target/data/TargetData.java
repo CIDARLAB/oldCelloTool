@@ -18,45 +18,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package target.ecoli.singlecell.plate;
+package common.target.data;
 
 import common.CObject;
-import common.netlist.Netlist;
-import common.runtime.environment.RuntimeEnv;
-import common.stage.Stage;
-import common.target.TargetConfiguration;
-import common.target.TargetUtils;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Nov 20, 2017
+ * @date: Nov 21, 2017
  *
  */
-public class Main extends CObject{
+public class TargetData extends CObject{
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		RuntimeEnv runEnv = new RuntimeEnv(args);
-		Netlist netlist = new Netlist();
-	    TargetConfiguration targetInfo = TargetUtils.getTargetInfo(runEnv);
-	    Stage currentStage = null;
-		// LogicSynthesis
-	    currentStage = targetInfo.getStageByName("LogicSynthesis");
-		//LogicSynthesis LS = new LogicSynthesis(netlist, runEnv);
-		//LS.execute();
-		// TechnologyMapping
-	    currentStage = targetInfo.getStageByName("TechnologyMapping");
-		//TechnologyMapping TM = new TechnologyMapping(netlist, runEnv);
-		//TM.execute();
-		// Eugene
-	    currentStage = targetInfo.getStageByName("Eugene");
-		//Eugene EU = new Eugene(netlist, runEnv);
-		//EU.execute();
-	    System.out.println(netlist.getName());
-	    System.out.println(currentStage.getName());
-	}
-	
 }

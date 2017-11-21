@@ -33,13 +33,13 @@ import common.stage.Stage;
  * @date: Nov 20, 2017
  *
  */
-public class TargetInfo extends ProfileObject{
+public class TargetConfiguration extends ProfileObject{
 
 	private void init() {
 		this.stages = new CObjectCollection<Stage>();
 	}
 	
-	public TargetInfo(final JSONObject JObj){
+	public TargetConfiguration(final JSONObject JObj){
 		super(JObj);
 		init();
 		parse(JObj);

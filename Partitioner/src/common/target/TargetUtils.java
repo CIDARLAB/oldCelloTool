@@ -42,11 +42,11 @@ import common.target.runtime.environment.TargetArgString;
  */
 public class TargetUtils {
 
-	static public TargetInfo getTargetInfo(RuntimeEnv runEnv){
+	static public TargetConfiguration getTargetInfo(RuntimeEnv runEnv){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
-		TargetInfo rtn = null;
+		TargetConfiguration rtn = null;
 		// get Target File
-		String targetFilename = runEnv.getOptionValue(TargetArgString.TARGETFILE);
+		String targetFilename = runEnv.getOptionValue(TargetArgString.TARGETDATAFILE);
 		String targetDir = runEnv.getOptionValue(TargetArgString.TARGETDIR);
 	    File targetFile = new File(targetDir + Utils.getFileSeparator() + targetFilename);
 	    Reader targetReader = null;
@@ -67,7 +67,7 @@ public class TargetUtils {
 	        throw new RuntimeException("Parser Exception for: " + targetFile + ".");
 	    }
 		// Create TargetInfo object
-	    rtn = new TargetInfo(jsonTop);
+	    rtn = new TargetConfiguration(jsonTop);
 	    try {
 			targetReader.close();
 		} catch (IOException e) {

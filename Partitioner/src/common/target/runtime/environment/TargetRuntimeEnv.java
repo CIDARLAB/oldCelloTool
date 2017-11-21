@@ -56,7 +56,7 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		Options options = this.getOptions();
 		options.addOption(this.getVerilogOption());
 		options.addOption(this.getConfigFileOption());
-		options.addOption(this.getTargetFileOption());
+		options.addOption(this.getTargetDataFileOption());
 		options.addOption(this.getTargetDirOption());
 		options.addOption(this.getNetlistConstraintFileOption());
 		options.addOption(this.getOutputDirOption());
@@ -79,8 +79,8 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		return rtn;
 	}
 	
-	protected Option getTargetFileOption(){
-		Option rtn = new Option( TargetArgString.TARGETFILE, true, TargetArgDescription.TARGETFILE_DESCRIPTION);
+	protected Option getTargetDataFileOption(){
+		Option rtn = new Option( TargetArgString.TARGETDATAFILE, true, TargetArgDescription.TARGETDATAFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}

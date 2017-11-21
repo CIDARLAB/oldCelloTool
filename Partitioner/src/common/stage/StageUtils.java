@@ -42,10 +42,10 @@ import common.stage.runtime.environment.StageArgString;
  */
 public class StageUtils {
 
-	static public Netlist getNetlist(RuntimeEnv runEnv){
+	static public Netlist getNetlist(final RuntimeEnv runEnv, final String inputNetlist){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		Netlist rtn = null;
-		String inputNetlistFilename = runEnv.getOptionValue(StageArgString.INPUTNETLIST);
+		String inputNetlistFilename = runEnv.getOptionValue(inputNetlist);
 	    Reader inputNetlistReader = null;
 		JSONObject jsonTop = null;
 		// Create File Reader
