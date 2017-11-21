@@ -23,6 +23,7 @@ package partition.profile;
 import org.json.simple.JSONObject;
 
 import common.CObjectCollection;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -44,7 +45,7 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 	 * Parse
 	 */
 	private void parseSource(final JSONObject JObj, final CObjectCollection<BlockProfile> Blocks){
-		String sourceName = this.getString(JObj, "source");
+		String sourceName = ProfileUtils.getString(JObj, "source");
 		if (sourceName != null) {
 			BlockProfile source = Blocks.findCObjectByName(sourceName);
 			if (source == null) {
@@ -58,7 +59,7 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 	}
 	
 	private void parseDestination(final JSONObject JObj, final CObjectCollection<BlockProfile> Blocks){
-		String destinationName = this.getString(JObj, "destination");
+		String destinationName = ProfileUtils.getString(JObj, "destination");
 		if (destinationName != null) {
 			BlockProfile destination = Blocks.findCObjectByName(destinationName);
 			if (destination == null) {

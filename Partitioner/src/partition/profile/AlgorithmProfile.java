@@ -30,6 +30,7 @@ import common.CObject;
 import common.CObjectCollection;
 import common.Pair;
 import common.profile.ProfileObject;
+import common.profile.ProfileUtils;
 
 
 /**
@@ -134,7 +135,7 @@ public class AlgorithmProfile extends ProfileObject {
 	 * Parse
 	 */
 	private void parseType(final JSONObject JObj){
-		String type = (String) this.getString(JObj, "type");
+		String type = (String) ProfileUtils.getString(JObj, "type");
 		if (type == null){
 			throw new RuntimeException("Type not specified for AlgorithmProfile " + this.getName() +".");
 		}
@@ -153,63 +154,63 @@ public class AlgorithmProfile extends ProfileObject {
 
 	private void parseParameter(final JSONObject JObj){
 		//name
-		String name = (String) this.getString(JObj, "name");
+		String name = (String) ProfileUtils.getString(JObj, "name");
 		if (name == null){
 			throw new RuntimeException("Name not specified for parameter in AlgorithmProfile " + this.getName() + ".");
 		}
 		//type
-		String type = (String) this.getString(JObj, "type");
+		String type = (String) ProfileUtils.getString(JObj, "type");
 		if (type == null){
 			throw new RuntimeException("Type not specified for parameter " + name + ".");
 		}
 		// value
-		Object value = this.getObject(JObj, "value");
+		Object value = ProfileUtils.getObject(JObj, "value");
 		if (value == null){
 			throw new RuntimeException("Value not specified for parameter " + name + ".");
 		}
 		switch (type) {
 	        case BOOLEAN:{
-	        	Boolean data = this.getBoolean(JObj, "value");
+	        	Boolean data = ProfileUtils.getBoolean(JObj, "value");
 	        	booleanParameters.put(name, data);
 	            break;
 	        }
 	        case BYTE:{
-	        	Byte data = this.getByte(JObj, "value");
+	        	Byte data = ProfileUtils.getByte(JObj, "value");
 	        	byteParameters.put(name, data);
 	            break;
 	        }
 	        case CHAR:{
-	        	Character c = this.getCharacter(JObj, "value");
+	        	Character c = ProfileUtils.getCharacter(JObj, "value");
 	        	charParameters.put(name, c);
 	            break;
 	        }
 	        case SHORT:{
-	        	Short data = this.getShort(JObj, "value");
+	        	Short data = ProfileUtils.getShort(JObj, "value");
 	        	shortParameters.put(name, data);
 	            break;
 	        }
 	        case INT:{
-	        	Integer data = this.getInteger(JObj, "value");
+	        	Integer data = ProfileUtils.getInteger(JObj, "value");
 	        	intParameters.put(name, data);
 	            break;
 	        }
 	        case LONG:{
-	        	Long data = this.getLong(JObj, "value");
+	        	Long data = ProfileUtils.getLong(JObj, "value");
 	        	longParameters.put(name, data);
 	            break;
 	        }
 	        case FLOAT:{
-	        	Float data = this.getFloat(JObj, "value");
+	        	Float data = ProfileUtils.getFloat(JObj, "value");
 	        	floatParameters.put(name, data);
 	            break;
 	        }
 	        case DOUBLE:{
-	        	Double data = this.getDouble(JObj, "value");
+	        	Double data = ProfileUtils.getDouble(JObj, "value");
 	        	doubleParameters.put(name, data);
 	            break;
 	        }
 	        case STRING:{
-	        	String data = this.getString(JObj, "value");
+	        	String data = ProfileUtils.getString(JObj, "value");
 	        	stringParameters.put(name, data);
 	            break;
 	        }

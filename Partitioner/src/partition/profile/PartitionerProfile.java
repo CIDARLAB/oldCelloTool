@@ -24,6 +24,7 @@ import org.json.simple.JSONObject;
 
 import common.CObjectCollection;
 import common.profile.ProfileObject;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -46,7 +47,7 @@ public class PartitionerProfile extends ProfileObject {
 	 */
 	private void parsePartitionProfile(final CObjectCollection<PartitionProfile> PProfiles, final JSONObject JObj){
 		PartitionProfile PPObj;
-		String PartitionProfile = this.getString(JObj, "PartitionProfile");
+		String PartitionProfile = ProfileUtils.getString(JObj, "PartitionProfile");
 		if (PartitionProfile == null) {
 			throw new RuntimeException("PartitionProfile not specified for " + this.getName() + ".");
 		}
@@ -59,7 +60,7 @@ public class PartitionerProfile extends ProfileObject {
 
 	private void parseAlgorithmProfile(final CObjectCollection<AlgorithmProfile> AProfiles, final JSONObject JObj){
 		AlgorithmProfile APObj;
-		String AlgorithmProfile = this.getString(JObj, "AlgorithmProfile");
+		String AlgorithmProfile = ProfileUtils.getString(JObj, "AlgorithmProfile");
 		if (AlgorithmProfile == null) {
 			throw new RuntimeException("AlgorithmProfile not specified for " + this.getName() + ".");
 		}

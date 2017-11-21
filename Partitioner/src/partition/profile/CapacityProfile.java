@@ -28,6 +28,7 @@ import common.Utils;
 import common.capacity.LowerBoundType;
 import common.capacity.UpperBoundType;
 import common.profile.ProfileObject;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -81,7 +82,7 @@ public class CapacityProfile extends ProfileObject{
 	}
 	
 	private void parseLowerBound(final JSONObject JObj){
-		Integer IntegerValue = this.getInteger(JObj, "lower_bound");
+		Integer IntegerValue = ProfileUtils.getInteger(JObj, "lower_bound");
 		if (IntegerValue != null) {
 			int value = IntegerValue.intValue();
 			this.setLowerBound(value);
@@ -89,7 +90,7 @@ public class CapacityProfile extends ProfileObject{
 	}
 	
 	private void parseLowerBoundType(final JSONObject JObj){
-		String StringValue = this.getString(JObj, "lower_bound_type");
+		String StringValue = ProfileUtils.getString(JObj, "lower_bound_type");
 		if (StringValue != null) {
 			LowerBoundType boundType = LowerBoundType.getBoundType(StringValue);
 			if (boundType != null) {
@@ -99,7 +100,7 @@ public class CapacityProfile extends ProfileObject{
 	}
 	
 	private void parseUpperBound(final JSONObject JObj){
-		Integer IntegerValue = this.getInteger(JObj, "upper_bound");
+		Integer IntegerValue = ProfileUtils.getInteger(JObj, "upper_bound");
 		if (IntegerValue == null) {
 	    	throw new RuntimeException("UpperBound not specified for capacity " + this.getName());
 		}
@@ -110,7 +111,7 @@ public class CapacityProfile extends ProfileObject{
 	}
 	
 	private void parseUpperBoundType(final JSONObject JObj){
-		String StringValue = this.getString(JObj, "upper_bound_type");
+		String StringValue = ProfileUtils.getString(JObj, "upper_bound_type");
 		if (StringValue != null) {
 			UpperBoundType boundType = UpperBoundType.getBoundType(StringValue);
 			if (boundType != null) {

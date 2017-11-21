@@ -18,38 +18,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.profile;
-
-import org.json.simple.JSONObject;
+package common.runtime;
 
 import common.CObject;
+import common.Utils;
+import common.netlist.Netlist;
+import common.runtime.environment.ArgString;
+import common.runtime.environment.RuntimeEnv;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Oct 27, 2017
+ * @date: Nov 17, 2017
  *
  */
-public class ProfileObject extends CObject{
+abstract public class RuntimeObject extends CObject{
 
-	public ProfileObject(){
-		
-	}
-	
-	protected ProfileObject(final JSONObject JObj){
-		this.parseName(JObj);
-	}
-	
-	/*
-	 * Parse
-	 */
-	protected void parseName(final JSONObject JObj){
-		// name
-		String name = (String) ProfileUtils.getString(JObj, "name");
-		if (name == null) {
-	    	throw new RuntimeException("Name not specified!");
+	public RuntimeObject(final Netlist netlist, final RuntimeEnv runEnv) {
+		super();
+		Utils.isNullRuntimeException(netlist, "netlist");
+		Utils.isNullRuntimeException(runEnv, "runEnv");
+		this.setNetlist(netlist);
+		this.setRuntimeEnv(runEnv);
+		if (runEnv.getOptionValue(ArgString.HELP) != null) {
+			runEnv.printHelp();
+			System.exit(0);
 		}
-		this.setName(name);
+	}
+	
+	protected Netlist getNetlist() {
+		return this.netlist;
+	}
+	
+	private void setNetlist(final Netlist netlist) {
+		this.netlist = netlist;
 	}
 
+	protected RuntimeEnv getRuntimeEnv() {
+		return this.runEnv;
+	}
+	
+	private void setRuntimeEnv(final RuntimeEnv runEnv) {
+		this.runEnv = runEnv;
+	}
+
+	abstract protected void preprocessing();
+	abstract protected void run();
+	abstract protected void postprocessing();
+	abstract protected String getOutputNetlist();
+	
+	public void execute() {
+		preprocessing();
+		run();
+		postprocessing();
+	}
+
+	private Netlist netlist;
+	private RuntimeEnv runEnv;
 }

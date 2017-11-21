@@ -23,6 +23,7 @@ package common.stage;
 import org.json.simple.JSONObject;
 
 import common.profile.ProfileObject;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -47,12 +48,12 @@ public class StageConfiguration extends ProfileObject{
 	 * Parse
 	 */
 	private void parseType(final JSONObject JObj){
-		String type = this.getString(JObj, "type");
+		String type = ProfileUtils.getString(JObj, "type");
 		this.setConfigurationType(type);
 	}
 
 	private void parseConfigurationFilename(final JSONObject JObj){
-		String cf = this.getString(JObj, "configuration_filename");
+		String cf = ProfileUtils.getString(JObj, "configuration_filename");
 		this.setConfigurationFilename(cf);
 	}
 
