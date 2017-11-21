@@ -55,6 +55,7 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		super.setOptions();
 		Options options = this.getOptions();
 		options.addOption(this.getVerilogOption());
+		options.addOption(this.getConfigFileOption());
 		options.addOption(this.getTargetFileOption());
 		options.addOption(this.getTargetDirOption());
 		options.addOption(this.getNetlistConstraintFileOption());
@@ -68,6 +69,12 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 	 */
 	protected Option getVerilogOption(){
 		Option rtn = new Option( TargetArgString.VERILOG, true, TargetArgDescription.VERILOG_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
+	protected Option getConfigFileOption(){
+		Option rtn = new Option( TargetArgString.CONFIGFILE, true, TargetArgDescription.CONFIGFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}

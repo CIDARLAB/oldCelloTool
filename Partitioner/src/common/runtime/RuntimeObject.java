@@ -23,7 +23,6 @@ package common.runtime;
 import common.CObject;
 import common.Utils;
 import common.netlist.Netlist;
-import common.runtime.environment.ArgString;
 import common.runtime.environment.RuntimeEnv;
 
 /**
@@ -32,6 +31,7 @@ import common.runtime.environment.RuntimeEnv;
  * @date: Nov 17, 2017
  *
  */
+// Object that aggregates the netlist, the stage configuration, target data and RuntimeEnv
 abstract public class RuntimeObject extends CObject{
 
 	public RuntimeObject(final Netlist netlist, final RuntimeEnv runEnv) {
@@ -40,10 +40,6 @@ abstract public class RuntimeObject extends CObject{
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		this.setNetlist(netlist);
 		this.setRuntimeEnv(runEnv);
-		if (runEnv.getOptionValue(ArgString.HELP) != null) {
-			runEnv.printHelp();
-			System.exit(0);
-		}
 	}
 	
 	protected Netlist getNetlist() {

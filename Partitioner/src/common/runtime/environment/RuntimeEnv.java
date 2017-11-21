@@ -54,6 +54,10 @@ public class RuntimeEnv extends CObject{
 	        // oops, something went wrong
 	        System.err.println( "Parsing failed.  Reason: " + e.getMessage() );
 	    }
+		if (this.getOptionValue(ArgString.HELP) != null) {
+			this.printHelp();
+			System.exit(0);
+		}
 	}
 	
 	// print help
