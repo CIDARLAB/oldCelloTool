@@ -23,6 +23,8 @@ package common.runtime.environment;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
@@ -34,14 +36,17 @@ import common.CObject;
  * @date: Nov 13, 2017
  *
  */
-abstract public class RuntimeEnv extends CObject{
+public class RuntimeEnv extends CObject{
 	
 	private void init(){
-		parser = new DefaultParser();		
+		this.parser = new DefaultParser();
+		this.options = new Options();		
 	}
 	
 	public RuntimeEnv(final String[] args){
+		super();
 		init();
+		this.setOptions();
 		try {
 			line = parser.parse(this.getOptions(), args);
 	    }
@@ -51,8 +56,39 @@ abstract public class RuntimeEnv extends CObject{
 	    }
 	}
 	
+	// print help
+	public void printHelp() {
+		 HelpFormatter formatter = new HelpFormatter();
+		 formatter.printHelp(this.getName(), this.getOptions());
+	}
+
+	// getter and setter
+	protected Options getOptions() {
+		return this.options;
+	}
+	
+	protected void setOptions() {
+		Options options = this.getOptions();
+		options.addOption(this.getHelpOption());
+	}
+
+	/*
+	 * Options
+	 */
+	private Option getHelpOption(){
+		Option rtn = new Option( ArgString.HELP, false, ArgDescription.HELP_DESCRIPTION);
+		return rtn;
+	}
+	
+	// get Values
+	protected String getDefault(final String str){
+		String rtn = null;
+		return rtn;
+	}
+	
 	public String getOptionValue(final String str){
 		String rtn = null;
+		rtn = this.getDefault(str);
 		rtn = line.getOptionValue(str);
 		return rtn;
 	}
@@ -63,9 +99,11 @@ abstract public class RuntimeEnv extends CObject{
 		return rtn;
 	}
 
-	abstract protected Options getOptions();
-	
+	protected void makeRequired(final Option arg){
+		arg.setRequired(true);		
+	}
+	    
 	private CommandLineParser parser;
     private CommandLine line;
-    
+    private Options options;
 }
