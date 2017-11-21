@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.stage.runtime.environment;
+package target.runtime.environment;
 
 /**
  * @author: Vincent Mirian
@@ -26,13 +26,17 @@ package common.stage.runtime.environment;
  * @date: Nov 20, 2017
  *
  */
-public class ArgDescriptionStage{
-
+public class ArgDescriptionTarget{
+	
     /*
-     * Default
+     * Target
      */
-    final static public String CONFIGFILE_DESCRIPTION = "config file for Stage";
-    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Stage";
-    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Stage";
-    
+	final static public String VERILOG_DESCRIPTION = "verilog file";
+	final static public String TARGETFILE_DESCRIPTION = "target file";
+	final static public String TARGETDIR_DESCRIPTION = "target directory";
+	final static public String NETLISTCONSTRAINTFILE_DESCRIPTION = "netlist constraint file";
+	final static public String OUTPUTDIR_DESCRIPTION = "output directory";
+	final static public String CELLODIR_DESCRIPTION = "cello directory";
+	final static public String PYTHONDIR_DESCRIPTION = "python directory";
+	
 }

@@ -26,7 +26,7 @@ package common.runtime.environment;
  * @date: Nov 17, 2017
  *
  */
-public class ArgDescription {
+public final class ArgDescription {
 
 	/*
 	 * General

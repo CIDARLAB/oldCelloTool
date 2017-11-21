@@ -1,0 +1,29 @@
+{	
+	"stages":
+	[
+		{
+			"name": "LogicSynthesis",
+			"configuration":
+			{
+				"type" : "file",
+				"configuration_filename" : "LSTarget.json"
+			}
+		},
+		{
+			"name": "TechnologyMapping",
+			"configuration":
+			{
+				"type" : "file",
+				"configuration_filename" : "TMTarget.json"
+			}
+		},
+		{
+			"name": "Eugene",
+			"configuration":
+			{
+				"type" : "file",
+				"configuration_filename" : "EUTarget.json"
+			}
+		},
+	],
+}
