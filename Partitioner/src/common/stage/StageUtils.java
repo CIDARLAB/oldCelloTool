@@ -32,7 +32,7 @@ import org.json.simple.parser.ParseException;
 import common.Utils;
 import common.netlist.Netlist;
 import common.runtime.environment.RuntimeEnv;
-import common.stage.runtime.environment.ArgStringStage;
+import common.stage.runtime.environment.StageArgString;
 
 /**
  * @author: Vincent Mirian
@@ -45,7 +45,7 @@ public class StageUtils {
 	static public Netlist getNetlist(RuntimeEnv runEnv){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		Netlist rtn = null;
-		String inputNetlistFilename = runEnv.getOptionValue(ArgStringStage.INPUTNETLIST);
+		String inputNetlistFilename = runEnv.getOptionValue(StageArgString.INPUTNETLIST);
 	    Reader inputNetlistReader = null;
 		JSONObject jsonTop = null;
 		// Create File Reader
@@ -76,7 +76,7 @@ public class StageUtils {
 	static public StageConfiguration getStageConfiguration(RuntimeEnv runEnv){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		StageConfiguration rtn = null;
-		String configFilename = runEnv.getOptionValue(ArgStringStage.CONFIGFILE);
+		String configFilename = runEnv.getOptionValue(StageArgString.CONFIGFILE);
 	    Reader configFileReader = null;
 		JSONObject jsonTop = null;
 		// Create File Reader

@@ -22,7 +22,7 @@ package logicSynthesis.runtime.environment;
 
 import org.apache.commons.cli.Option;
 
-import common.stage.runtime.environment.RuntimeEnvStage;
+import common.stage.runtime.environment.StageRuntimeEnv;
 
 /**
  * @author: Vincent Mirian
@@ -30,7 +30,7 @@ import common.stage.runtime.environment.RuntimeEnvStage;
  * @date: Nov 20, 2017
  *
  */
-public class LSRuntimeEnv extends RuntimeEnvStage{
+public class LSRuntimeEnv extends StageRuntimeEnv{
 
 	public LSRuntimeEnv(String[] args) {
 		super(args);
@@ -40,19 +40,19 @@ public class LSRuntimeEnv extends RuntimeEnvStage{
 	 * Options
 	 */
 	protected Option getInputNetlistOption(){
-		Option rtn = new Option( ArgStringLS.INPUTNETLIST, true, ArgDescriptionLS.INPUTNETLIST_DESCRIPTION);
+		Option rtn = new Option( LSArgString.INPUTNETLIST, true, LSArgDescription.INPUTNETLIST_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
 	
 	protected Option getConfigFileOption(){
-		Option rtn = new Option( ArgStringLS.CONFIGFILE, true, ArgDescriptionLS.CONFIGFILE_DESCRIPTION);
+		Option rtn = new Option( LSArgString.CONFIGFILE, true, LSArgDescription.CONFIGFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
 	
 	protected Option getOutputNetlistOption(){
-		Option rtn = new Option( ArgStringLS.OUTPUTNETLIST, true, ArgDescriptionLS.OUTPUTNETLIST_DESCRIPTION);
+		Option rtn = new Option( LSArgString.OUTPUTNETLIST, true, LSArgDescription.OUTPUTNETLIST_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}

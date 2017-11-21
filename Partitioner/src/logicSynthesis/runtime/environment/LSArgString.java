@@ -18,7 +18,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.stage.runtime.environment;
+package logicSynthesis.runtime.environment;
+
+import common.stage.runtime.environment.StageArgString;
 
 /**
  * @author: Vincent Mirian
@@ -26,13 +28,6 @@ package common.stage.runtime.environment;
  * @date: Nov 20, 2017
  *
  */
-public class ArgDescriptionStage{
+public class LSArgString extends StageArgString{
 
-    /*
-     * Default
-     */
-    final static public String CONFIGFILE_DESCRIPTION = "config file for Stage";
-    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Stage";
-    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Stage";
-    
 }

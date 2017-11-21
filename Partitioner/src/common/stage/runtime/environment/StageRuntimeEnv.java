@@ -18,14 +18,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package target.ecoli.singlecell.plate;
+package common.stage.runtime.environment;
 
-import common.CObject;
-import common.netlist.Netlist;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+
 import common.runtime.environment.RuntimeEnv;
-import common.stage.Stage;
-import target.TargetInfo;
-import target.TargetUtils;
 
 /**
  * @author: Vincent Mirian
@@ -33,30 +31,40 @@ import target.TargetUtils;
  * @date: Nov 20, 2017
  *
  */
-public class Target extends CObject{
+public class StageRuntimeEnv extends RuntimeEnv{
 
-	/**
-	 * @param args
+	public StageRuntimeEnv(String[] args) {
+		super(args);
+	}
+
+	@Override
+	protected void setOptions() {
+		super.setOptions();
+		Options options = this.getOptions();
+		options.addOption(this.getInputNetlistOption());
+		options.addOption(this.getConfigFileOption());
+		options.addOption(this.getOutputNetlistOption());
+	}
+
+	/*
+	 * Options
 	 */
-	public static void main(String[] args) {
-		RuntimeEnv runEnv = new RuntimeEnv(args);
-		Netlist netlist = new Netlist();
-	    TargetInfo targetInfo = TargetUtils.getTargetInfo(runEnv);
-	    Stage currentStage = null;
-		// LogicSynthesis
-	    currentStage = targetInfo.getStageByName("LogicSynthesis");
-		//LogicSynthesis LS = new LogicSynthesis(netlist, runEnv);
-		//LS.execute();
-		// TechnologyMapping
-	    currentStage = targetInfo.getStageByName("TechnologyMapping");
-		//TechnologyMapping TM = new TechnologyMapping(netlist, runEnv);
-		//TM.execute();
-		// Eugene
-	    currentStage = targetInfo.getStageByName("Eugene");
-		//Eugene EU = new Eugene(netlist, runEnv);
-		//EU.execute();
-	    System.out.println(netlist.getName());
-	    System.out.println(currentStage.getName());
+	protected Option getInputNetlistOption(){
+		Option rtn = new Option( StageArgString.INPUTNETLIST, true, StageArgDescription.INPUTNETLIST_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
+	protected Option getConfigFileOption(){
+		Option rtn = new Option( StageArgString.CONFIGFILE, true, StageArgDescription.CONFIGFILE_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
+	protected Option getOutputNetlistOption(){
+		Option rtn = new Option( StageArgString.OUTPUTNETLIST, true, StageArgDescription.OUTPUTNETLIST_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
 	}
 	
 }

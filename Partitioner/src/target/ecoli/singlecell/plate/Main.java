@@ -18,9 +18,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package logicSynthesis.runtime.environment;
+package target.ecoli.singlecell.plate;
 
-import common.stage.runtime.environment.ArgStringStage;
+import common.CObject;
+import common.netlist.Netlist;
+import common.runtime.environment.RuntimeEnv;
+import common.stage.Stage;
+import target.TargetInfo;
+import target.TargetUtils;
 
 /**
  * @author: Vincent Mirian
@@ -28,6 +33,30 @@ import common.stage.runtime.environment.ArgStringStage;
  * @date: Nov 20, 2017
  *
  */
-public class ArgStringLS extends ArgStringStage{
+public class Main extends CObject{
 
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		RuntimeEnv runEnv = new RuntimeEnv(args);
+		Netlist netlist = new Netlist();
+	    TargetInfo targetInfo = TargetUtils.getTargetInfo(runEnv);
+	    Stage currentStage = null;
+		// LogicSynthesis
+	    currentStage = targetInfo.getStageByName("LogicSynthesis");
+		//LogicSynthesis LS = new LogicSynthesis(netlist, runEnv);
+		//LS.execute();
+		// TechnologyMapping
+	    currentStage = targetInfo.getStageByName("TechnologyMapping");
+		//TechnologyMapping TM = new TechnologyMapping(netlist, runEnv);
+		//TM.execute();
+		// Eugene
+	    currentStage = targetInfo.getStageByName("Eugene");
+		//Eugene EU = new Eugene(netlist, runEnv);
+		//EU.execute();
+	    System.out.println(netlist.getName());
+	    System.out.println(currentStage.getName());
+	}
+	
 }

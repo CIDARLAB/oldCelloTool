@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.stage.runtime.environment;
+package target.runtime.environment;
 
 /**
  * @author: Vincent Mirian
@@ -26,13 +26,17 @@ package common.stage.runtime.environment;
  * @date: Nov 20, 2017
  *
  */
-public class ArgStringStage {
-
+public class TargetArgString{
+	
     /*
-     * Default
+     * Target
      */
-    final static public String CONFIGFILE = "configFile";
-    final static public String INPUTNETLIST = "inputNetlist";
-    final static public String OUTPUTNETLIST = "outputNetlist";
-    
+	final static public String VERILOG = "verilogFile";
+	final static public String TARGETFILE = "targetFile";
+	final static public String TARGETDIR = "targetDir";
+	final static public String NETLISTCONSTRAINTFILE = "netlistConstraintFile";
+	final static public String OUTPUTDIR  = "outputDir";
+	final static public String CELLODIR = "celloDir";
+	final static public String PYTHONDIR = "pythonDir";
+	
 }

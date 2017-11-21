@@ -32,9 +32,9 @@ import common.runtime.environment.RuntimeEnv;
  * @date: Nov 20, 2017
  *
  */
-public class RuntimeEnvTarget extends RuntimeEnv{
+public class TargetRuntimeEnv extends RuntimeEnv{
 
-	public RuntimeEnvTarget(String[] args) {
+	public TargetRuntimeEnv(String[] args) {
 		super(args);
 	}
 
@@ -42,8 +42,8 @@ public class RuntimeEnvTarget extends RuntimeEnv{
 	protected String getDefault(final String str){
 		String rtn = null;
 		switch (str) {
-        case ArgStringTarget.OUTPUTDIR:  
-        case ArgStringTarget.CELLODIR:
+        case TargetArgString.OUTPUTDIR:  
+        case TargetArgString.CELLODIR:
         	rtn = "./";
         	break;
 		}
@@ -67,40 +67,40 @@ public class RuntimeEnvTarget extends RuntimeEnv{
 	 * Options
 	 */
 	protected Option getVerilogOption(){
-		Option rtn = new Option( ArgStringTarget.VERILOG, true, ArgDescriptionTarget.VERILOG_DESCRIPTION);
+		Option rtn = new Option( TargetArgString.VERILOG, true, TargetArgDescription.VERILOG_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
 	
 	protected Option getTargetFileOption(){
-		Option rtn = new Option( ArgStringTarget.TARGETFILE, true, ArgDescriptionTarget.TARGETFILE_DESCRIPTION);
+		Option rtn = new Option( TargetArgString.TARGETFILE, true, TargetArgDescription.TARGETFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
 	
 	protected Option getTargetDirOption(){
-		Option rtn = new Option( ArgStringTarget.TARGETDIR, true, ArgDescriptionTarget.TARGETDIR_DESCRIPTION);
+		Option rtn = new Option( TargetArgString.TARGETDIR, true, TargetArgDescription.TARGETDIR_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
 	
 	protected Option getNetlistConstraintFileOption(){
-		Option rtn = new Option( ArgStringTarget.NETLISTCONSTRAINTFILE, true, ArgDescriptionTarget.NETLISTCONSTRAINTFILE_DESCRIPTION);
+		Option rtn = new Option( TargetArgString.NETLISTCONSTRAINTFILE, true, TargetArgDescription.NETLISTCONSTRAINTFILE_DESCRIPTION);
 		return rtn;
 	}
 	
 	protected Option getOutputDirOption(){
-		Option rtn = new Option( ArgStringTarget.OUTPUTDIR, true, ArgDescriptionTarget.OUTPUTDIR_DESCRIPTION);
+		Option rtn = new Option( TargetArgString.OUTPUTDIR, true, TargetArgDescription.OUTPUTDIR_DESCRIPTION);
 		return rtn;
 	}
 	
 	protected Option getCelloDirOption(){
-		Option rtn = new Option( ArgStringTarget.CELLODIR, true, ArgDescriptionTarget.CELLODIR_DESCRIPTION);
+		Option rtn = new Option( TargetArgString.CELLODIR, true, TargetArgDescription.CELLODIR_DESCRIPTION);
 		return rtn;
 	}
 	
 	protected Option getPythonDirOption(){
-		Option rtn = new Option( ArgStringTarget.PYTHONDIR, true, ArgDescriptionTarget.PYTHONDIR_DESCRIPTION);
+		Option rtn = new Option( TargetArgString.PYTHONDIR, true, TargetArgDescription.PYTHONDIR_DESCRIPTION);
 		return rtn;
 	}
 }

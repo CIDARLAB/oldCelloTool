@@ -18,12 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.stage.runtime.environment;
-
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-
-import common.runtime.environment.RuntimeEnv;
+package target.runtime.environment;
 
 /**
  * @author: Vincent Mirian
@@ -31,40 +26,17 @@ import common.runtime.environment.RuntimeEnv;
  * @date: Nov 20, 2017
  *
  */
-public class RuntimeEnvStage extends RuntimeEnv{
-
-	public RuntimeEnvStage(String[] args) {
-		super(args);
-	}
-
-	@Override
-	protected void setOptions() {
-		super.setOptions();
-		Options options = this.getOptions();
-		options.addOption(this.getInputNetlistOption());
-		options.addOption(this.getConfigFileOption());
-		options.addOption(this.getOutputNetlistOption());
-	}
-
-	/*
-	 * Options
-	 */
-	protected Option getInputNetlistOption(){
-		Option rtn = new Option( ArgStringStage.INPUTNETLIST, true, ArgDescriptionStage.INPUTNETLIST_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
+public class TargetArgDescription{
 	
-	protected Option getConfigFileOption(){
-		Option rtn = new Option( ArgStringStage.CONFIGFILE, true, ArgDescriptionStage.CONFIGFILE_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
-	protected Option getOutputNetlistOption(){
-		Option rtn = new Option( ArgStringStage.OUTPUTNETLIST, true, ArgDescriptionStage.OUTPUTNETLIST_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
+    /*
+     * Target
+     */
+	final static public String VERILOG_DESCRIPTION = "verilog file";
+	final static public String TARGETFILE_DESCRIPTION = "target file";
+	final static public String TARGETDIR_DESCRIPTION = "target directory";
+	final static public String NETLISTCONSTRAINTFILE_DESCRIPTION = "netlist constraint file";
+	final static public String OUTPUTDIR_DESCRIPTION = "output directory";
+	final static public String CELLODIR_DESCRIPTION = "cello directory";
+	final static public String PYTHONDIR_DESCRIPTION = "python directory";
 	
 }

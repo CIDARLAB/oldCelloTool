@@ -32,7 +32,7 @@ import org.json.simple.parser.ParseException;
 
 import common.Utils;
 import common.runtime.environment.RuntimeEnv;
-import target.runtime.environment.ArgStringTarget;
+import target.runtime.environment.TargetArgString;
 
 /**
  * @author: Vincent Mirian
@@ -46,8 +46,8 @@ public class TargetUtils {
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		TargetInfo rtn = null;
 		// get Target File
-		String targetFilename = runEnv.getOptionValue(ArgStringTarget.TARGETFILE);
-		String targetDir = runEnv.getOptionValue(ArgStringTarget.TARGETDIR);
+		String targetFilename = runEnv.getOptionValue(TargetArgString.TARGETFILE);
+		String targetDir = runEnv.getOptionValue(TargetArgString.TARGETDIR);
 	    File targetFile = new File(targetDir + Utils.getFileSeparator() + targetFilename);
 	    Reader targetReader = null;
 		JSONObject jsonTop = null;

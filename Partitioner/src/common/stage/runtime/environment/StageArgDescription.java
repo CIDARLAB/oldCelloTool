@@ -18,9 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package logicSynthesis.runtime.environment;
-
-import common.stage.runtime.environment.ArgDescriptionStage;
+package common.stage.runtime.environment;
 
 /**
  * @author: Vincent Mirian
@@ -28,12 +26,13 @@ import common.stage.runtime.environment.ArgDescriptionStage;
  * @date: Nov 20, 2017
  *
  */
-public class ArgDescriptionLS extends ArgDescriptionStage{
+public class StageArgDescription{
 
     /*
-     * Logic Synthesis (LS)
+     * Default
      */
-    final static public String CONFIGFILE_DESCRIPTION = "config file for Logic Synthesis (LS)";
-    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Logic Synthesis (LS)";
-    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Logic Synthesis (LS)";
+    final static public String CONFIGFILE_DESCRIPTION = "config file for Stage";
+    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Stage";
+    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Stage";
+    
 }
