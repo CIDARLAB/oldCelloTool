@@ -40,10 +40,6 @@ public class PTestingEnv extends RuntimeEnv{
 		super(args);
 	}
 	
-	private void makeRequired(final Option arg){
-		arg.setRequired(true);		
-	}
-
 	private Option getHelpOption(){
 		Option rtn = new Option( HELP, "print this message" );
 		return rtn;		
