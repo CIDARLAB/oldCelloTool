@@ -33,10 +33,13 @@ public class EdgeTemplate<T extends VertexTemplate<?>> extends AbstractEdge<T>{
 	
 	public EdgeTemplate(){
 		super();
+        this.setSrc(null);
+        this.setDst(null);
 	}
 	
 	public EdgeTemplate(final T Src) {
 		super(Src);
+        this.setDst(null);
     }
 	
 	public EdgeTemplate(final EdgeTemplate<T> other) {

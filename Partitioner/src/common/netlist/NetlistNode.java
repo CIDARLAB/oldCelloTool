@@ -18,29 +18,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.graph.graph;
+package common.netlist;
+
+import common.graph.graph.VertexTemplate;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Oct 26, 2017
+ * @date: Nov 17, 2017
  *
  */
-public class Edge extends EdgeTemplate<Vertex>{
-
-	public Edge(){
+public class NetlistNode extends VertexTemplate<NetlistEdge>{
+	
+	public NetlistNode(){
 		super();
 	}
 	
-	public Edge(final Vertex Src, final Vertex Dst) {
-        super(Src);
-        this.setDst(Dst);
-    }
-	
-	public Edge(final Edge other) {
+	public NetlistNode(final NetlistNode other){
 		super(other);
-        this.setSrc(other.getSrc());
-        this.setDst(other.getDst());
-    }
+	}
+	
+	@Override
+	protected void addMeToSrc(NetlistEdge e) {
+		e.setSrc(this);
+	}
 
+	@Override
+	protected void addMeToDst(NetlistEdge e) {
+		e.setDst(this);
+	}
+
+	@Override
+	public NetlistEdge createT(NetlistEdge e) {
+		NetlistEdge rtn = null;
+		rtn = new NetlistEdge(e);
+		return rtn;
+	}
+
+	/*
+	 * Partition ID
+	 */
+	public void setPartitionID(int pID) {
+		this.partitionID = pID;
+	}
+	
+	public int getPartitionID() {
+		return this.partitionID;
+	}
+	
+	private int partitionID;
 }

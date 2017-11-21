@@ -18,29 +18,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.graph.graph;
+package common.netlist;
+
+import java.io.Writer;
+
+import org.json.simple.JSONObject;
+
+import common.graph.graph.GraphTemplate;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Oct 26, 2017
+ * @date: Nov 17, 2017
  *
  */
-public class Edge extends EdgeTemplate<Vertex>{
+public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 
-	public Edge(){
-		super();
+	public Netlist () {
+		
 	}
 	
-	public Edge(final Vertex Src, final Vertex Dst) {
-        super(Src);
-        this.setDst(Dst);
-    }
+	public Netlist (final JSONObject JObj) {
+		
+	}
 	
-	public Edge(final Edge other) {
-		super(other);
-        this.setSrc(other.getSrc());
-        this.setDst(other.getDst());
-    }
+	public void write(Writer os) {
+		
+	}
+	
+	@Override
+	public NetlistNode createV(NetlistNode other) {
+		NetlistNode rtn = new NetlistNode(other);
+		return rtn;
+	}
 
+	@Override
+	public NetlistEdge createE(NetlistEdge other) {
+		NetlistEdge rtn = new NetlistEdge(other);
+		return rtn;
+	}
+	
 }

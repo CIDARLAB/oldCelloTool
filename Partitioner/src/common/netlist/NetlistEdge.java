@@ -18,29 +18,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.graph.graph;
+package common.netlist;
+
+import common.graph.graph.EdgeTemplate;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Oct 26, 2017
+ * @date: Nov 17, 2017
  *
  */
-public class Edge extends EdgeTemplate<Vertex>{
-
-	public Edge(){
+public class NetlistEdge extends EdgeTemplate<NetlistNode>{
+	
+	public NetlistEdge(){
 		super();
 	}
 	
-	public Edge(final Vertex Src, final Vertex Dst) {
+	public NetlistEdge(final NetlistNode Src, final NetlistNode Dst) {
         super(Src);
         this.setDst(Dst);
     }
 	
-	public Edge(final Edge other) {
+	public NetlistEdge(final NetlistEdge other) {
 		super(other);
         this.setSrc(other.getSrc());
         this.setDst(other.getDst());
     }
-
 }
