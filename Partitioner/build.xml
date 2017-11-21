@@ -14,6 +14,7 @@
 	<property name="source.dir" value="src"/>
 	<property name="build.dir" value="bin"/>
 	<property name="jars.dir" value="jars"/>
+	<property name="main-class" value="runtime/Main"/>
     <path id="Partitioner.classpath">
         <pathelement location="${build.dir}"/>
         <pathelement location="../external_jars/commons-cli-1.4.jar"/>
@@ -49,16 +50,18 @@
 	<macrodef name="build_jar">
 		<attribute name="name"/>
 		<sequential>
-			<jar jarfile="${jars.dir}/@{name}.jar" basedir="${build.dir}/@{name}/">
+			<jar jarfile="${jars.dir}/@{name}.jar" basedir="${build.dir}">
+			    <fileset dir="${build.dir}/@{name}/"/>
 			</jar>
 		</sequential>
 	</macrodef>
 	<macrodef name="build_exec_jar">
 		<attribute name="name"/>
 		<sequential>
-			<jar jarfile="${jars.dir}/@{name}.jar" basedir="${build.dir}/@{name}/">
+			<jar jarfile="${jars.dir}/@{name}.jar" basedir="${build.dir}">
+			    <fileset dir="${build.dir}/@{name}/"/>
 				<manifest>
-					<attribute name="Main-Class" value="${main-class}"/>
+					<attribute name="Main-Class" value="@{name}/${main-class}"/>
 				</manifest>
 			</jar>
 		</sequential>
@@ -80,8 +83,7 @@
 					<build_jar name="${name}"/>
 				</then>
 				<else>
-					<!-- TODO: make executable jar -->
-					<build_jar name="${name}"/>
+					<build_exec_jar name="${name}"/>
 				</else>
 				</if>
 			</sequential>
