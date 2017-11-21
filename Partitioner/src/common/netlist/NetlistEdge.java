@@ -20,7 +20,15 @@
  */
 package common.netlist;
 
+import java.io.IOException;
+import java.io.Writer;
+
+import org.json.simple.JSONObject;
+
+import common.Utils;
+import common.JSON.JSONUtils;
 import common.graph.graph.EdgeTemplate;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -44,4 +52,53 @@ public class NetlistEdge extends EdgeTemplate<NetlistNode>{
         this.setSrc(other.getSrc());
         this.setDst(other.getDst());
     }
+	
+	public NetlistEdge(final JSONObject JObj){
+		this();
+		this.parse(JObj);
+	}
+
+	/*
+	 * Parse
+	 */
+	private void parseName(final JSONObject JObj){
+		String name = ProfileUtils.getString(JObj, "name");
+		if (name != null) {
+			this.setName(name);
+		}
+	}
+	private void parse(final JSONObject JObj){
+    	this.parseName(JObj);
+	}
+
+	/*
+	 * Write
+	 */	
+	protected String getJSONHeader(){	
+		String rtn = "";
+		// name
+		rtn += JSONUtils.getEntryToString("name", this.getName());
+		// src
+		rtn += JSONUtils.getEntryToString("src", this.getSrc().getName());
+		// dst
+		rtn += JSONUtils.getEntryToString("dst", this.getDst().getName());
+		return rtn;
+	}
+	
+	protected String getJSONFooter(){	
+		String rtn = "";
+		return rtn;
+	}
+	public void writeJSON(int indent, Writer os) throws IOException {
+		String str = null;
+		//header
+		str = this.getJSONHeader();
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
+		//footer
+		str = this.getJSONFooter();
+		str = Utils.addIndent(indent, str);
+		os.write(str);
+	}
+	
 }

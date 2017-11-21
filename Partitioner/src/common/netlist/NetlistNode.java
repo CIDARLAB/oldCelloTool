@@ -20,7 +20,14 @@
  */
 package common.netlist;
 
+import java.io.IOException;
+import java.io.Writer;
+
+import org.json.simple.JSONObject;
+
+import common.JSON.JSONUtils;
 import common.graph.graph.VertexTemplate;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -29,15 +36,51 @@ import common.graph.graph.VertexTemplate;
  *
  */
 public class NetlistNode extends VertexTemplate<NetlistEdge>{
+
+	private void setDefault() {
+		this.setPartitionID(-1);
+	}
 	
 	public NetlistNode(){
 		super();
+		this.setDefault();
 	}
-	
+
 	public NetlistNode(final NetlistNode other){
 		super(other);
+		this.setDefault();
 	}
 	
+	public NetlistNode(final JSONObject JObj){
+		this();
+		this.parse(JObj);
+	}
+
+	/*
+	 * Parse
+	 */
+	private void parseName(final JSONObject JObj){
+		String name = ProfileUtils.getString(JObj, "name");
+		if (name != null) {
+			this.setName(name);
+		}
+	}
+	
+	private void parsePartitionID(final JSONObject JObj){
+		Integer value = ProfileUtils.getInteger(JObj, "partitionID");
+		if (value != null) {
+			this.setPartitionID(value.intValue());
+		}
+	}
+	
+	private void parse(final JSONObject JObj){
+    	this.parseName(JObj);
+    	this.parsePartitionID(JObj);
+	}
+	
+	/*
+	 * Inherit
+	 */
 	@Override
 	protected void addMeToSrc(NetlistEdge e) {
 		e.setSrc(this);
@@ -58,7 +101,7 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	/*
 	 * Partition ID
 	 */
-	public void setPartitionID(int pID) {
+	protected void setPartitionID(int pID) {
 		this.partitionID = pID;
 	}
 	
@@ -67,4 +110,33 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	}
 	
 	private int partitionID;
+
+	/*
+	 * Write
+	 */	
+	protected String getJSONHeader(){	
+		String rtn = "";
+		// name
+		rtn += JSONUtils.getEntryToString("name", this.getName());
+		// partitionID
+		rtn += JSONUtils.getEntryToString("partitionID", this.getPartitionID());
+		return rtn;
+	}
+	
+	protected String getJSONFooter(){	
+		String rtn = "";
+		return rtn;
+	}
+	
+	public void writeJSON(int indent, Writer os) throws IOException {
+		String str = null;
+		//header
+		str = this.getJSONHeader();
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
+		//footer
+		str = this.getJSONFooter();
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
+	}
 }

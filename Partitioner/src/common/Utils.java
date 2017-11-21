@@ -37,7 +37,7 @@ public class Utils {
 	static public String getFilename(final String name){
 		String rtn = name;
 		int index = 0;
-		index = rtn.lastIndexOf(System.getProperty("file.separator"));
+		index = rtn.lastIndexOf(Utils.getFileSeparator());
 		if (index != -1){
 			rtn = rtn.substring(index + 1);
 		}
@@ -134,7 +134,9 @@ public class Utils {
 		String replace = "";
 		String numTab = Utils.getTabCharacterRepeat(numIndent);
 		replace = Utils.getNewLine() + numTab;
-		rtn = numTab + str.replace(Utils.getNewLine(), replace);
+		if (!str.isEmpty()) {
+			rtn = numTab + str.replace(Utils.getNewLine(), replace);
+		}
 		return rtn;		
 	}
 

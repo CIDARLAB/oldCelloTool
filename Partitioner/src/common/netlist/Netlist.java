@@ -20,11 +20,15 @@
  */
 package common.netlist;
 
+import java.io.IOException;
 import java.io.Writer;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import common.JSON.JSONUtils;
 import common.graph.graph.GraphTemplate;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -32,18 +36,136 @@ import common.graph.graph.GraphTemplate;
  * @date: Nov 17, 2017
  *
  */
+// TODO: Make all netlist data strings, place into Map?
 public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 
 	public Netlist () {
-		
+		super();
 	}
 	
 	public Netlist (final JSONObject JObj) {
-		
+		this();
+		this.parse(JObj);
+	}
+
+	/*
+	 * Parse
+	 */
+	private void parseName(final JSONObject JObj){
+		String name = ProfileUtils.getString(JObj, "name");
+		if (name != null) {
+			this.setName(name);
+		}
+	}
+
+	private void parseNetlistNodes(final JSONObject JObj){
+    	JSONArray jsonArr;
+    	jsonArr = (JSONArray) JObj.get("nodes");
+		if (jsonArr == null) {
+			throw new RuntimeException("'nodes' missing in Netlist!");
+		}
+    	for (int i = 0; i < jsonArr.size(); i++)
+    	{
+    	    JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+    	    NetlistNode node = new NetlistNode(jsonObj);
+    	    this.addVertex(node);
+    	}
+	}
+
+	private NetlistNode getNetlistNode(final JSONObject JObj, final String str){
+		NetlistNode rtn = null;
+    	String name = null;
+		name = ProfileUtils.getString(JObj, str);
+		if (name == null) {
+			throw new RuntimeException("No name for" + str + "edges in Netlist!");
+		}
+		rtn = this.getVertexByName(name);
+		if (rtn == null) {
+			throw new RuntimeException("Node missing in Netlist " + name + ".");
+		}
+		return rtn;
+	}
+
+	private void parseNetlistEdges(final JSONObject JObj){
+    	JSONArray jsonArr;
+    	NetlistNode node = null;
+    	jsonArr = (JSONArray) JObj.get("edges");
+		if (jsonArr == null) {
+			throw new RuntimeException("'edges' missing in Netlist!");
+		}
+    	for (int i = 0; i < jsonArr.size(); i++)
+    	{
+    	    JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+    	    NetlistEdge edge = new NetlistEdge(jsonObj);
+    	    this.addEdge(edge);
+    	    node = getNetlistNode(jsonObj, "src");
+    		node.addOutEdge(edge);
+    		edge.setSrc(node);
+    	    node = getNetlistNode(jsonObj, "dst");
+    		node.addInEdge(edge);
+    		edge.setDst(node);
+    	}
+	}
+
+	private void parse(final JSONObject JObj){
+    	this.parseName(JObj);
+    	this.parseNetlistNodes(JObj);
+    	this.parseNetlistEdges(JObj);
+	}
+
+	/*
+	 * WriteJSON
+	 */
+	protected String getJSONHeader(){	
+		String rtn = "";
+		// name
+		rtn += JSONUtils.getEntryToString("name", this.getName());
+		return rtn;
 	}
 	
-	public void write(Writer os) {
-		
+	protected String getJSONFooter(){	
+		String rtn = "";
+		return rtn;
+	}
+	
+	public void writeJSON(int indent, Writer os) throws IOException {
+		String str = null;
+		//header
+		str = this.getJSONHeader();
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
+		// nodes
+		str = JSONUtils.getStartArrayWithMemberString("nodes");
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
+		for (int i = 0; i < this.getNumVertex(); i++){
+			str = JSONUtils.addIndent(indent + 1, JSONUtils.getStartEntryString());
+			os.write(str);
+			this.getVertexAtIdx(i).writeJSON(indent + 2, os);
+			str = JSONUtils.addIndent(indent + 1, JSONUtils.getEndEntryString());
+			os.write(str);
+		}
+		str = JSONUtils.getEndArrayString();
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
+		// edges
+		str = JSONUtils.getStartArrayWithMemberString("edges");
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
+		for (int i = 0; i < this.getNumEdge(); i++){
+			str = JSONUtils.addIndent(indent + 1, JSONUtils.getStartEntryString());
+			os.write(str);
+			this.getEdgeAtIdx(i).writeJSON(indent + 2, os);
+			str = JSONUtils.addIndent(indent + 1, JSONUtils.getEndEntryString());
+			os.write(str);
+		}
+		str = JSONUtils.getEndArrayString();
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
+		//footer
+		str = this.getJSONFooter();
+		str = JSONUtils.addIndent(indent, str);
+		os.write(str);
 	}
 	
 	@Override
