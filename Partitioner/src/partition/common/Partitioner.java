@@ -142,7 +142,7 @@ public class Partitioner extends CObject {
 		P.setName(G.getName());
 		// run Algorithm
 		PAlgorithmFactory PAF = new PAlgorithmFactory();
-		PAlgorithm algo = PAF.getPAlgorithm(AProfile);
+		PAlgorithm algo = PAF.getAlgorithm(AProfile);
 		if (algo == null){
 	    	throw new RuntimeException("Algorithm not found!");
 		}

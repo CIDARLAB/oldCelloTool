@@ -18,29 +18,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package partition.algorithm;
+package common.algorithm;
 
-import partition.algorithm.KL.KL;
-import partition.algorithm.hmetis.HMetis;
-import common.algorithm.AlgorithmFactory;
+import common.CObject;
+import partition.profile.AlgorithmProfile;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Oct 29, 2017
+ * @date: Nov 21, 2017
  *
  */
-public class PAlgorithmFactory extends AlgorithmFactory<PAlgorithm>{
+public abstract class AlgorithmFactory<T extends Algorithm> extends CObject{
 
-
-	@Override
-	protected PAlgorithm getAlgorithm(final String name) {
-		PAlgorithm rtn = null;
-		if(name.equalsIgnoreCase("KL")){
-			rtn = new KL();
-		}
-		else if(name.equalsIgnoreCase("hmetis")){
-			rtn = new HMetis();
+	abstract protected T getAlgorithm(final String name);
+	
+	public T getAlgorithm(final AlgorithmProfile AProfile){
+		T rtn = null;
+		if (AProfile != null){
+			String name = AProfile.getTypeName();
+			rtn = getAlgorithm(name);
 		}
 		return rtn;
 	}

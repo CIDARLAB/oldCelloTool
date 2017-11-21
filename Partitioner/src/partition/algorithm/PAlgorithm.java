@@ -20,6 +20,7 @@
  */
 package partition.algorithm;
 
+import common.algorithm.Algorithm;
 import common.runtime.environment.RuntimeEnv;
 import partition.common.Partition;
 import partition.graph.PGraph;
@@ -31,15 +32,8 @@ import partition.profile.AlgorithmProfile;
  * @date: Oct 27, 2017
  *
  */
-abstract public class PAlgorithm{
-	
-	abstract public void setDefaultParameterValues();
-	abstract public void setParameterValues();
-	abstract public void validateParameterValues();
-	abstract public void preprocessing();
-	abstract public void run();
-	abstract public void postprocessing();
-	
+abstract public class PAlgorithm extends Algorithm{
+		
 	public void execute(final PGraph G, final Partition P, final AlgorithmProfile AProfile, final RuntimeEnv runtimeEnv){
 		// set members
 		this.setPGraph(G);

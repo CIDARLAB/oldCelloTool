@@ -18,30 +18,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package partition.algorithm;
+package common.algorithm;
 
-import partition.algorithm.KL.KL;
-import partition.algorithm.hmetis.HMetis;
-import common.algorithm.AlgorithmFactory;
+import common.CObject;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Oct 29, 2017
+ * @date: Nov 17, 2017
  *
  */
-public class PAlgorithmFactory extends AlgorithmFactory<PAlgorithm>{
+public abstract class Algorithm extends CObject{
 
-
-	@Override
-	protected PAlgorithm getAlgorithm(final String name) {
-		PAlgorithm rtn = null;
-		if(name.equalsIgnoreCase("KL")){
-			rtn = new KL();
-		}
-		else if(name.equalsIgnoreCase("hmetis")){
-			rtn = new HMetis();
-		}
-		return rtn;
-	}
+	abstract protected void setDefaultParameterValues();
+	abstract protected void setParameterValues();
+	abstract protected void validateParameterValues();
+	abstract protected void preprocessing();
+	abstract protected void run();
+	abstract protected void postprocessing();
+	
 }
