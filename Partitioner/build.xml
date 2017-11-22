@@ -5,29 +5,32 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="Partitioner">
-	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="../external_jars/ant-contrib.jar"/>
+	<taskdef resource="net${file.separator}sf${file.separator}antcontrib${file.separator}antlib.xml" classpath="..${file.separator}external_jars${file.separator}ant-contrib.jar"/>
 	<!-- Build -->
     <property environment="env"/>
-    <property name="debuglevel" value="source,lines,vars"/>
+	<property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
 	<property name="source.dir" value="src"/>
 	<property name="build.dir" value="bin"/>
 	<property name="jars.dir" value="jars"/>
-	<property name="main-class" value="runtime/Main"/>
+	<property name="jars.dir.absolute.path" value="${basedir}${file.separator}${jars.dir}"/>
+	<property name="external-jars.dir" value="external_jars"/>
+	<property name="external-jars.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-jars.dir}${file.separator}"/>
+	<property name="main-class" value="runtime${file.separator}Main"/>
     <path id="Partitioner.classpath">
         <pathelement location="${build.dir}"/>
-        <pathelement location="../external_jars/commons-cli-1.4.jar"/>
-        <pathelement location="../external_jars/commons-csv-1.5.jar"/>
-        <pathelement location="../external_jars/json-simple-1.1.1.jar"/>
+        <pathelement location="..${file.separator}external_jars${file.separator}commons-cli-1.4.jar"/>
+        <pathelement location="..${file.separator}external_jars${file.separator}commons-csv-1.5.jar"/>
+        <pathelement location="..${file.separator}external_jars${file.separator}json-simple-1.1.1.jar"/>
     </path>
 	<!-- Init -->
     <target name="init">
         <mkdir dir="${build.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}/">
             <fileset dir="${source.dir}/">
-                <exclude name="**/*.launch"/>
-                <exclude name="**/*.java"/>
+                <exclude name="**${file.separator}*.launch"/>
+                <exclude name="**${file.separator}*.java"/>
             </fileset>
         </copy>
     </target>
@@ -37,7 +40,7 @@
         <delete dir="${jars.dir}"/>
     </target>
     <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project,build-jars" name="build"/>
+    <target depends="build-subprojects,build-project,makeJarsDir,build-jars,copy-external-jars" name="build"/>
     <target name="build-subprojects"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
@@ -46,22 +49,27 @@
             <classpath refid="Partitioner.classpath"/>
         </javac>
     </target>
+	<!-- Make Jars Directory -->
+    <target name="makeJarsDir">
+    	<echo>"Creating directory: ${jars.dir.absolute.path}"</echo>
+		<mkdir dir="${jars.dir.absolute.path}"/>
+    </target>
 	<!-- Build-Jar Macro -->
 	<macrodef name="build_jar">
 		<attribute name="name"/>
 		<sequential>
-			<jar jarfile="${jars.dir}/@{name}.jar" basedir="${build.dir}">
-			    <fileset dir="${build.dir}/@{name}/"/>
+			<jar jarfile="${jars.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
+			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
 			</jar>
 		</sequential>
 	</macrodef>
 	<macrodef name="build_exec_jar">
 		<attribute name="name"/>
 		<sequential>
-			<jar jarfile="${jars.dir}/@{name}.jar" basedir="${build.dir}">
-			    <fileset dir="${build.dir}/@{name}/"/>
+			<jar jarfile="${jars.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
+			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
 				<manifest>
-					<attribute name="Main-Class" value="@{name}/${main-class}"/>
+					<attribute name="Main-Class" value="@{name}${file.separator}${main-class}"/>
 				</manifest>
 			</jar>
 		</sequential>
@@ -89,4 +97,11 @@
 			</sequential>
 		</for>  
 	</target>
+	<!-- Copy External Jars -->
+    <target name="copy-external-jars">
+    	<echo>"Copying External jars to directory: ${jars.dir.absolute.path}"</echo>
+    	<copy todir="${jars.dir.absolute.path}">
+			<fileset dir="${external-jars.dir.absolute.path}"/>
+		</copy>
+    </target>
 </project>
