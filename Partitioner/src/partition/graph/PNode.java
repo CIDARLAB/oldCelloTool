@@ -58,17 +58,17 @@ public class PNode extends VertexTemplate<PEdge> {
 	}
 
 	@Override
-	protected void addMeToSrc(PEdge e) {
+	protected void addMeToSrc(final PEdge e) {
 		e.setSrc(this);
 	}
 
 	@Override
-	protected void addMeToDst(PEdge e){
+	protected void addMeToDst(final PEdge e){
 		e.setDst(this);
 	}
 	
 	@Override
-	public PEdge createT(PEdge e) {
+	public PEdge createT(final PEdge e) {
 		PEdge rtn = null;
 		rtn = new PEdge(e);
 		return rtn;
@@ -149,7 +149,7 @@ public class PNode extends VertexTemplate<PEdge> {
 	/*
 	 * Weight
 	 */
-	protected void setMyWeight(Weight w){
+	protected void setMyWeight(final Weight w){
 		this.myWeight = w;
 	}
 	

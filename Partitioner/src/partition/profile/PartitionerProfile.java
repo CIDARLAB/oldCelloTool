@@ -84,7 +84,7 @@ public class PartitionerProfile extends ProfileObject {
 	}
 	
 	
-	private void setPProfile(PartitionProfile PProfile){
+	private void setPProfile(final PartitionProfile PProfile){
 		this.PProfile = PProfile;
 	}
 
@@ -92,7 +92,7 @@ public class PartitionerProfile extends ProfileObject {
 		return this.PProfile;
 	}
 	
-	private void setAProfile(AlgorithmProfile AProfile){
+	private void setAProfile(final AlgorithmProfile AProfile){
 		this.AProfile = AProfile;
 	}
 		

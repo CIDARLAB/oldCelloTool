@@ -39,14 +39,14 @@ public class PGraph extends GraphTemplate<PNode, PEdge> {
 	}
 	
 	@Override
-	public PNode createV(PNode other) {
+	public PNode createV(final PNode other) {
 		PNode rtn = null;
 		rtn = new PNode(other);
 		return rtn;
 	}
 
 	@Override
-	public PEdge createE(PEdge other) {
+	public PEdge createE(final PEdge other) {
 		PEdge rtn = null;
 		rtn = new PEdge(other);
 		return rtn;

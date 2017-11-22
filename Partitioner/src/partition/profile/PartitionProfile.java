@@ -147,7 +147,7 @@ public class PartitionProfile extends ProfileObject {
 	/*
 	 * CapacityUnits
 	 */
-	private ProfileObject getCapacityUnitsAtIdx(CObjectCollection<ProfileObject> collection, int index) {
+	private ProfileObject getCapacityUnitsAtIdx(final CObjectCollection<ProfileObject> collection, int index) {
 		ProfileObject rtn = null;
 		if (
 				(index >= 0) &&
@@ -158,7 +158,7 @@ public class PartitionProfile extends ProfileObject {
 		return rtn;
 	}
 	
-	private int getCapacityUnitsSize(CObjectCollection<ProfileObject> collection) {
+	private int getCapacityUnitsSize(final CObjectCollection<ProfileObject> collection) {
 		int rtn = 0;
 		if (collection != null) {
 			rtn = collection.size();
@@ -169,7 +169,7 @@ public class PartitionProfile extends ProfileObject {
 	/*
 	 * Capacity
 	 */
-	private CapacityProfile getCapacityAtIdx(CObjectCollection<CapacityProfile> collection, int index) {
+	private CapacityProfile getCapacityAtIdx(final CObjectCollection<CapacityProfile> collection, int index) {
 		CapacityProfile rtn = null;
 		if (
 				(index >= 0) &&
@@ -180,7 +180,7 @@ public class PartitionProfile extends ProfileObject {
 		return rtn;
 	}
 	
-	private int getCapacitySize(CObjectCollection<CapacityProfile> collection) {
+	private int getCapacitySize(final CObjectCollection<CapacityProfile> collection) {
 		int rtn = 0;
 		if (collection != null) {
 			rtn = collection.size();

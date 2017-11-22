@@ -48,7 +48,7 @@ public class Move extends CObject {
 	 * null destination block means remove/no assignment
 	 */
 	
-	public void setPNode(PNode node){
+	public void setPNode(final PNode node){
 		this.node = node;
 	}
 		

@@ -33,7 +33,7 @@ public class LSAlgorithmFactory extends AlgorithmFactory<LSAlgorithm>{
 
 
 	@Override
-	protected LSAlgorithm getAlgorithm(String name) {
+	protected LSAlgorithm getAlgorithm(final String name) {
 		LSAlgorithm rtn = null;
 		if(name.equalsIgnoreCase("Base")){
 			rtn = new Base();
