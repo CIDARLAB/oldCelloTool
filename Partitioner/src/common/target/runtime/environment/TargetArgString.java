@@ -20,20 +20,22 @@
  */
 package common.target.runtime.environment;
 
+import common.runtime.environment.ArgString;
+
 /**
  * @author: Vincent Mirian
  * 
  * @date: Nov 20, 2017
  *
  */
-public class TargetArgString{
+public class TargetArgString extends ArgString{
 	
     /*
      * Target
      */
 	final static public String VERILOG = "verilogFile";
-    final static public String CONFIGFILE = "configFile";
-	final static public String CONFIGFILEDIR = "configDir";
+    final static public String TARGETCONFIGFILE = "configFile";
+	final static public String TARGETCONFIGDIR = "configDir";
 	final static public String NETLISTCONSTRAINTFILE = "netlistConstraintFile";
 	final static public String OUTPUTDIR  = "outputDir";
 	final static public String CELLODIR = "celloDir";

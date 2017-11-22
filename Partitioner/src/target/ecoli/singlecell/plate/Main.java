@@ -42,7 +42,7 @@ public class Main extends CObject{
 	public static void main(String[] args) {
 		RuntimeEnv runEnv = new RuntimeEnv(args);
 		Netlist netlist = new Netlist();
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.CONFIGFILE, TargetArgString.CONFIGFILEDIR);
+	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 	    Stage currentStage = null;
 		// LogicSynthesis
 	    currentStage = targetCfg.getStageByName("LogicSynthesis");

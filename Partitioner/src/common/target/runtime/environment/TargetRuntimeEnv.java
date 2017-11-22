@@ -55,8 +55,8 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		super.setOptions();
 		Options options = this.getOptions();
 		options.addOption(this.getVerilogOption());
-		options.addOption(this.getConfigFileOption());
-		options.addOption(this.getConfigDirOption());
+		options.addOption(this.getTargetConfigFileOption());
+		options.addOption(this.getTargetConfigDirOption());
 		options.addOption(this.getNetlistConstraintFileOption());
 		options.addOption(this.getOutputDirOption());
 		options.addOption(this.getCelloDirOption());
@@ -72,14 +72,14 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		return rtn;
 	}
 	
-	protected Option getConfigFileOption(){
-		Option rtn = new Option( TargetArgString.CONFIGFILE, true, TargetArgDescription.CONFIGFILE_DESCRIPTION);
+	protected Option getTargetConfigFileOption(){
+		Option rtn = new Option( TargetArgString.TARGETCONFIGFILE, true, TargetArgDescription.TARGETCONFIGFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
 	
-	protected Option getConfigDirOption(){
-		Option rtn = new Option( TargetArgString.CONFIGFILEDIR, true, TargetArgDescription.CONFIGFILEDIR_DESCRIPTION);
+	protected Option getTargetConfigDirOption(){
+		Option rtn = new Option( TargetArgString.TARGETCONFIGDIR, true, TargetArgDescription.TARGETCONFIGDIR_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
