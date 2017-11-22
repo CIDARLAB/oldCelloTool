@@ -24,8 +24,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 import common.runtime.environment.RuntimeEnv;
-import common.target.runtime.environment.TargetArgDescription;
-import common.target.runtime.environment.TargetArgString;
 
 /**
  * @author: Vincent Mirian
@@ -60,13 +58,13 @@ public class StageRuntimeEnv extends RuntimeEnv{
 	}
 	
 	private Option getTargetDataFileOption(){
-		Option rtn = new Option( TargetArgString.TARGETDATAFILE, true, TargetArgDescription.TARGETDATAFILE_DESCRIPTION);
+		Option rtn = new Option( StageArgString.TARGETDATAFILE, true, StageArgDescription.TARGETDATAFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
 	
 	private Option getTargetDirOption(){
-		Option rtn = new Option( TargetArgString.TARGETDIR, true, TargetArgDescription.TARGETDIR_DESCRIPTION);
+		Option rtn = new Option( StageArgString.TARGETDATADIR, true, StageArgDescription.TARGETDATADIR_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}

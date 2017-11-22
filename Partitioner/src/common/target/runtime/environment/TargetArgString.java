@@ -33,8 +33,9 @@ public class TargetArgString{
      */
 	final static public String VERILOG = "verilogFile";
     final static public String CONFIGFILE = "configFile";
+	final static public String CONFIGFILEDIR = "configDir";
 	final static public String TARGETDATAFILE = "targetDataFile";
-	final static public String TARGETDIR = "targetDir";
+	final static public String TARGETDATADIR = "targetDir";
 	final static public String NETLISTCONSTRAINTFILE = "netlistConstraintFile";
 	final static public String OUTPUTDIR  = "outputDir";
 	final static public String CELLODIR = "celloDir";

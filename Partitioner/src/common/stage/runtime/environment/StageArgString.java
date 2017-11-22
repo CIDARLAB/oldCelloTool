@@ -33,7 +33,7 @@ public class StageArgString {
      */
     final static public String CONFIGFILE = "configFile";
 	final static public String TARGETDATAFILE = "targetDataFile";
-	final static public String TARGETDIR = "targetDir";
+	final static public String TARGETDATADIR = "targetDataDir";
     final static public String INPUTNETLIST = "inputNetlist";
     final static public String OUTPUTNETLIST = "outputNetlist";
     
