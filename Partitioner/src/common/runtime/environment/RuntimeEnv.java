@@ -29,6 +29,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import common.CObject;
+import common.Utils;
 
 /**
  * @author: Vincent Mirian
@@ -54,16 +55,20 @@ public class RuntimeEnv extends CObject{
 	        // oops, something went wrong
 	        System.err.println( "Parsing failed.  Reason: " + e.getMessage() );
 	    }
-		if (this.getOptionValue(ArgString.HELP) != null) {
+		if (this.hasOption(ArgString.HELP)) {
 			this.printHelp();
-			System.exit(0);
+			Utils.exit(0);
 		}
 	}
 	
 	// print help
 	public void printHelp() {
 		 HelpFormatter formatter = new HelpFormatter();
-		 formatter.printHelp(this.getName(), this.getOptions());
+		 String name = this.getName();
+		 if (name.isEmpty()) {
+			 name = "\"EXECUTABLE\"";
+		 }
+		 formatter.printHelp(name, this.getOptions(), true);
 	}
 
 	// getter and setter
@@ -114,6 +119,18 @@ public class RuntimeEnv extends CObject{
 	public String getOptionValue(final char c){
 		String rtn = null;
 		rtn = line.getOptionValue(c);
+		return rtn;
+	}
+	
+	public boolean hasOption(final String str){
+		boolean rtn = false;
+		rtn = line.hasOption(str);
+		return rtn;
+	}
+	
+	public boolean hasOption(final char c){
+		boolean rtn = false;
+		rtn = line.hasOption(c);
 		return rtn;
 	}
 

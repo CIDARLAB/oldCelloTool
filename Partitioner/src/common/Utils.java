@@ -185,5 +185,11 @@ public class Utils {
 			throw new RuntimeException(name + " cannot be null!");
 		}
 		return rtn;
-	}	
+	}
+
+	static public void exit(int exit) {
+		System.exit(exit);
+	}
+	
+
 }
