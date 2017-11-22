@@ -101,7 +101,7 @@
     <target name="copy-external-jars">
     	<echo>"Copying External jars to directory: ${jars.dir.absolute.path}"</echo>
     	<copy todir="${jars.dir.absolute.path}">
-			<fileset dir="${external-jars.dir.absolute.path}"/>
+			<fileset dir="${external-jars.dir.absolute.path}" excludes="ant-contrib.jar"/>
 		</copy>
     </target>
 </project>
