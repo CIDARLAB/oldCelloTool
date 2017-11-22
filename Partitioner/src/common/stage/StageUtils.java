@@ -32,7 +32,6 @@ import org.json.simple.parser.ParseException;
 import common.Utils;
 import common.netlist.Netlist;
 import common.runtime.environment.RuntimeEnv;
-import common.stage.runtime.environment.StageArgString;
 
 /**
  * @author: Vincent Mirian
@@ -73,10 +72,10 @@ public class StageUtils {
 	    return rtn;
 	}
 	
-	static public StageConfiguration getStageConfiguration(RuntimeEnv runEnv){
+	static public StageConfiguration getStageConfiguration(RuntimeEnv runEnv, final String configFile){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		StageConfiguration rtn = null;
-		String configFilename = runEnv.getOptionValue(StageArgString.CONFIGFILE);
+		String configFilename = runEnv.getOptionValue(configFile);
 	    Reader configFileReader = null;
 		JSONObject jsonTop = null;
 		// Create File Reader

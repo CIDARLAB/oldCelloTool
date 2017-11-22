@@ -32,8 +32,6 @@ import org.json.simple.parser.ParseException;
 
 import common.Utils;
 import common.runtime.environment.RuntimeEnv;
-import common.target.runtime.environment.TargetArgString;
-
 /**
  * @author: Vincent Mirian
  * 
@@ -42,12 +40,14 @@ import common.target.runtime.environment.TargetArgString;
  */
 public class TargetUtils {
 
-	static public TargetConfiguration getTargetInfo(RuntimeEnv runEnv){
+	static public TargetConfiguration getTargetConfiguration(final RuntimeEnv runEnv, final String targetConfigFile, final String targetDataDir){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
+		Utils.isNullRuntimeException(targetConfigFile, "targetConfigFile");
+		Utils.isNullRuntimeException(targetDataDir, "targetDataDir");
 		TargetConfiguration rtn = null;
 		// get Target File
-		String targetFilename = runEnv.getOptionValue(TargetArgString.TARGETDATAFILE);
-		String targetDir = runEnv.getOptionValue(TargetArgString.TARGETDIR);
+		String targetFilename = runEnv.getOptionValue(targetConfigFile);
+		String targetDir = runEnv.getOptionValue(targetDataDir);
 	    File targetFile = new File(targetDir + Utils.getFileSeparator() + targetFilename);
 	    Reader targetReader = null;
 		JSONObject jsonTop = null;
@@ -74,6 +74,6 @@ public class TargetUtils {
 			throw new RuntimeException("Error with file: " + targetFile);
 		}
 	    return rtn;
-	}
+	}	
 	
 }

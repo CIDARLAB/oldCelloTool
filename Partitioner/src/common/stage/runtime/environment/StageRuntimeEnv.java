@@ -24,6 +24,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 import common.runtime.environment.RuntimeEnv;
+import common.target.runtime.environment.TargetArgDescription;
+import common.target.runtime.environment.TargetArgString;
 
 /**
  * @author: Vincent Mirian
@@ -41,25 +43,40 @@ public class StageRuntimeEnv extends RuntimeEnv{
 	protected void setOptions() {
 		super.setOptions();
 		Options options = this.getOptions();
-		options.addOption(this.getInputNetlistOption());
 		options.addOption(this.getConfigFileOption());
+		options.addOption(this.getTargetDataFileOption());
+		options.addOption(this.getTargetDirOption());
+		options.addOption(this.getInputNetlistOption());
 		options.addOption(this.getOutputNetlistOption());
 	}
 
 	/*
 	 * Options
 	 */
+	protected Option getConfigFileOption(){
+		Option rtn = new Option( StageArgString.CONFIGFILE, true, StageArgDescription.CONFIGFILE_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
+	private Option getTargetDataFileOption(){
+		Option rtn = new Option( TargetArgString.TARGETDATAFILE, true, TargetArgDescription.TARGETDATAFILE_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
+	private Option getTargetDirOption(){
+		Option rtn = new Option( TargetArgString.TARGETDIR, true, TargetArgDescription.TARGETDIR_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
 	protected Option getInputNetlistOption(){
 		Option rtn = new Option( StageArgString.INPUTNETLIST, true, StageArgDescription.INPUTNETLIST_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
 	
-	protected Option getConfigFileOption(){
-		Option rtn = new Option( StageArgString.CONFIGFILE, true, StageArgDescription.CONFIGFILE_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
 	
 	protected Option getOutputNetlistOption(){
 		Option rtn = new Option( StageArgString.OUTPUTNETLIST, true, StageArgDescription.OUTPUTNETLIST_DESCRIPTION);

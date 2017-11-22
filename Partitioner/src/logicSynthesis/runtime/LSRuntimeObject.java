@@ -18,46 +18,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package target.ecoli.singlecell.plate;
+package logicSynthesis.runtime;
 
-import common.CObject;
 import common.netlist.Netlist;
+import common.runtime.RuntimeObject;
 import common.runtime.environment.RuntimeEnv;
-import common.stage.Stage;
-import common.target.TargetConfiguration;
-import common.target.TargetUtils;
-import common.target.runtime.environment.TargetArgString;
+import common.stage.StageConfiguration;
+import common.target.data.TargetData;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Nov 20, 2017
+ * @date: Nov 21, 2017
  *
  */
-public class Main extends CObject{
+public class LSRuntimeObject extends RuntimeObject{
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		RuntimeEnv runEnv = new RuntimeEnv(args);
-		Netlist netlist = new Netlist();
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.CONFIGFILE, TargetArgString.TARGETDIR);
-	    Stage currentStage = null;
-		// LogicSynthesis
-	    currentStage = targetCfg.getStageByName("LogicSynthesis");
-		//LogicSynthesis LS = new LogicSynthesis(netlist, runEnv);
-		//LS.execute();
-		// TechnologyMapping
-	    currentStage = targetCfg.getStageByName("TechnologyMapping");
-		//TechnologyMapping TM = new TechnologyMapping(netlist, runEnv);
-		//TM.execute();
-		// Eugene
-	    currentStage = targetCfg.getStageByName("Eugene");
-		//Eugene EU = new Eugene(netlist, runEnv);
-		//EU.execute();
-	    System.out.println(netlist.getName());
-	    System.out.println(currentStage.getName());
+	public LSRuntimeObject(
+			StageConfiguration stageConfiguration,
+			TargetData targetData,
+			Netlist netlist,
+			RuntimeEnv runEnv
+			) {
+		super(stageConfiguration, targetData, netlist, runEnv);
 	}
-	
+
+	@Override
+	protected void initStageConfiguration() {
+	}
+
+	@Override
+	protected void readTargetData() {
+	}
+
+	@Override
+	protected void run() {
+	}
+
 }

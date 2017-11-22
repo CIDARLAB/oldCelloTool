@@ -32,6 +32,8 @@ public class StageArgDescription{
      * Default
      */
     final static public String CONFIGFILE_DESCRIPTION = "config file for Stage";
+	final static public String TARGETDATAFILE_DESCRIPTION = "target data file";
+	final static public String TARGETDIR_DESCRIPTION = "target directory";
     final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Stage";
     final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Stage";
     

@@ -20,7 +20,13 @@
  */
 package logicSynthesis.runtime;
 
+import common.netlist.Netlist;
+import common.netlist.NetlistUtils;
 import common.runtime.environment.RuntimeEnv;
+import common.stage.StageConfiguration;
+import common.stage.StageUtils;
+import common.target.data.TargetData;
+import logicSynthesis.runtime.environment.LSArgString;
 import logicSynthesis.runtime.environment.LSRuntimeEnv;
 
 /**
@@ -37,6 +43,18 @@ public class Main {
 	public static void main(String[] args) {
 		RuntimeEnv runEnv = new LSRuntimeEnv(args);
 		runEnv.setName("LogicSynthesis");
+		// Read Netlist
+		Netlist netlist = StageUtils.getNetlist(runEnv, LSArgString.INPUTNETLIST);
+		// get StageConfiguration
+		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, LSArgString.CONFIGFILE);
+		// get TargetData
+		TargetData td = new TargetData();
+		// Execute
+		LSRuntimeObject LS = new LSRuntimeObject(sc, td, netlist, runEnv);
+		LS.execute();
+		// Write Netlist
+		String outputFilename = runEnv.getOptionValue(LSArgString.OUTPUTNETLIST);
+		NetlistUtils.writeJSONForNetlist(netlist, outputFilename);
 	}
 	
 }

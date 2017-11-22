@@ -178,7 +178,7 @@ public class Utils {
 		return rtn;
 	}
 
-	static public boolean isNullRuntimeException(final CObject cObj, String name) {
+	static public boolean isNullRuntimeException(final Object cObj, String name) {
 		boolean rtn = false;
 		rtn = (cObj == null);
 		if (rtn) {
