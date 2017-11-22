@@ -22,11 +22,14 @@ package target.ecoli.singlecell.plate;
 
 import common.CObject;
 import common.netlist.Netlist;
-import common.runtime.environment.RuntimeEnv;
 import common.stage.Stage;
 import common.target.TargetConfiguration;
 import common.target.TargetUtils;
+import common.target.data.TargetData;
+import common.target.data.TargetDataUtils;
 import common.target.runtime.environment.TargetArgString;
+import common.target.runtime.environment.TargetRuntimeEnv;
+import logicSynthesis.runtime.LSRuntimeObject;
 
 /**
  * @author: Vincent Mirian
@@ -40,14 +43,21 @@ public class Main extends CObject{
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RuntimeEnv runEnv = new RuntimeEnv(args);
-		Netlist netlist = new Netlist();
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 	    Stage currentStage = null;
+		// RuntimeEnv
+	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
+		runEnv.setName("EColi.SingleCell.Plate");
+		// Netlist
+		Netlist netlist = new Netlist();
+		// TargetConfiguration
+	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		// get TargetData
+		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
+		// Stages
 		// LogicSynthesis
 	    currentStage = targetCfg.getStageByName("LogicSynthesis");
-		//LogicSynthesis LS = new LogicSynthesis(netlist, runEnv);
-		//LS.execute();
+		LSRuntimeObject LS = new LSRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		LS.execute();
 		// TechnologyMapping
 	    currentStage = targetCfg.getStageByName("TechnologyMapping");
 		//TechnologyMapping TM = new TechnologyMapping(netlist, runEnv);
@@ -56,8 +66,6 @@ public class Main extends CObject{
 	    currentStage = targetCfg.getStageByName("Eugene");
 		//Eugene EU = new Eugene(netlist, runEnv);
 		//EU.execute();
-	    System.out.println(netlist.getName());
-	    System.out.println(currentStage.getName());
 	}
 	
 }
