@@ -33,7 +33,7 @@ import common.target.data.TargetData;
  * @date: Nov 17, 2017
  *
  */
-// Object that aggregates the netlist, the stage configuration, target data and RuntimeEnv
+//Object that aggregates the netlist, the stage configuration, target data and RuntimeEnv
 abstract public class RuntimeObject extends CObject{
 
 	public RuntimeObject(

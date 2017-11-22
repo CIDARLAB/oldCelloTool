@@ -21,7 +21,7 @@
 package logicSynthesis.algorithm;
 
 import common.algorithm.AlgorithmFactory;
-import logicSynthesis.algorithm.base.Base;
+import logicSynthesis.algorithm.Base.Base;
 
 /**
  * @author: Vincent Mirian
