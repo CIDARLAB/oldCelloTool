@@ -20,13 +20,22 @@
  */
 package common.netlist;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Writer;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import common.Utils;
 import common.JSON.JSONUtils;
+import common.runtime.environment.RuntimeEnv;
 
 /**
  * @author: Vincent Mirian
@@ -36,6 +45,37 @@ import common.JSON.JSONUtils;
  */
 public class NetlistUtils {
 
+	static public Netlist getNetlist(final RuntimeEnv runEnv, final String inputNetlist){
+		Utils.isNullRuntimeException(runEnv, "runEnv");
+		Netlist rtn = null;
+		String inputNetlistFilename = runEnv.getOptionValue(inputNetlist);
+	    Reader inputNetlistReader = null;
+		JSONObject jsonTop = null;
+		// Create File Reader
+		try {
+			inputNetlistReader = new FileReader(inputNetlistFilename);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException("Error with file: " + inputNetlistFilename);
+		}
+		// Create JSON object from File Reader
+		JSONParser parser = new JSONParser();
+        try{
+        	jsonTop = (JSONObject) parser.parse(inputNetlistReader);
+	    } catch (IOException e) {
+	        throw new RuntimeException("File IO Exception for: " + inputNetlistFilename + ".");
+	    } catch (ParseException e) {
+	        throw new RuntimeException("Parser Exception for: " + inputNetlistFilename + ".");
+	    }
+		// Create TargetInfo object
+        rtn = new Netlist(jsonTop);
+	    try {
+	    	inputNetlistReader.close();
+		} catch (IOException e) {
+			throw new RuntimeException("Error with file: " + inputNetlistFilename);
+		}
+	    return rtn;
+	}
+	
 	static public void writeJSONForNetlist(final Netlist netlist, final String filename){
 		try {
 			OutputStream outputStream = new FileOutputStream(filename);
@@ -49,4 +89,5 @@ public class NetlistUtils {
 			e.printStackTrace();
 		}
 	}
+	
 }

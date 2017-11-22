@@ -34,28 +34,31 @@ public class Stage extends ProfileObject{
 	
 	private void init() {
 	}
-		
-	public Stage(final JSONObject JObj){
+
+	public Stage(final JSONObject JObj, final String TargetConfigurationDir){
 		super(JObj);
 		init();
-		parse(JObj);
+		parse(JObj, TargetConfigurationDir);
 	}
 	
+	public Stage(final JSONObject JObj){
+		this(JObj, "");
+	}
 	/*
 	 * Parse
 	 */
-	private void parseConfiguration(final JSONObject JObj){
+	private void parseConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
 		JSONObject jsonObj;
     	// parse PartitionProfile
 		jsonObj = (JSONObject) JObj.get("configuration");
 		if (jsonObj == null) {
 			throw new RuntimeException("'configuration' missing in Stage!");
 		}
-		this.setStageConfiguration(new StageConfiguration(jsonObj));		
+		this.setStageConfiguration(new StageConfiguration(jsonObj, TargetConfigurationDir));		
 	}
 	
-	private void parse(final JSONObject JObj){
-		this.parseConfiguration(JObj);
+	private void parse(final JSONObject JObj, final String TargetConfigurationDir){
+		this.parseConfiguration(JObj, TargetConfigurationDir);
 	}
 
 	/*

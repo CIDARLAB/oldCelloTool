@@ -1,10 +1,12 @@
 {	
+	"name": "EColi.SingleCell.Plate",
 	"stages":
 	[
 		{
 			"name": "LogicSynthesis",
 			"configuration":
 			{
+				"name": "LogicSynthesisConfig",
 				"type" : "file",
 				"configuration_data" : "LSConfiguration.json"
 			}
@@ -13,6 +15,7 @@
 			"name": "TechnologyMapping",
 			"configuration":
 			{
+				"name": "TechnologyMappingConfig",
 				"type" : "file",
 				"configuration_data" : "TMConfiguration.json"
 			}
@@ -21,6 +24,7 @@
 			"name": "Eugene",
 			"configuration":
 			{
+				"name": "EugeneConfig",
 				"type" : "file",
 				"configuration_data" : "EUConfiguration.json"
 			}

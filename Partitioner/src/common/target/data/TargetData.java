@@ -34,13 +34,17 @@ public class TargetData extends ProfileObject{
 
 	private void init() {
 	}
-	
-	public TargetData(final JSONObject JObj){
+
+	public TargetData(final JSONObject JObj, final String TargetDataDir){
 		super(JObj);
 		init();
-		parse(JObj);
+		parse(JObj, TargetDataDir);
 	}
 	
-	private void parse(final JSONObject JObj){
+	public TargetData(final JSONObject JObj){
+		this(JObj, "");
+	}
+	
+	private void parse(final JSONObject JObj, final String TargetDataDir){
 	}
 }

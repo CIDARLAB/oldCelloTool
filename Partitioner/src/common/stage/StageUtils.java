@@ -30,7 +30,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import common.Utils;
-import common.netlist.Netlist;
 import common.runtime.environment.RuntimeEnv;
 
 /**
@@ -40,37 +39,6 @@ import common.runtime.environment.RuntimeEnv;
  *
  */
 public class StageUtils {
-
-	static public Netlist getNetlist(final RuntimeEnv runEnv, final String inputNetlist){
-		Utils.isNullRuntimeException(runEnv, "runEnv");
-		Netlist rtn = null;
-		String inputNetlistFilename = runEnv.getOptionValue(inputNetlist);
-	    Reader inputNetlistReader = null;
-		JSONObject jsonTop = null;
-		// Create File Reader
-		try {
-			inputNetlistReader = new FileReader(inputNetlistFilename);
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException("Error with file: " + inputNetlistFilename);
-		}
-		// Create JSON object from File Reader
-		JSONParser parser = new JSONParser();
-        try{
-        	jsonTop = (JSONObject) parser.parse(inputNetlistReader);
-	    } catch (IOException e) {
-	        throw new RuntimeException("File IO Exception for: " + inputNetlistFilename + ".");
-	    } catch (ParseException e) {
-	        throw new RuntimeException("Parser Exception for: " + inputNetlistFilename + ".");
-	    }
-		// Create TargetInfo object
-        rtn = new Netlist(jsonTop);
-	    try {
-	    	inputNetlistReader.close();
-		} catch (IOException e) {
-			throw new RuntimeException("Error with file: " + inputNetlistFilename);
-		}
-	    return rtn;
-	}
 	
 	static public StageConfiguration getStageConfiguration(final RuntimeEnv runEnv, final String configFile){
 		Utils.isNullRuntimeException(runEnv, "runEnv");

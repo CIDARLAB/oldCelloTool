@@ -29,6 +29,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import common.Utils;
 import common.profile.AlgorithmProfile;
 import common.profile.ProfileObject;
 import common.profile.ProfileUtils;
@@ -44,16 +45,20 @@ public class StageConfiguration extends ProfileObject{
 	private void init() {
 	}
 	
-	public StageConfiguration(final JSONObject JObj){
+	public StageConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
 		super(JObj);
 		init();
-		parse(JObj);
+		parse(JObj, TargetConfigurationDir);
+	}
+	
+	public StageConfiguration(final JSONObject JObj){
+		this(JObj, "");
 	}
 
 	/*
 	 * Parse
 	 */
-	private void parse(final JSONObject JObj){
+	private void parse(final JSONObject JObj, final String TargetConfigurationDir){
 		String type = ProfileUtils.getString(JObj, "type");
 	    Reader configFileReader = null;
 		JSONObject jsonObj = null;
@@ -71,7 +76,7 @@ public class StageConfiguration extends ProfileObject{
 			}
 			// Create File Reader
 			try {
-				configFileReader = new FileReader(configFilename);
+				configFileReader = new FileReader(TargetConfigurationDir + Utils.getFileSeparator() + configFilename);
 			} catch (FileNotFoundException e) {
 				throw new RuntimeException("Error with file: " + configFilename);
 			}

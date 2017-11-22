@@ -68,7 +68,7 @@ public class TargetDataUtils {
 	        throw new RuntimeException("Parser Exception for: " + targetFile + ".");
 	    }
 		// Create TargetInfo object
-	    rtn = new TargetData(jsonTop);
+	    rtn = new TargetData(jsonTop, targetDataDir);
 	    try {
 			targetReader.close();
 		} catch (IOException e) {

@@ -39,16 +39,20 @@ public class TargetConfiguration extends ProfileObject{
 		this.stages = new CObjectCollection<Stage>();
 	}
 	
-	public TargetConfiguration(final JSONObject JObj){
+	public TargetConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
 		super(JObj);
 		init();
-		parse(JObj);
+		parse(JObj, TargetConfigurationDir);
+	}
+	
+	public TargetConfiguration(final JSONObject JObj){
+		this(JObj, "");
 	}
 	
 	/*
 	 * Parse
 	 */
-	private void parseStages(final JSONObject JObj){
+	private void parseStages(final JSONObject JObj, final String TargetConfigurationDir){
     	JSONArray jsonArr;
     	// parse PartitionProfile
     	jsonArr = (JSONArray) JObj.get("stages");
@@ -58,13 +62,13 @@ public class TargetConfiguration extends ProfileObject{
     	for (int i = 0; i < jsonArr.size(); i++)
     	{
     	    JSONObject jsonObj = (JSONObject) jsonArr.get(i);
-    	    Stage S = new Stage(jsonObj);
+    	    Stage S = new Stage(jsonObj, TargetConfigurationDir);
     	    this.addStage(S);
     	}
 	}
 	
-	private void parse(final JSONObject JObj){
-		this.parseStages(JObj);
+	private void parse(final JSONObject JObj, final String TargetConfigurationDir){
+		this.parseStages(JObj, TargetConfigurationDir);
 	}
 	
 	private void addStage(final Stage stage){
