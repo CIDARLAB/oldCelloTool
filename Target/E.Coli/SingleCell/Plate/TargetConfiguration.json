@@ -6,7 +6,7 @@
 			"configuration":
 			{
 				"type" : "file",
-				"configuration_filename" : "LSTarget.json"
+				"configuration_data" : "LSConfiguration.json"
 			}
 		},
 		{
@@ -14,7 +14,7 @@
 			"configuration":
 			{
 				"type" : "file",
-				"configuration_filename" : "TMTarget.json"
+				"configuration_data" : "TMConfiguration.json"
 			}
 		},
 		{
@@ -22,7 +22,7 @@
 			"configuration":
 			{
 				"type" : "file",
-				"configuration_filename" : "EUTarget.json"
+				"configuration_data" : "EUConfiguration.json"
 			}
 		},
 	],
