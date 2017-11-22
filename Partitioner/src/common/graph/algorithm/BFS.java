@@ -130,7 +130,7 @@ public class BFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>, G exten
 	 * Equals
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))

@@ -41,7 +41,7 @@ public abstract class VertexTemplate <T extends EdgeTemplate<?>> extends Abstrac
 	/*
 	 * toString
 	 */
-	protected String getEdgeTemplateToString(T edge) {
+	protected String getEdgeTemplateToString(final T edge) {
 		String rtn = "";
 		rtn = rtn + "[";
 		rtn = rtn + " name = ";

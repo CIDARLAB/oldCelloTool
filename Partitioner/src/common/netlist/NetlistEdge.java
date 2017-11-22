@@ -89,7 +89,7 @@ public class NetlistEdge extends EdgeTemplate<NetlistNode>{
 		String rtn = "";
 		return rtn;
 	}
-	public void writeJSON(int indent, Writer os) throws IOException {
+	public void writeJSON(int indent, final Writer os) throws IOException {
 		String str = null;
 		//header
 		str = this.getJSONHeader();

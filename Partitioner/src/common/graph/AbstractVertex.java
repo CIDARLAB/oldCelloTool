@@ -245,7 +245,7 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 	 * Equals
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))

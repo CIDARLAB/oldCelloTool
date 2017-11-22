@@ -92,7 +92,7 @@ public class CapacityCollection<T extends CapacityCollectionProfile> extends Der
 	/*
 	 * capacity
 	 */
-	public void addCapacity(Capacity c) {
+	public void addCapacity(final Capacity c) {
 		if (c != null) {
 			this.myCapacity.add(c);
 		}

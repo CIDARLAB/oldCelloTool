@@ -82,17 +82,17 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	 * Inherit
 	 */
 	@Override
-	protected void addMeToSrc(NetlistEdge e) {
+	protected void addMeToSrc(final NetlistEdge e) {
 		e.setSrc(this);
 	}
 
 	@Override
-	protected void addMeToDst(NetlistEdge e) {
+	protected void addMeToDst(final NetlistEdge e) {
 		e.setDst(this);
 	}
 
 	@Override
-	public NetlistEdge createT(NetlistEdge e) {
+	public NetlistEdge createT(final NetlistEdge e) {
 		NetlistEdge rtn = null;
 		rtn = new NetlistEdge(e);
 		return rtn;
@@ -128,7 +128,7 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		return rtn;
 	}
 	
-	public void writeJSON(int indent, Writer os) throws IOException {
+	public void writeJSON(int indent, final Writer os) throws IOException {
 		String str = null;
 		//header
 		str = this.getJSONHeader();

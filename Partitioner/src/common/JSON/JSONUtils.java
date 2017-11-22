@@ -43,7 +43,7 @@ public class JSONUtils {
 		return rtn;
 	}
 
-	static private String getKeyEntryToString(String name) {
+	static private String getKeyEntryToString(final String name) {
 		String rtn = "";
 		rtn += "\"";
 		if (name != null) {
@@ -56,7 +56,7 @@ public class JSONUtils {
 		return rtn;	
 	}
 	
-	static public String getEntryToString(String name, String value) {
+	static public String getEntryToString(final String name, final String value) {
 		String rtn = "";
 		rtn += JSONUtils.getKeyEntryToString(name);
 		rtn += "\"";
@@ -72,7 +72,7 @@ public class JSONUtils {
 		return rtn;
 	}
 	
-	static public String getEntryToString(String name, int value) {
+	static public String getEntryToString(final String name, int value) {
 		String rtn = "";
 		rtn += JSONUtils.getKeyEntryToString(name);
 		rtn += Integer.toString(value);
@@ -96,7 +96,7 @@ public class JSONUtils {
 		return rtn;
 	}
 
-	static public String getStartArrayWithMemberString(String str) {
+	static public String getStartArrayWithMemberString(final String str) {
 		String rtn = "";
 		rtn += "\"";
 		rtn += str;

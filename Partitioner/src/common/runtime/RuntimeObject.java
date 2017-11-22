@@ -34,6 +34,7 @@ import common.target.data.TargetData;
  *
  */
 //Object that aggregates the netlist, the stage configuration, target data and RuntimeEnv
+// TODO: incorporate Algorithm and AlgorithmFactory
 abstract public class RuntimeObject extends CObject{
 
 	public RuntimeObject(

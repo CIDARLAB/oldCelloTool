@@ -169,13 +169,13 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 	}
 	
 	@Override
-	public NetlistNode createV(NetlistNode other) {
+	public NetlistNode createV(final NetlistNode other) {
 		NetlistNode rtn = new NetlistNode(other);
 		return rtn;
 	}
 
 	@Override
-	public NetlistEdge createE(NetlistEdge other) {
+	public NetlistEdge createE(final NetlistEdge other) {
 		NetlistEdge rtn = new NetlistEdge(other);
 		return rtn;
 	}

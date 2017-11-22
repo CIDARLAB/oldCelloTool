@@ -38,17 +38,17 @@ public class Vertex extends VertexTemplate<Edge>{
 	}
 
 	@Override
-	protected void addMeToSrc(Edge e) {
+	protected void addMeToSrc(final Edge e) {
 		e.setSrc(this);
 	}
 
 	@Override
-	protected void addMeToDst(Edge e){
+	protected void addMeToDst(final Edge e){
 		e.setDst(this);
 	}
 
 	@Override
-	public Edge createT(Edge e) {
+	public Edge createT(final Edge e) {
 		Edge rtn = null;
 		rtn = new Edge(e);
 		return rtn;

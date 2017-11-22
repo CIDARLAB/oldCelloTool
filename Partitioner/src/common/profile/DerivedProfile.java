@@ -41,7 +41,7 @@ public class DerivedProfile<T extends ProfileObject> extends CObject{
 		return this.Profile;
 	}
 	
-	protected void setProfile(T Profile) {
+	protected void setProfile(final T Profile) {
 		this.Profile = Profile;
 	}
 	

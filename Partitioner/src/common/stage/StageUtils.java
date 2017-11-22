@@ -72,7 +72,7 @@ public class StageUtils {
 	    return rtn;
 	}
 	
-	static public StageConfiguration getStageConfiguration(RuntimeEnv runEnv, final String configFile){
+	static public StageConfiguration getStageConfiguration(final RuntimeEnv runEnv, final String configFile){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		StageConfiguration rtn = null;
 		String configFilename = runEnv.getOptionValue(configFile);

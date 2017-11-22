@@ -37,17 +37,17 @@ public class HyperVertex extends HyperVertexTemplate<HyperEdge>{
 	}
 
 	@Override
-	protected void addMeToSrc(HyperEdge e) {
+	protected void addMeToSrc(final HyperEdge e) {
 		e.setSrc(this);
 	}
 
 	@Override
-	protected void addMeToDst(HyperEdge e){
+	protected void addMeToDst(final HyperEdge e){
 		e.addDst(this);
 	}
 
 	@Override
-	public HyperEdge createT(HyperEdge e) {
+	public HyperEdge createT(final HyperEdge e) {
 		HyperEdge rtn = null;
 		rtn = new HyperEdge(e);
 		return rtn;

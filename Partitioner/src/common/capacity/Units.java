@@ -43,7 +43,7 @@ public class Units extends CObject {
 		this.UnitsEnables = new boolean[size];
 	}
 
-	private void copyUnitsEnables(boolean[] array) {
+	private void copyUnitsEnables(final boolean[] array) {
 		this.UnitsEnables = Arrays.copyOf(array, array.length);
 	}
 	

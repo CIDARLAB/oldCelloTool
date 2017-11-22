@@ -46,25 +46,25 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		init();
 	}
 	
-	protected void addVertexToSrc(V v, E e) {
+	protected void addVertexToSrc(final V v, final E e) {
 		e.setSrc(v);
 	}
 	
-	protected void addVertexToDst(V v, E e){
+	protected void addVertexToDst(final V v, final E e){
 		e.addDst(v);
 	}
 	
-	protected void addEdgeToInEdge(V v, E e) {
+	protected void addEdgeToInEdge(final V v, final E e) {
 		v.addInEdge(e);
 	}
 	
-	protected void addEdgeToOutEdge(V v, E e){
+	protected void addEdgeToOutEdge(final V v, final E e){
 		v.addOutEdge(e);
 	}
 
-	public abstract V createV(V other);
+	public abstract V createV(final V other);
 	
-	public abstract E createE(E other);
+	public abstract E createE(final E other);
 	
 	/*@SuppressWarnings("unchecked")
 	private E createE(E other) {

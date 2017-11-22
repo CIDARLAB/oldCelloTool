@@ -47,7 +47,7 @@ public class Weight extends CObject {
 		this.setTotal(0);
 	}
 	
-	public Weight(Weight other) {
+	public Weight(final Weight other) {
 		super(other);
 		init();
 		weightMap = new HashMap<String, Integer>(other.weightMap);
@@ -204,7 +204,7 @@ public class Weight extends CObject {
 	 * Equals
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))

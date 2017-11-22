@@ -212,7 +212,7 @@ public class CObjectCollection<T extends CObject> extends CObject implements Lis
 	 * Equals
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
