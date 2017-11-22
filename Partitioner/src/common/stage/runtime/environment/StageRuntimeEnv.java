@@ -42,8 +42,6 @@ public class StageRuntimeEnv extends RuntimeEnv{
 		super.setOptions();
 		Options options = this.getOptions();
 		options.addOption(this.getConfigFileOption());
-		options.addOption(this.getTargetDataFileOption());
-		options.addOption(this.getTargetDirOption());
 		options.addOption(this.getInputNetlistOption());
 		options.addOption(this.getOutputNetlistOption());
 	}
@@ -53,18 +51,6 @@ public class StageRuntimeEnv extends RuntimeEnv{
 	 */
 	protected Option getConfigFileOption(){
 		Option rtn = new Option( StageArgString.CONFIGFILE, true, StageArgDescription.CONFIGFILE_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
-	private Option getTargetDataFileOption(){
-		Option rtn = new Option( StageArgString.TARGETDATAFILE, true, StageArgDescription.TARGETDATAFILE_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
-	private Option getTargetDirOption(){
-		Option rtn = new Option( StageArgString.TARGETDATADIR, true, StageArgDescription.TARGETDATADIR_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}

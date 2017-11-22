@@ -20,7 +20,9 @@
  */
 package common.target.data;
 
-import common.CObject;
+import org.json.simple.JSONObject;
+
+import common.profile.ProfileObject;
 
 /**
  * @author: Vincent Mirian
@@ -28,6 +30,17 @@ import common.CObject;
  * @date: Nov 21, 2017
  *
  */
-public class TargetData extends CObject{
+public class TargetData extends ProfileObject{
 
+	private void init() {
+	}
+	
+	public TargetData(final JSONObject JObj){
+		super(JObj);
+		init();
+		parse(JObj);
+	}
+	
+	private void parse(final JSONObject JObj){
+	}
 }

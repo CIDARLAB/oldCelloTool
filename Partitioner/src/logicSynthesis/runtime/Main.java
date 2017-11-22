@@ -26,6 +26,7 @@ import common.runtime.environment.RuntimeEnv;
 import common.stage.StageConfiguration;
 import common.stage.StageUtils;
 import common.target.data.TargetData;
+import common.target.data.TargetDataUtils;
 import logicSynthesis.runtime.environment.LSArgString;
 import logicSynthesis.runtime.environment.LSRuntimeEnv;
 
@@ -48,7 +49,7 @@ public class Main {
 		// get StageConfiguration
 		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, LSArgString.CONFIGFILE);
 		// get TargetData
-		TargetData td = new TargetData();
+		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, LSArgString.TARGETDATAFILE, LSArgString.TARGETDATADIR);
 		// Execute
 		LSRuntimeObject LS = new LSRuntimeObject(sc, td, netlist, runEnv);
 		LS.execute();

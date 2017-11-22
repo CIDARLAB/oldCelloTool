@@ -26,11 +26,13 @@ package common.runtime.environment;
  * @date: Nov 17, 2017
  *
  */
-public final class ArgDescription {
+public class ArgDescription {
 
 	/*
 	 * General
 	 */
 	final static public String HELP_DESCRIPTION = "print this message";
+	final static public String TARGETDATAFILE_DESCRIPTION = "target data file";
+	final static public String TARGETDATADIR_DESCRIPTION = "target data directory";
 	
 }

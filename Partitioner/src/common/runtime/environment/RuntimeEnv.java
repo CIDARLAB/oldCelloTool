@@ -74,6 +74,8 @@ public class RuntimeEnv extends CObject{
 	protected void setOptions() {
 		Options options = this.getOptions();
 		options.addOption(this.getHelpOption());
+		options.addOption(this.getTargetDataFileOption());
+		options.addOption(this.getTargetDataDirOption());
 	}
 
 	/*
@@ -81,6 +83,18 @@ public class RuntimeEnv extends CObject{
 	 */
 	private Option getHelpOption(){
 		Option rtn = new Option( ArgString.HELP, false, ArgDescription.HELP_DESCRIPTION);
+		return rtn;
+	}
+	
+	private Option getTargetDataFileOption(){
+		Option rtn = new Option( ArgString.TARGETDATAFILE, true, ArgDescription.TARGETDATAFILE_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
+	private Option getTargetDataDirOption(){
+		Option rtn = new Option( ArgString.TARGETDATADIR, true, ArgDescription.TARGETDATADIR_DESCRIPTION);
+		this.makeRequired(rtn);
 		return rtn;
 	}
 	

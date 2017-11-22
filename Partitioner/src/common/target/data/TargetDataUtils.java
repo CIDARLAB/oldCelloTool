@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.target;
+package common.target.data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,22 +32,23 @@ import org.json.simple.parser.ParseException;
 
 import common.Utils;
 import common.runtime.environment.RuntimeEnv;
+
 /**
  * @author: Vincent Mirian
  * 
- * @date: Nov 20, 2017
+ * @date: Nov 22, 2017
  *
  */
-public class TargetUtils {
+public class TargetDataUtils {
 
-	static public TargetConfiguration getTargetConfiguration(final RuntimeEnv runEnv, final String targetConfigFile, final String targetConfigDir){
+	static public TargetData getTargetTargetData(final RuntimeEnv runEnv, final String targetDataFile, final String targetDataDir){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
-		Utils.isNullRuntimeException(targetConfigFile, "targetConfigFile");
-		Utils.isNullRuntimeException(targetConfigDir, "targetConfigDir");
-		TargetConfiguration rtn = null;
+		Utils.isNullRuntimeException(targetDataFile, "targetDataFile");
+		Utils.isNullRuntimeException(targetDataDir, "targetDataDir");
+		TargetData rtn = null;
 		// get Target File
-		String targetFilename = runEnv.getOptionValue(targetConfigFile);
-		String targetDir = runEnv.getOptionValue(targetConfigDir);
+		String targetFilename = runEnv.getOptionValue(targetDataFile);
+		String targetDir = runEnv.getOptionValue(targetDataDir);
 	    File targetFile = new File(targetDir + Utils.getFileSeparator() + targetFilename);
 	    Reader targetReader = null;
 		JSONObject jsonTop = null;
@@ -67,7 +68,7 @@ public class TargetUtils {
 	        throw new RuntimeException("Parser Exception for: " + targetFile + ".");
 	    }
 		// Create TargetInfo object
-	    rtn = new TargetConfiguration(jsonTop);
+	    rtn = new TargetData(jsonTop);
 	    try {
 			targetReader.close();
 		} catch (IOException e) {
@@ -75,5 +76,4 @@ public class TargetUtils {
 		}
 	    return rtn;
 	}	
-	
 }

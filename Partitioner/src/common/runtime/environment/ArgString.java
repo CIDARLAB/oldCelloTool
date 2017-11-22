@@ -26,11 +26,13 @@ package common.runtime.environment;
  * @date: Nov 17, 2017
  *
  */
-public final class ArgString {
+public class ArgString {
 	
 	/*
 	 * General
 	 */
 	final static public String HELP = "help";
+	final static public String TARGETDATAFILE = "targetDataFile";
+	final static public String TARGETDATADIR = "targetDataDir";
 	
 }

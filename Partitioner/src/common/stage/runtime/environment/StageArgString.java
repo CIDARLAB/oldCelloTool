@@ -20,20 +20,20 @@
  */
 package common.stage.runtime.environment;
 
+import common.runtime.environment.ArgString;
+
 /**
  * @author: Vincent Mirian
  * 
  * @date: Nov 20, 2017
  *
  */
-public class StageArgString {
+public class StageArgString extends ArgString{
 
     /*
      * Default
      */
     final static public String CONFIGFILE = "configFile";
-	final static public String TARGETDATAFILE = "targetDataFile";
-	final static public String TARGETDATADIR = "targetDataDir";
     final static public String INPUTNETLIST = "inputNetlist";
     final static public String OUTPUTNETLIST = "outputNetlist";
     

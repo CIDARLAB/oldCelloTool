@@ -57,8 +57,6 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		options.addOption(this.getVerilogOption());
 		options.addOption(this.getConfigFileOption());
 		options.addOption(this.getConfigDirOption());
-		options.addOption(this.getTargetDataFileOption());
-		options.addOption(this.getTargetDirOption());
 		options.addOption(this.getNetlistConstraintFileOption());
 		options.addOption(this.getOutputDirOption());
 		options.addOption(this.getCelloDirOption());
@@ -85,19 +83,7 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
-	protected Option getTargetDataFileOption(){
-		Option rtn = new Option( TargetArgString.TARGETDATAFILE, true, TargetArgDescription.TARGETDATAFILE_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
-	protected Option getTargetDirOption(){
-		Option rtn = new Option( TargetArgString.TARGETDATADIR, true, TargetArgDescription.TARGETDATADIR_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
+		
 	protected Option getNetlistConstraintFileOption(){
 		Option rtn = new Option( TargetArgString.NETLISTCONSTRAINTFILE, true, TargetArgDescription.NETLISTCONSTRAINTFILE_DESCRIPTION);
 		return rtn;

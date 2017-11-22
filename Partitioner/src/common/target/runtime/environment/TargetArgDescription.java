@@ -34,8 +34,6 @@ public class TargetArgDescription{
 	final static public String VERILOG_DESCRIPTION = "verilog file";
 	final static public String CONFIGFILE_DESCRIPTION = "config file for Target";
 	final static public String CONFIGFILEDIR_DESCRIPTION = "config directory for Target";
-	final static public String TARGETDATAFILE_DESCRIPTION = "target data file";
-	final static public String TARGETDATADIR_DESCRIPTION = "target data directory";
 	final static public String NETLISTCONSTRAINTFILE_DESCRIPTION = "netlist constraint file";
 	final static public String OUTPUTDIR_DESCRIPTION = "output directory";
 	final static public String CELLODIR_DESCRIPTION = "cello directory";
