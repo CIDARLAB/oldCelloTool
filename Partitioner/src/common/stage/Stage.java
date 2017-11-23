@@ -20,9 +20,18 @@
  */
 package common.stage;
 
-import org.json.simple.JSONObject;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import common.Utils;
 import common.profile.ProfileObject;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -47,18 +56,60 @@ public class Stage extends ProfileObject{
 	/*
 	 * Parse
 	 */
-	private void parseConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
-		JSONObject jsonObj;
-    	// parse PartitionProfile
-		jsonObj = (JSONObject) JObj.get("configuration");
-		if (jsonObj == null) {
-			throw new RuntimeException("'configuration' missing in Stage!");
+	private void parseStageConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
+    	// parse StageConfiguration
+	    Reader configFileReader = null;
+		JSONObject jsonObj = null;
+		String configFilename = null;
+		// type
+		String type = ProfileUtils.getString(JObj, "configuration_type");
+		if (type == null) {
+			throw new RuntimeException("'configuration_type' missing for stage configuration " + this.getName() + ".");
 		}
-		this.setStageConfiguration(new StageConfiguration(jsonObj, TargetConfigurationDir));		
+		// case check
+		if (type.equalsIgnoreCase("file")) {
+			// configData
+			configFilename = ProfileUtils.getString(JObj, "configuration_data");
+			if (configFilename == null) {
+				throw new RuntimeException("'configuration_data' missing for stage configuration " + this.getName() + ".");
+			}
+			// Create File Reader
+			try {
+				configFileReader = new FileReader(TargetConfigurationDir + Utils.getFileSeparator() + configFilename);
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException("Error with file: " + configFilename);
+			}
+			// Create JSON object from File Reader
+			JSONParser parser = new JSONParser();
+	        try{
+	        	jsonObj = (JSONObject) parser.parse(configFileReader);
+		    } catch (IOException e) {
+		        throw new RuntimeException("File IO Exception for: " + configFilename + ".");
+		    } catch (ParseException e) {
+		        throw new RuntimeException("Parser Exception for: " + configFilename + ".");
+		    }
+		}
+		else if (type.equalsIgnoreCase("data")) {
+			// configData
+			jsonObj = (JSONObject) ProfileUtils.getObject(JObj, "configuration_data");
+		}
+		else {
+			throw new RuntimeException("Value of type unknown for stage configuration " + this.getName() + ".");
+		}
+		// Create StageConfiguration object
+		this.setStageConfiguration(new StageConfiguration(jsonObj));
+		//close file
+		if (type.equalsIgnoreCase("file")) {
+		    try {
+		    	configFileReader.close();
+			} catch (IOException e) {
+				throw new RuntimeException("Error with file: " + configFilename);
+			}
+		}
 	}
 	
 	private void parse(final JSONObject JObj, final String TargetConfigurationDir){
-		this.parseConfiguration(JObj, TargetConfigurationDir);
+		this.parseStageConfiguration(JObj, TargetConfigurationDir);
 	}
 
 	/*
