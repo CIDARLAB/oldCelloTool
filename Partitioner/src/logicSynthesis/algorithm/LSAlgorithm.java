@@ -20,7 +20,12 @@
  */
 package logicSynthesis.algorithm;
 
+import common.Utils;
 import common.algorithm.Algorithm;
+import common.netlist.Netlist;
+import common.profile.AlgorithmProfile;
+import common.runtime.environment.RuntimeEnv;
+import common.target.data.TargetData;
 
 /**
  * @author: Vincent Mirian
@@ -30,7 +35,24 @@ import common.algorithm.Algorithm;
  */
 public abstract class LSAlgorithm extends Algorithm{
 
-	public void execute(){
+	public void execute(
+			final String verilogFile,
+			final Netlist netlist,
+			final TargetData targetData,
+			final AlgorithmProfile AProfile,
+			final RuntimeEnv runtimeEnv
+			){
+		Utils.isNullRuntimeException(verilogFile, "verilogFile");
+		Utils.isNullRuntimeException(netlist, "netlist");
+		Utils.isNullRuntimeException(targetData, "targetData");
+		Utils.isNullRuntimeException(AProfile, "AProfile");
+		Utils.isNullRuntimeException(runtimeEnv, "runtimeEnv");
+		// init
+		this.setVerilogFile(verilogFile);
+		this.setNetlist(netlist);
+		this.setTargetData(targetData);
+		this.setAlgorithmProfile(AProfile);
+		this.setRuntimeEnv(runtimeEnv);
 		// execute
 		this.setDefaultParameterValues();
 		this.setParameterValues();
@@ -39,5 +61,48 @@ public abstract class LSAlgorithm extends Algorithm{
 		this.run();
 		this.postprocessing();
 	}
+	
+	/*
+	 * Getter and Setter
+	 */
+	private void setVerilogFile (final String verilogFile) {
+		this.verilogFile = verilogFile;
+	}
+	protected String getVerilogFile() {
+		return this.verilogFile;
+	}
 
+	private void setNetlist (final Netlist netlist) {
+		this.netlist = netlist;
+	}
+	protected Netlist getNetlist() {
+		return this.netlist;
+	}
+
+	private void setTargetData (final TargetData targetData) {
+		this.targetData = targetData;
+	}
+	protected TargetData getTargetData() {
+		return this.targetData;
+	}
+
+	private void setAlgorithmProfile (final AlgorithmProfile AProfile) {
+		this.AProfile = AProfile;
+	}
+	protected AlgorithmProfile getAlgorithmProfile() {
+		return this.AProfile;
+	}
+
+	private void setRuntimeEnv (final RuntimeEnv runtimeEnv) {
+		this.runtimeEnv = runtimeEnv;
+	}
+	protected RuntimeEnv getRuntimeEnv() {
+		return this.runtimeEnv;
+	}
+
+	private String verilogFile;
+	private Netlist netlist;
+	private TargetData targetData;
+	private AlgorithmProfile AProfile;
+	private RuntimeEnv runtimeEnv;
 }

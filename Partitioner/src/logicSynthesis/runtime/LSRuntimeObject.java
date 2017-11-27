@@ -21,10 +21,13 @@
 package logicSynthesis.runtime;
 
 import common.netlist.Netlist;
+import common.profile.AlgorithmProfile;
 import common.runtime.RuntimeObject;
 import common.runtime.environment.RuntimeEnv;
 import common.stage.StageConfiguration;
 import common.target.data.TargetData;
+import logicSynthesis.algorithm.LSAlgorithm;
+import logicSynthesis.algorithm.LSAlgorithmFactory;
 
 /**
  * @author: Vincent Mirian
@@ -35,24 +38,52 @@ import common.target.data.TargetData;
 public class LSRuntimeObject extends RuntimeObject{
 
 	public LSRuntimeObject(
-			StageConfiguration stageConfiguration,
-			TargetData targetData,
-			Netlist netlist,
-			RuntimeEnv runEnv
+			final StageConfiguration stageConfiguration,
+			final TargetData targetData,
+			final Netlist netlist,
+			final RuntimeEnv runEnv
 			) {
 		super(stageConfiguration, targetData, netlist, runEnv);
 	}
-
-	@Override
-	protected void initStageConfiguration() {
+	
+	public LSRuntimeObject(
+			final String verilogFile,
+			final StageConfiguration stageConfiguration,
+			final TargetData targetData,
+			final Netlist netlist,
+			final RuntimeEnv runEnv
+			) {
+		super(stageConfiguration, targetData, netlist, runEnv);
+		this.setVerilogFile(verilogFile);
 	}
-
-	@Override
-	protected void readTargetData() {
+	
+	/*
+	 * getter and setter
+	 */
+	public void setVerilogFile (final String verilogFile) {
+		this.verilogFile = verilogFile;
+	}
+	private String getVerilogFile() {
+		return this.verilogFile;
 	}
 
 	@Override
 	protected void run() {
+		// get verilog file
+		String verilogFile = this.getVerilogFile();
+		if (verilogFile == null){
+			throw new RuntimeException("VerilogFile is missing!");
+		}
+		// AlgorithmProfile
+		AlgorithmProfile AProfile = this.getStageConfiguration().getAlgorithmProfile();
+		// run Algorithm
+		LSAlgorithmFactory LSAF = new LSAlgorithmFactory();
+		LSAlgorithm algo = LSAF.getAlgorithm(AProfile);
+		if (algo == null){
+	    	throw new RuntimeException("Algorithm not found!");
+		}
+		algo.execute(verilogFile, this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
 	}
 
+	private String verilogFile;
 }

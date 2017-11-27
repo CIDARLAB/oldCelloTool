@@ -44,14 +44,16 @@ public class Main {
 	public static void main(String[] args) {
 		RuntimeEnv runEnv = new LSRuntimeEnv(args);
 		runEnv.setName("LogicSynthesis");
+		// verilogFile
+		String verilogFile = runEnv.getOptionValue(LSArgString.INPUTNETLIST);
 		// Read Netlist
-		Netlist netlist = new Netlist(); //NetlistUtils.getNetlist(runEnv, LSArgString.INPUTNETLIST);
+		Netlist netlist = new Netlist();
 		// get StageConfiguration
 		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, LSArgString.CONFIGFILE);
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, LSArgString.TARGETDATAFILE, LSArgString.TARGETDATADIR);
 		// Execute
-		LSRuntimeObject LS = new LSRuntimeObject(sc, td, netlist, runEnv);
+		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, sc, td, netlist, runEnv);
 		LS.execute();
 		// Write Netlist
 		String outputFilename = runEnv.getOptionValue(LSArgString.OUTPUTNETLIST);
