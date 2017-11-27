@@ -34,7 +34,6 @@ import common.target.data.TargetData;
  *
  */
 //Object that aggregates the netlist, the stage configuration, target data and RuntimeEnv
-//TODO: incorporate Algorithm and AlgorithmFactory
 abstract public class RuntimeObject extends CObject{
 
 	public RuntimeObject(
@@ -85,13 +84,9 @@ abstract public class RuntimeObject extends CObject{
 		this.runEnv = runEnv;
 	}*/
 
-	abstract protected void initStageConfiguration();
-	abstract protected void readTargetData();
 	abstract protected void run();
 	
 	public void execute() {
-		this.initStageConfiguration();
-		this.readTargetData();
 		this.run();
 	}
 
