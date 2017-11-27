@@ -47,6 +47,8 @@ public class Main extends CObject{
 		// RuntimeEnv
 	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("EColi.SingleCell.Plate");
+		// VerilogFile
+		String verilogFile = runEnv.getOptionValue(TargetArgString.VERILOG);
 		// Netlist
 		Netlist netlist = new Netlist();
 		// TargetConfiguration
@@ -56,7 +58,7 @@ public class Main extends CObject{
 		// Stages
 		// LogicSynthesis
 	    currentStage = targetCfg.getStageByName("LogicSynthesis");
-		LSRuntimeObject LS = new LSRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
 		LS.execute();
 		// TechnologyMapping
 	    currentStage = targetCfg.getStageByName("TechnologyMapping");
