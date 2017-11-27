@@ -45,7 +45,7 @@ public class Main {
 		RuntimeEnv runEnv = new LSRuntimeEnv(args);
 		runEnv.setName("LogicSynthesis");
 		// Read Netlist
-		Netlist netlist = NetlistUtils.getNetlist(runEnv, LSArgString.INPUTNETLIST);
+		Netlist netlist = new Netlist(); //NetlistUtils.getNetlist(runEnv, LSArgString.INPUTNETLIST);
 		// get StageConfiguration
 		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, LSArgString.CONFIGFILE);
 		// get TargetData
