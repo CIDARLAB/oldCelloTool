@@ -30,6 +30,8 @@ import org.apache.commons.cli.ParseException;
 
 import common.CObject;
 import common.Utils;
+import common.target.runtime.environment.TargetArgDescription;
+import common.target.runtime.environment.TargetArgString;
 
 /**
  * @author: Vincent Mirian
@@ -81,6 +83,9 @@ public class RuntimeEnv extends CObject{
 		options.addOption(this.getHelpOption());
 		options.addOption(this.getTargetDataFileOption());
 		options.addOption(this.getTargetDataDirOption());
+		options.addOption(this.getOutputDirOption());
+		options.addOption(this.getCelloDirOption());
+		options.addOption(this.getPythonDirOption());
 	}
 
 	/*
@@ -103,16 +108,40 @@ public class RuntimeEnv extends CObject{
 		return rtn;
 	}
 	
+	protected Option getOutputDirOption(){
+		Option rtn = new Option( TargetArgString.OUTPUTDIR, true, TargetArgDescription.OUTPUTDIR_DESCRIPTION);
+		return rtn;
+	}
+	
+	protected Option getCelloDirOption(){
+		Option rtn = new Option( TargetArgString.CELLODIR, true, TargetArgDescription.CELLODIR_DESCRIPTION);
+		return rtn;
+	}
+	
+	protected Option getPythonDirOption(){
+		Option rtn = new Option( TargetArgString.PYTHONDIR, true, TargetArgDescription.PYTHONDIR_DESCRIPTION);
+		return rtn;
+	}
+	
 	// get Values
 	protected String getDefault(final String str){
 		String rtn = null;
+		switch (str) {
+        case TargetArgString.OUTPUTDIR:  
+        case TargetArgString.CELLODIR:
+        	rtn = "";
+        	rtn += Utils.getWorkingDirectory();
+        	break;
+		}
 		return rtn;
 	}
 	
 	public String getOptionValue(final String str){
 		String rtn = null;
-		rtn = this.getDefault(str);
 		rtn = line.getOptionValue(str);
+		if (rtn == null) {
+			rtn = this.getDefault(str);
+		}
 		return rtn;
 	}
 	

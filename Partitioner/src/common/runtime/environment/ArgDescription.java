@@ -34,5 +34,8 @@ public class ArgDescription {
 	final static public String HELP_DESCRIPTION = "print this message";
 	final static public String TARGETDATAFILE_DESCRIPTION = "target data file";
 	final static public String TARGETDATADIR_DESCRIPTION = "target data directory";
+	final static public String OUTPUTDIR_DESCRIPTION = "output directory";
+	final static public String CELLODIR_DESCRIPTION = "cello directory";
+	final static public String PYTHONDIR_DESCRIPTION = "python directory";
 	
 }

@@ -38,6 +38,7 @@ import common.profile.ProfileUtils;
 public class NetlistNode extends VertexTemplate<NetlistEdge>{
 
 	private void setDefault() {
+		this.setNodeType("");
 		this.setPartitionID(-1);
 	}
 	
@@ -66,6 +67,13 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		}
 	}
 	
+	private void parseNodeType(final JSONObject JObj){
+		String value = ProfileUtils.getString(JObj, "nodeType");
+		if (value != null) {
+			this.setNodeType(value);
+		}
+	}
+	
 	private void parsePartitionID(final JSONObject JObj){
 		Integer value = ProfileUtils.getInteger(JObj, "partitionID");
 		if (value != null) {
@@ -75,6 +83,7 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	
 	private void parse(final JSONObject JObj){
     	this.parseName(JObj);
+    	this.parseNodeType(JObj);
     	this.parsePartitionID(JObj);
 	}
 	
@@ -101,7 +110,7 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	/*
 	 * Partition ID
 	 */
-	protected void setPartitionID(int pID) {
+	public void setPartitionID(int pID) {
 		this.partitionID = pID;
 	}
 	
@@ -112,12 +121,27 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	private int partitionID;
 
 	/*
+	 * NodeType
+	 */
+	public void setNodeType(String nodeType) {
+		this.nodeType = nodeType;
+	}
+	
+	public String getNodeType() {
+		return this.nodeType;
+	}
+	
+	private String nodeType;
+
+	/*
 	 * Write
 	 */	
 	protected String getJSONHeader(){	
 		String rtn = "";
 		// name
 		rtn += JSONUtils.getEntryToString("name", this.getName());
+		// NodeType
+		rtn += JSONUtils.getEntryToString("nodeType", this.getNodeType());
 		// partitionID
 		rtn += JSONUtils.getEntryToString("partitionID", this.getPartitionID());
 		return rtn;

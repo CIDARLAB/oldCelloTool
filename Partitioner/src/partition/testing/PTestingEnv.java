@@ -63,7 +63,7 @@ public class PTestingEnv extends RuntimeEnv{
 		return rtn;		
 	}
 	
-	private Option getCelloDirOption(){
+	private Option getCelloDirOption0(){
 		Option rtn = new Option( CELLODIR, true, "cello directory top directory" );
 		this.makeRequired(rtn);
 		return rtn;		
@@ -80,7 +80,7 @@ public class PTestingEnv extends RuntimeEnv{
 		// graphFilename
 		rtn.addOption(this.getGraphFilenameOption());
 		// celloDir
-		rtn.addOption(this.getCelloDirOption());
+		rtn.addOption(this.getCelloDirOption0());
 		return rtn;
 	}
 

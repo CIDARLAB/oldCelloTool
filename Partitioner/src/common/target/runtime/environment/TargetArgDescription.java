@@ -37,8 +37,5 @@ public class TargetArgDescription extends ArgDescription{
 	final static public String TARGETCONFIGFILE_DESCRIPTION = "config file for Target";
 	final static public String TARGETCONFIGDIR_DESCRIPTION = "config directory for Target";
 	final static public String NETLISTCONSTRAINTFILE_DESCRIPTION = "netlist constraint file";
-	final static public String OUTPUTDIR_DESCRIPTION = "output directory";
-	final static public String CELLODIR_DESCRIPTION = "cello directory";
-	final static public String PYTHONDIR_DESCRIPTION = "python directory";
 	
 }

@@ -33,7 +33,7 @@ import java.util.Date;
  *
  */
 public class Utils {
-	
+
 	static public String getFilename(final String name){
 		String rtn = name;
 		int index = 0;
@@ -47,7 +47,13 @@ public class Utils {
 		}
 		return rtn;
 	}
-
+	
+	static public boolean deleteFilename(final String name){
+		boolean rtn = false;
+		File file = new File(name);
+		rtn = file.delete();
+		return rtn;
+	}
 
 	public static boolean isMac() {
 		return (Utils.isMac(Utils.getOS()));
@@ -69,7 +75,7 @@ public class Utils {
 		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
 	}
 
-	private static Process executeAndWaitForCommand(final String cmd){
+	public static Process executeAndWaitForCommand(final String cmd){
 		Process rtn = null;
 		try{
 			rtn = Runtime.getRuntime().exec(cmd);

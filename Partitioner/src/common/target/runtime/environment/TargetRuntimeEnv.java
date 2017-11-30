@@ -39,18 +39,6 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 	}
 
 	@Override
-	protected String getDefault(final String str){
-		String rtn = null;
-		switch (str) {
-        case TargetArgString.OUTPUTDIR:  
-        case TargetArgString.CELLODIR:
-        	rtn = "./";
-        	break;
-		}
-		return rtn;
-	}
-
-	@Override
 	protected void setOptions() {
 		super.setOptions();
 		Options options = this.getOptions();
@@ -58,9 +46,6 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		options.addOption(this.getTargetConfigFileOption());
 		options.addOption(this.getTargetConfigDirOption());
 		options.addOption(this.getNetlistConstraintFileOption());
-		options.addOption(this.getOutputDirOption());
-		options.addOption(this.getCelloDirOption());
-		options.addOption(this.getPythonDirOption());
 	}
 	
 	/*
@@ -89,18 +74,4 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		return rtn;
 	}
 	
-	protected Option getOutputDirOption(){
-		Option rtn = new Option( TargetArgString.OUTPUTDIR, true, TargetArgDescription.OUTPUTDIR_DESCRIPTION);
-		return rtn;
-	}
-	
-	protected Option getCelloDirOption(){
-		Option rtn = new Option( TargetArgString.CELLODIR, true, TargetArgDescription.CELLODIR_DESCRIPTION);
-		return rtn;
-	}
-	
-	protected Option getPythonDirOption(){
-		Option rtn = new Option( TargetArgString.PYTHONDIR, true, TargetArgDescription.PYTHONDIR_DESCRIPTION);
-		return rtn;
-	}
 }

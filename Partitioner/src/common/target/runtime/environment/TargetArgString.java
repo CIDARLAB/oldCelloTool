@@ -37,8 +37,5 @@ public class TargetArgString extends ArgString{
     final static public String TARGETCONFIGFILE = "configFile";
 	final static public String TARGETCONFIGDIR = "configDir";
 	final static public String NETLISTCONSTRAINTFILE = "netlistConstraintFile";
-	final static public String OUTPUTDIR  = "outputDir";
-	final static public String CELLODIR = "celloDir";
-	final static public String PYTHONDIR = "pythonDir";
 	
 }

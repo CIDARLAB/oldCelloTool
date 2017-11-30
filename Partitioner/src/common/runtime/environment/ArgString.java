@@ -34,5 +34,8 @@ public class ArgString {
 	final static public String HELP = "help";
 	final static public String TARGETDATAFILE = "targetDataFile";
 	final static public String TARGETDATADIR = "targetDataDir";
+	final static public String OUTPUTDIR  = "outputDir";
+	final static public String CELLODIR = "celloDir";
+	final static public String PYTHONDIR = "pythonDir";
 	
 }
