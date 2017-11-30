@@ -13,10 +13,14 @@
     <property name="source" value="1.8"/>
 	<property name="source.dir" value="src"/>
 	<property name="build.dir" value="bin"/>
-	<property name="jars.dir" value="jars"/>
-	<property name="jars.dir.absolute.path" value="${basedir}${file.separator}${jars.dir}"/>
+	<property name="exec.dir" value="exec"/>
+	<property name="exec.dir.absolute.path" value="${basedir}${file.separator}${exec.dir}"/>
 	<property name="external-jars.dir" value="external_jars"/>
 	<property name="external-jars.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-jars.dir}${file.separator}"/>
+	<property name="external-tools.dir" value="external_tools"/>
+	<property name="external-tools.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-tools.dir}${file.separator}"/>
+	<property name="scripts.dir" value="scripts"/>
+	<property name="scripts.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${scripts.dir}${file.separator}"/>
 	<property name="main-class" value="runtime${file.separator}Main"/>
     <path id="Partitioner.classpath">
         <pathelement location="${build.dir}"/>
@@ -37,10 +41,10 @@
 	<!-- Clean -->
     <target name="clean">
         <delete dir="${build.dir}"/>
-        <delete dir="${jars.dir}"/>
+        <delete dir="${exec.dir}"/>
     </target>
     <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project,makeJarsDir,build-jars,copy-external-jars" name="build"/>
+    <target depends="build-subprojects,build-project,makeExecDir,build-jars,copy-external-jars,copy-external-tools,copy-scripts" name="build"/>
     <target name="build-subprojects"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
@@ -50,15 +54,15 @@
         </javac>
     </target>
 	<!-- Make Jars Directory -->
-    <target name="makeJarsDir">
-    	<echo>"Creating directory: ${jars.dir.absolute.path}"</echo>
-		<mkdir dir="${jars.dir.absolute.path}"/>
+    <target name="makeExecDir">
+    	<echo>"Creating directory: ${exec.dir.absolute.path}"</echo>
+		<mkdir dir="${exec.dir.absolute.path}"/>
     </target>
 	<!-- Build-Jar Macro -->
 	<macrodef name="build_jar">
 		<attribute name="name"/>
 		<sequential>
-			<jar jarfile="${jars.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
+			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
 			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
 			</jar>
 		</sequential>
@@ -66,7 +70,7 @@
 	<macrodef name="build_exec_jar">
 		<attribute name="name"/>
 		<sequential>
-			<jar jarfile="${jars.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
+			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
 			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
 				<manifest>
 					<attribute name="Main-Class" value="@{name}${file.separator}${main-class}"/>
@@ -99,9 +103,23 @@
 	</target>
 	<!-- Copy External Jars -->
     <target name="copy-external-jars">
-    	<echo>"Copying External jars to directory: ${jars.dir.absolute.path}"</echo>
-    	<copy todir="${jars.dir.absolute.path}">
+		<echo>"Copying External jars to directory: ${exec.dir.absolute.path}"</echo>
+		<copy todir="${exec.dir.absolute.path}">
 			<fileset dir="${external-jars.dir.absolute.path}" excludes="ant-contrib.jar"/>
+		</copy>
+    </target>
+	<!-- Copy External tools -->
+    <target name="copy-external-tools">
+		<echo>"Copying External tools to directory: ${exec.dir.absolute.path}"</echo>
+		<copy todir="${exec.dir.absolute.path}">
+			<fileset dir="${external-tools.dir.absolute.path}..${file.separator}" includes="${external-tools.dir}/**"/>
+		</copy>
+    </target>
+	<!-- Copy Scripts -->
+    <target name="copy-scripts">
+		<echo>"Copying Scripts to directory: ${exec.dir.absolute.path}"</echo>
+		<copy todir="${exec.dir.absolute.path}">
+			<fileset dir="${scripts.dir.absolute.path}..${file.separator}" includes="${scripts.dir}/**"/>
 		</copy>
     </target>
 </project>
