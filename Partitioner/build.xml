@@ -24,9 +24,11 @@
 	<property name="main-class" value="runtime${file.separator}Main"/>
     <path id="Partitioner.classpath">
         <pathelement location="${build.dir}"/>
-        <pathelement location="..${file.separator}external_jars${file.separator}commons-cli-1.4.jar"/>
-        <pathelement location="..${file.separator}external_jars${file.separator}commons-csv-1.5.jar"/>
-        <pathelement location="..${file.separator}external_jars${file.separator}json-simple-1.1.1.jar"/>
+        <pathelement location="${source.dir}"/>
+        <pathelement path="${classpath}"/>
+		<fileset dir="..${file.separator}external_jars${file.separator}">
+			<include name="**/*.jar"/>
+		</fileset>
     </path>
 	<!-- Init -->
     <target name="init">
