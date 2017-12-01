@@ -14,6 +14,7 @@
 	<property name="source.dir" value="src"/>
 	<property name="build.dir" value="bin"/>
 	<property name="exec.dir" value="exec"/>
+	<property name="logger.dir" value="logger"/>
 	<property name="exec.dir.absolute.path" value="${basedir}${file.separator}${exec.dir}"/>
 	<property name="external-jars.dir" value="external_jars"/>
 	<property name="external-jars.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-jars.dir}${file.separator}"/>
@@ -23,8 +24,8 @@
 	<property name="scripts.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${scripts.dir}${file.separator}"/>
 	<property name="main-class" value="runtime${file.separator}Main"/>
     <path id="Partitioner.classpath">
-        <pathelement location="${build.dir}"/>
         <pathelement location="${source.dir}"/>
+        <pathelement location="${build.dir}"/>
         <pathelement path="${classpath}"/>
 		<fileset dir="..${file.separator}external_jars${file.separator}">
 			<include name="**/*.jar"/>
@@ -51,6 +52,7 @@
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" includeantruntime="false" source="${source}" target="${target}">
+            <src path="${logger.dir}"/>
             <src path="${source.dir}"/>
             <classpath refid="Partitioner.classpath"/>
         </javac>
