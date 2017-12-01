@@ -54,6 +54,7 @@ public class Main {
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, LSArgString.TARGETDATAFILE, LSArgString.TARGETDATADIR);
 		// Execute
 		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, sc, td, netlist, runEnv);
+		LS.setName("LogicSynthesis");
 		LS.execute();
 		// Write Netlist
 		String outputFilename = runEnv.getOptionValue(LSArgString.OUTPUTNETLIST);

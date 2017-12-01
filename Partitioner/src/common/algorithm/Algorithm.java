@@ -20,6 +20,9 @@
  */
 package common.algorithm;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import common.CObject;
 
 /**
@@ -36,5 +39,35 @@ public abstract class Algorithm extends CObject{
 	abstract protected void preprocessing();
 	abstract protected void run();
 	abstract protected void postprocessing();
+
+	protected void logTrace(String str) {
+		this.getLogger().trace(str);
+	}
+
+	protected void logDebug(String str) {
+		this.getLogger().debug(str);
+	}
+
+	protected void logInfo(String str) {
+		this.getLogger().info(str);
+	}
 	
+	protected void logWarn(String str) {
+		this.getLogger().warn(str);
+	}
+	
+	protected void logError(String str) {
+		this.getLogger().error(str);
+	}
+	
+	protected void logFatal(String str) {
+		this.getLogger().fatal(str);
+	}
+	
+	protected Logger getLogger() {
+		return Algorithm.logger;
+	}
+	
+    private static final Logger logger = LogManager.getLogger(Algorithm.class.getSimpleName());
+    
 }
