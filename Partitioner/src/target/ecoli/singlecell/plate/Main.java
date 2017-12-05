@@ -30,6 +30,7 @@ import common.target.data.TargetDataUtils;
 import common.target.runtime.environment.TargetArgString;
 import common.target.runtime.environment.TargetRuntimeEnv;
 import logicSynthesis.runtime.LSRuntimeObject;
+import technologyMapping.runtime.TMRuntimeObject;
 
 /**
  * @author: Vincent Mirian
@@ -62,8 +63,8 @@ public class Main extends CObject{
 		LS.execute();
 		// TechnologyMapping
 	    currentStage = targetCfg.getStageByName("TechnologyMapping");
-		//TechnologyMapping TM = new TechnologyMapping(netlist, runEnv);
-		//TM.execute();
+		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		TM.execute();
 		// Eugene
 	    currentStage = targetCfg.getStageByName("Eugene");
 		//Eugene EU = new Eugene(netlist, runEnv);

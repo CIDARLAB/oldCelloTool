@@ -2,8 +2,8 @@
 	"name": "TMConfiguration",
 	"AlgorithmProfile":
 	{
-		"name": "Base",
-		"type": "Base",
+		"name": "SimulatedAnnealing",
+		"type": "SimulatedAnnealing",
 		"parameters":
 		[
 			{
