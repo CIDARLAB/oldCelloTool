@@ -30,12 +30,12 @@ import common.algorithm.AlgorithmFactory;
  * @date: Oct 29, 2017
  *
  */
-public class PAlgorithmFactory extends AlgorithmFactory<PAlgorithm>{
+public class PTAlgorithmFactory extends AlgorithmFactory<PTAlgorithm>{
 
 
 	@Override
-	protected PAlgorithm getAlgorithm(final String name) {
-		PAlgorithm rtn = null;
+	protected PTAlgorithm getAlgorithm(final String name) {
+		PTAlgorithm rtn = null;
 		if(name.equalsIgnoreCase("KL")){
 			rtn = new KL();
 		}

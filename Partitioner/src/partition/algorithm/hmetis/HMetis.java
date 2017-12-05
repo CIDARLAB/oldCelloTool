@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import common.Utils;
-import partition.algorithm.PAlgorithm;
+import partition.algorithm.PTAlgorithm;
 import partition.common.Block;
 import partition.common.Move;
 import partition.graph.PEdge;
@@ -49,7 +49,7 @@ import partition.testing.PTestingEnv;
  * @date: Nov 13, 2017
  *
  */
-public class HMetis extends PAlgorithm{
+public class HMetis extends PTAlgorithm{
 
 	private void init() {
 		integerVertexMap = new HashMap<Integer, PNode>();

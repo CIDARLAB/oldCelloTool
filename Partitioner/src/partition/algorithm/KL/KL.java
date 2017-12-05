@@ -23,7 +23,7 @@ package partition.algorithm.KL;
 import common.graph.graph.Edge;
 import common.graph.graph.Graph;
 import common.graph.graph.Vertex;
-import partition.algorithm.PAlgorithm;
+import partition.algorithm.PTAlgorithm;
 
 /**
  * @author: Vincent Mirian
@@ -31,7 +31,7 @@ import partition.algorithm.PAlgorithm;
  * @date: Oct 26, 2017
  *
  */
-public class KL extends PAlgorithm{
+public class KL extends PTAlgorithm{
 
 	/**
 	 * @param args

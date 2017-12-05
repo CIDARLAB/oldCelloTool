@@ -23,8 +23,8 @@ package partition.common;
 import java.util.HashMap;
 import java.util.Map;
 
-import partition.algorithm.PAlgorithm;
-import partition.algorithm.PAlgorithmFactory;
+import partition.algorithm.PTAlgorithm;
+import partition.algorithm.PTAlgorithmFactory;
 import partition.graph.PEdge;
 import partition.graph.PGraph;
 import partition.graph.PNode;
@@ -141,8 +141,8 @@ public class Partitioner extends CObject {
 		Partition P = new Partition(this.getPProfile().getPProfile());
 		P.setName(G.getName());
 		// run Algorithm
-		PAlgorithmFactory PAF = new PAlgorithmFactory();
-		PAlgorithm algo = PAF.getAlgorithm(AProfile);
+		PTAlgorithmFactory PAF = new PTAlgorithmFactory();
+		PTAlgorithm algo = PAF.getAlgorithm(AProfile);
 		if (algo == null){
 	    	throw new RuntimeException("Algorithm not found!");
 		}

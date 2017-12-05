@@ -32,7 +32,7 @@ import partition.graph.PGraph;
  * @date: Oct 27, 2017
  *
  */
-abstract public class PAlgorithm extends Algorithm{
+abstract public class PTAlgorithm extends Algorithm{
 		
 	public void execute(final PGraph G, final Partition P, final AlgorithmProfile AProfile, final RuntimeEnv runtimeEnv){
 		// set members
@@ -105,7 +105,7 @@ abstract public class PAlgorithm extends Algorithm{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PAlgorithm other = (PAlgorithm) obj;
+		PTAlgorithm other = (PTAlgorithm) obj;
 		if (algorithmProfile == null) {
 			if (other.algorithmProfile != null)
 				return false;
