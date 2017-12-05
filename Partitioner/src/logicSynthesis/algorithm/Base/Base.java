@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import common.Utils;
+import common.graph.AbstractVertex.VertexType;
 import common.netlist.NetlistEdge;
 import common.netlist.NetlistNode;
 import edu.byu.ece.edif.core.EdifCellInstance;
@@ -125,90 +126,97 @@ public class Base extends LSAlgorithm{
 	 * EDIF
 	 */
 	public void convertEdifToNetlist() {
-			String filename = this.getYosysEdifFilename();
-			EdifEnvironment edifEnv = null;
-			try {
-				edifEnv = EdifParser.translate(filename);
-			}
-			catch (FileNotFoundException | ParseException e) {
-				e.printStackTrace();
-			}
-			EdifCellInstance top = edifEnv.getTopDesign().getTopCellInstance();
-			this.getNetlist().setName(top.getOldName());
-			Map<String, NetlistNode> map = new HashMap<String, NetlistNode>();
-			Collection<EdifNet> nets = top.getCellType().getNetList();
-			EdifCellInstance srcCell = null;
-			EdifCellInstance dstCell = null;
-			NetlistNode srcNode = null;
-			NetlistNode dstNode = null;
-			for (EdifNet net : nets) {
-				// Top Input
-				if (this.hasTopInput(net)) {
-					// Top PortRef
-					for (EdifPortRef topPortRef: net.getInputPortRefs()) {
-						if (topPortRef.isTopLevelPortRef()) {
-							srcNode = this.getNode(topPortRef.getSingleBitPort().getPortName(), "TopInput", map);
-							// Other Input/Output PortRef
-							for (EdifPortRef otherPortRef: net.getPortRefList()) {
-								if (topPortRef == otherPortRef) {
-									continue;
-								}
-								EdifCellInstance cell = otherPortRef.getCellInstance();
-								// generic
-								if (cell != null) {
-									assert(otherPortRef.getPort().isInput());
-									dstNode = this.getNode(cell.getName(), cell.getCellType().getOldName(), map);
-								}
-								// Top output
-								else {
-									assert(otherPortRef.getPort().isOutput());
-									dstNode = this.getNode(otherPortRef.getSingleBitPort().getPortName(), "TopOutput", map);
-								}
-								// setEdge
-								setEdge(srcNode, dstNode, net);
+		String filename = this.getYosysEdifFilename();
+		EdifEnvironment edifEnv = null;
+		try {
+			edifEnv = EdifParser.translate(filename);
+		}
+		catch (FileNotFoundException | ParseException e) {
+			e.printStackTrace();
+		}
+		EdifCellInstance top = edifEnv.getTopDesign().getTopCellInstance();
+		this.getNetlist().setName(top.getOldName());
+		Map<String, NetlistNode> map = new HashMap<String, NetlistNode>();
+		Collection<EdifNet> nets = top.getCellType().getNetList();
+		EdifCellInstance srcCell = null;
+		EdifCellInstance dstCell = null;
+		NetlistNode srcNode = null;
+		NetlistNode dstNode = null;
+		for (EdifNet net : nets) {
+			// Top Input
+			if (this.hasTopInput(net)) {
+				// Top PortRef
+				for (EdifPortRef topPortRef: net.getInputPortRefs()) {
+					if (topPortRef.isTopLevelPortRef()) {
+						srcNode = this.getNode(topPortRef.getSingleBitPort().getPortName(), "TopInput", map);
+						srcNode.setVertexType(VertexType.SOURCE);
+						// Other Input/Output PortRef
+						for (EdifPortRef otherPortRef: net.getPortRefList()) {
+							if (topPortRef == otherPortRef) {
+								continue;
 							}
-						}
-					}
-				}
-				// Top Output
-				else if (this.hasTopOutput(net)) {
-					// Top PortRef
-					for (EdifPortRef topPortRef: net.getOutputPortRefs()) {
-						if (topPortRef.isTopLevelPortRef()) {
-							srcNode = this.getNode(topPortRef.getSingleBitPort().getPortName(), "TopOutput", map);
-							// Other Output PortRef
-							for (EdifPortRef otherPortRef: net.getOutputPortRefs()) {
-								if (topPortRef == otherPortRef) {
-									continue;
-								}
-								EdifCellInstance cell = otherPortRef.getCellInstance();
-								// generic
-								assert(otherPortRef.getPort().isOutput());
+							EdifCellInstance cell = otherPortRef.getCellInstance();
+							// generic
+							if (cell != null) {
+								assert(otherPortRef.getPort().isInput());
 								dstNode = this.getNode(cell.getName(), cell.getCellType().getOldName(), map);
-								// setEdge
-								setEdge(srcNode, dstNode, net);
+								dstNode.setVertexType(VertexType.NONE);
 							}
-						}
-					}				
-				}
-				// Other
-				else {
-					// Outputs
-					for (EdifPortRef outputPortRef: net.getOutputPortRefs()) {
-						srcCell = outputPortRef.getCellInstance();
-						// create vertex if not present
-						srcNode = this.getNode(srcCell.getName(), srcCell.getCellType().getOldName(), map);
-						for (EdifPortRef inputPortRef: net.getInputPortRefs()) {
-							dstCell = inputPortRef.getCellInstance();
-							// create vertex if not present
-							dstNode = this.getNode(dstCell.getName(), dstCell.getCellType().getOldName(), map);
+							// Top output
+							else {
+								assert(otherPortRef.getPort().isOutput());
+								dstNode = this.getNode(otherPortRef.getSingleBitPort().getPortName(), "TopOutput", map);
+								dstNode.setVertexType(VertexType.SINK);
+							}
 							// setEdge
 							setEdge(srcNode, dstNode, net);
-						}			
+						}
 					}
+				}
+			}
+			// Top Output
+			else if (this.hasTopOutput(net)) {
+				// Top PortRef
+				for (EdifPortRef topPortRef: net.getOutputPortRefs()) {
+					if (topPortRef.isTopLevelPortRef()) {
+						dstNode = this.getNode(topPortRef.getSingleBitPort().getPortName(), "TopOutput", map);
+						dstNode.setVertexType(VertexType.SINK);
+						// Other Output PortRef
+						for (EdifPortRef otherPortRef: net.getOutputPortRefs()) {
+							if (topPortRef == otherPortRef) {
+								continue;
+							}
+							EdifCellInstance cell = otherPortRef.getCellInstance();
+							// generic
+							assert(otherPortRef.getPort().isOutput());
+							srcNode = this.getNode(cell.getName(), cell.getCellType().getOldName(), map);
+							srcNode.setVertexType(VertexType.NONE);
+							// setEdge
+							setEdge(srcNode, dstNode, net);
+						}
+					}
+				}				
+			}
+			// Other
+			else {
+				// Outputs
+				for (EdifPortRef outputPortRef: net.getOutputPortRefs()) {
+					srcCell = outputPortRef.getCellInstance();
+					// create vertex if not present
+					srcNode = this.getNode(srcCell.getName(), srcCell.getCellType().getOldName(), map);
+					srcNode.setVertexType(VertexType.NONE);
+					for (EdifPortRef inputPortRef: net.getInputPortRefs()) {
+						dstCell = inputPortRef.getCellInstance();
+						// create vertex if not present
+						dstNode = this.getNode(dstCell.getName(), dstCell.getCellType().getOldName(), map);
+						dstNode.setVertexType(VertexType.NONE);
+						// setEdge
+						setEdge(srcNode, dstNode, net);
+					}			
 				}
 			}
 		}
+	}
 
 	void setEdge(NetlistNode src, NetlistNode dst, EdifNet net) {
 		NetlistEdge edge = new NetlistEdge(src, dst);
