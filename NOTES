@@ -1,0 +1,31 @@
+-------------------------------------------
+--          SET NEW BUILD TYPE
+-------------------------------------------
+1. Right click on Project > Properties
+2. Builders > Import > ...
+3. Find and select "build.xml" under the Partitioner directory
+
+-------------------------------------------
+--          ADD EXTERNAL JAR TO PROJECT
+-------------------------------------------
+1. Right click on Project > Properties
+2. Java Build Path > Libraries > Add External Jars...
+3. Find and select:
+ant-contrib.jar
+byuediftools-0.5.2.jar
+commons-cli-1.4.jar
+commons-csv-1.5.jar
+JHDL_provisional.jar
+JSAP-2.1.jar
+json-simple-1.1.1.jar
+log4j-1.2-api-2.10.0.jar
+log4j-api-2.10.0.jar
+log4j-core-2.10.0.jar
+
+-------------------------------------------
+--          ADD SOURCE TO PROJECT
+-------------------------------------------
+1. Right click on Project > Properties
+2. Java Build Path > Source > Add Folder...
+3. Find and select:
+logger
