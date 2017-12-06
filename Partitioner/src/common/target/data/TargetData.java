@@ -20,9 +20,16 @@
  */
 package common.target.data;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import common.profile.ProfileObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import common.CObject;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -30,21 +37,56 @@ import common.profile.ProfileObject;
  * @date: Nov 21, 2017
  *
  */
-public class TargetData extends ProfileObject{
+public class TargetData extends CObject{
 
 	private void init() {
+		collectionTypeData = new HashMap< String, List<JSONObject> >();
 	}
 
-	public TargetData(final JSONObject JObj, final String TargetDataDir){
-		super(JObj);
+	public TargetData(final JSONArray JArray, final String TargetDataDir){
+		super();
 		init();
-		parse(JObj, TargetDataDir);
+		parse(JArray, TargetDataDir);
 	}
 	
-	public TargetData(final JSONObject JObj){
-		this(JObj, "");
+	public TargetData(final JSONArray JArray){
+		this(JArray, "");
 	}
 	
-	private void parse(final JSONObject JObj, final String TargetDataDir){
+	private void parse(final JSONArray JArray, final String TargetDataDir){
+		for (int i = 0; i < JArray.size(); i++) {
+			JSONObject JObj = (JSONObject) JArray.get(i);
+			String collection = ProfileUtils.getString(JObj, "collection");
+			List<JSONObject> temp = this.getCollectionTypeData().get(collection);
+			if (temp == null) {
+				temp = new ArrayList<JSONObject>();
+				this.getCollectionTypeData().put(collection, temp);
+			}
+			temp.add(JObj);			
+		}
 	}
+	
+	public JSONObject getJSONObjectAtIdx(String type, int index) {
+		JSONObject rtn = null;
+		List<JSONObject> temp = this.getCollectionTypeData().get(type);
+		if (temp != null) {
+			rtn = temp.get(index);
+		}
+		return rtn;
+	}
+	
+	public int getNumJSONObject(String type) {
+		int rtn = 0;
+		List<JSONObject> temp = this.getCollectionTypeData().get(type);
+		if (temp != null) {
+			rtn = temp.size();
+		}
+		return rtn;
+	}
+
+	protected Map< String, List<JSONObject> > getCollectionTypeData() {
+		return this.collectionTypeData;
+	}
+	
+	Map< String, List<JSONObject> > collectionTypeData;
 }

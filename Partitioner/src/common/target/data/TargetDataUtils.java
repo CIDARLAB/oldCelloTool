@@ -26,7 +26,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -51,7 +51,7 @@ public class TargetDataUtils {
 		String targetDir = runEnv.getOptionValue(targetDataDir);
 	    File targetFile = new File(targetDir + Utils.getFileSeparator() + targetFilename);
 	    Reader targetReader = null;
-		JSONObject jsonTop = null;
+	    JSONArray jsonTop = null;
 		// Create File Reader
 		try {
 			targetReader = new FileReader(targetFile);
@@ -61,7 +61,7 @@ public class TargetDataUtils {
 		// Create JSON object from File Reader
 		JSONParser parser = new JSONParser();
         try{
-        	jsonTop = (JSONObject) parser.parse(targetReader);
+        	jsonTop = (JSONArray) parser.parse(targetReader);
 	    } catch (IOException e) {
 	        throw new RuntimeException("File IO Exception for: " + targetFile + ".");
 	    } catch (ParseException e) {
