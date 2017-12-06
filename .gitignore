@@ -1,0 +1,10 @@
+.classpath
+.project
+.settings/
+*.class
+derby.log
+*.iml
+*egg-info
+*pyc
+**/.DS_Store
+addons
