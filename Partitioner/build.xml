@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="Partitioner">
+	<taskdef resource="net${file.separator}sf${file.separator}antcontrib${file.separator}antlib.xml" classpath="..${file.separator}external_jars${file.separator}ant-contrib.jar"/>
+	<!-- Build -->
+    <property environment="env"/>
+	<property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+	<property name="source.dir" value="src"/>
+	<property name="build.dir" value="bin"/>
+	<property name="exec.dir" value="exec"/>
+	<property name="logger.dir" value="logger"/>
+	<property name="exec.dir.absolute.path" value="${basedir}${file.separator}${exec.dir}"/>
+	<property name="external-jars.dir" value="external_jars"/>
+	<property name="external-jars.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-jars.dir}${file.separator}"/>
+	<property name="external-tools.dir" value="external_tools"/>
+	<property name="external-tools.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-tools.dir}${file.separator}"/>
+	<property name="scripts.dir" value="scripts"/>
+	<property name="scripts.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${scripts.dir}${file.separator}"/>
+	<property name="main-class" value="runtime${file.separator}Main"/>
+    <path id="Partitioner.classpath">
+        <pathelement location="${source.dir}"/>
+        <pathelement location="${build.dir}"/>
+        <pathelement path="${classpath}"/>
+		<fileset dir="..${file.separator}external_jars${file.separator}">
+			<include name="**/*.jar"/>
+		</fileset>
+    </path>
+	<!-- Init -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <copy includeemptydirs="false" todir="${build.dir}/">
+            <fileset dir="${source.dir}/">
+                <exclude name="**${file.separator}*.launch"/>
+                <exclude name="**${file.separator}*.java"/>
+            </fileset>
+        </copy>
+    </target>
+	<!-- Clean -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${exec.dir}"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project,makeExecDir,build-jars,copy-external-jars,copy-external-tools,copy-scripts" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" includeantruntime="false" source="${source}" target="${target}">
+            <src path="${logger.dir}"/>
+            <src path="${source.dir}"/>
+            <classpath refid="Partitioner.classpath"/>
+        </javac>
+    </target>
+	<!-- Make Jars Directory -->
+    <target name="makeExecDir">
+    	<echo>"Creating directory: ${exec.dir.absolute.path}"</echo>
+		<mkdir dir="${exec.dir.absolute.path}"/>
+    </target>
+	<!-- Build-Jar Macro -->
+	<macrodef name="build_jar">
+		<attribute name="name"/>
+		<sequential>
+			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
+			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
+			</jar>
+		</sequential>
+	</macrodef>
+	<macrodef name="build_exec_jar">
+		<attribute name="name"/>
+		<sequential>
+			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
+			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
+				<manifest>
+					<attribute name="Main-Class" value="@{name}${file.separator}${main-class}"/>
+				</manifest>
+			</jar>
+		</sequential>
+	</macrodef>
+	<!-- Jars -->
+	<target name="build-jars"> 
+		<for param="file">
+			<path>
+				<dirset dir="${source.dir}" includes="*"/>
+			</path>
+			<sequential>
+				<var name="name" unset="true"/>
+				<basename file="@{file}" property="name" />
+				<!-- <echo message="@{file}, ${name}"/> -->
+				<echo message="Building jar for ${name}" />
+				<if>
+					<equals arg1="${name}" arg2="common"/> 
+				<then>
+					<build_jar name="${name}"/>
+				</then>
+				<else>
+					<build_exec_jar name="${name}"/>
+				</else>
+				</if>
+			</sequential>
+		</for>  
+	</target>
+	<!-- Copy External Jars -->
+    <target name="copy-external-jars">
+		<echo>"Copying External jars to directory: ${exec.dir.absolute.path}"</echo>
+		<copy todir="${exec.dir.absolute.path}">
+			<fileset dir="${external-jars.dir.absolute.path}" excludes="ant-contrib.jar"/>
+		</copy>
+    </target>
+	<!-- Copy External tools -->
+    <target name="copy-external-tools">
+		<echo>"Copying External tools to directory: ${exec.dir.absolute.path}"</echo>
+		<copy todir="${exec.dir.absolute.path}">
+			<fileset dir="${external-tools.dir.absolute.path}..${file.separator}" includes="${external-tools.dir}/**"/>
+		</copy>
+    </target>
+	<!-- Copy Scripts -->
+    <target name="copy-scripts">
+		<echo>"Copying Scripts to directory: ${exec.dir.absolute.path}"</echo>
+		<copy todir="${exec.dir.absolute.path}">
+			<fileset dir="${scripts.dir.absolute.path}..${file.separator}" includes="${scripts.dir}/**"/>
+		</copy>
+    </target>
+</project>
