@@ -131,6 +131,9 @@ public class RuntimeEnv extends CObject{
         case TargetArgString.CELLODIR:
         	rtn = "";
         	rtn += Utils.getWorkingDirectory();
+        	break; 
+        case TargetArgString.PYTHONDIR:
+        	rtn = "";
         	break;
 		}
 		return rtn;
