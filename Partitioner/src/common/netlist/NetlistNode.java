@@ -132,6 +132,19 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	}
 	
 	private String nodeType;
+	
+	/*
+	 * Gate
+	 */
+	public void setGate(String nodeType) {
+		this.nodeType = nodeType;
+	}
+	
+	public String getGate() {
+		return this.gate;
+	}
+	
+	private String gate;
 
 	/*
 	 * Write
