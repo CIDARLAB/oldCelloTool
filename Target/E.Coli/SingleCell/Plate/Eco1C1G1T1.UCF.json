@@ -129897,27 +129897,25 @@
   ]
 },
 	{
-		"collection": "partition_profiles",
-		"PartitionProfiles":
-		[
+		"collection": "PartitionProfile",
+		"PartitionProfile":
+		{
+			"name": "PProfile0",
+			"Blocks":
 			{
-				"name": "PProfile0",
 				"Blocks":
-				{
-					"Blocks":
-					[
-						{
-							"name" : "block0"
-						},
-						{
-							"name" : "block1"
-						},
-						{
-							"name" : "block2"
-						}
-					]
-				}
+				[
+					{
+						"name" : "block0"
+					},
+					{
+						"name" : "block1"
+					},
+					{
+						"name" : "block2"
+					}
+				]
 			}
-		],
+		}
 	}
 ]
