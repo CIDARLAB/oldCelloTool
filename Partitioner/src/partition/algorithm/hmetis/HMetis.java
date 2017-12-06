@@ -41,7 +41,7 @@ import partition.common.Move;
 import partition.graph.PEdge;
 import partition.graph.PGraph;
 import partition.graph.PNode;
-import partition.testing.PTestingEnv;
+import partition.runtime.environment.PTArgString;
 
 /**
  * @author: Vincent Mirian
@@ -133,17 +133,9 @@ public class HMetis extends PTAlgorithm{
 	}
 	
 	private void callMetis() throws IOException {
-		PTestingEnv testingEnv = null;
 		String OSPath;
 		String line;
-		//TODO: fix this hack
-		if (this.getRuntimeEnv() instanceof PTestingEnv) {
-			testingEnv = (PTestingEnv) this.getRuntimeEnv();
-		}
-		else {
-			throw new RuntimeException("Environment var error!");
-		}
-		OSPath = testingEnv.getOptionValue(PTestingEnv.CELLODIR) + "/external_tools/";
+		OSPath = this.getRuntimeEnv().getOptionValue(PTArgString.CELLODIR) + "/external_tools/";
 		if (Utils.isMac()) {
 			OSPath = OSPath + "OSX/";
 		}
@@ -155,7 +147,13 @@ public class HMetis extends PTAlgorithm{
 		}
 		int UBFactor = 1;
 		try{
-			String cmd = testingEnv.getOptionValue(PTestingEnv.CELLODIR) + "/scripts/run_metis_partitioner.py graph_file.txt " + UBFactor + " " + OSPath;
+			String cmd = this.getRuntimeEnv().getOptionValue(PTArgString.PYTHONDIR);
+			cmd += " ";
+			cmd += this.getRuntimeEnv().getOptionValue(PTArgString.CELLODIR);
+			cmd += "/scripts/run_metis_partitioner.py graph_file.txt ";
+			cmd += UBFactor;
+			cmd += " ";
+			cmd += OSPath;
 			Process p = Runtime.getRuntime().exec(cmd);
 			p.waitFor();
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -166,7 +164,7 @@ public class HMetis extends PTAlgorithm{
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			while ((line = stdInput.readLine()) != null) {
 				System.out.println(line);
-			}			  
+			}
 		}catch(InterruptedException | IOException e){
 			e.printStackTrace();
 		}

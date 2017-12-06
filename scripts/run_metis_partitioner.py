@@ -1,4 +1,4 @@
-#!/Users/jaipadmakumar/anaconda2/bin/python
+#!/usr/bin/python
 
 import metis_tools as mt
 import sys
