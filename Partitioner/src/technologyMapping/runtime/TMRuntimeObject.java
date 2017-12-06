@@ -20,6 +20,9 @@
  */
 package technologyMapping.runtime;
 
+import org.json.simple.JSONObject;
+
+import common.CObjectCollection;
 import common.netlist.Netlist;
 import common.profile.AlgorithmProfile;
 import common.runtime.RuntimeObject;
@@ -28,6 +31,8 @@ import common.stage.StageConfiguration;
 import common.target.data.TargetData;
 import technologyMapping.algorithm.TMAlgorithm;
 import technologyMapping.algorithm.TMAlgorithmFactory;
+import technologyMapping.data.Gate;
+import technologyMapping.data.ResponseFunction;
 
 /**
  * @author: Vincent Mirian
@@ -45,18 +50,43 @@ public class TMRuntimeObject extends RuntimeObject{
 			) {
 		super(stageConfiguration, targetData, netlist, runEnv);
 	}
-
+	
 	@Override
 	protected void run() {
 		// AlgorithmProfile
 		AlgorithmProfile AProfile = this.getStageConfiguration().getAlgorithmProfile();
+		// get list of Gates
+		CObjectCollection<Gate> gates = new CObjectCollection<Gate>();
+		for (int i = 0; i < this.getTargetData().getNumJSONObject("gates"); i++) {
+			JSONObject jObj = this.getTargetData().getJSONObjectAtIdx("gates", i);
+			Gate g = new Gate(jObj);
+			gates.add(g);
+		}
+		// get list of Response Function
+		CObjectCollection<ResponseFunction> rf = new CObjectCollection<ResponseFunction>();
+		for (int i = 0; i < this.getTargetData().getNumJSONObject("response_functions"); i++) {
+			JSONObject jObj = this.getTargetData().getJSONObjectAtIdx("response_functions", i);
+			ResponseFunction r = new ResponseFunction(jObj);
+			rf.add(r);
+		}
+		// associate response function to gate
+		for (int i = 0; i < rf.size(); i++) {
+			ResponseFunction r = rf.get(i);
+			Gate g = gates.findCObjectByName(r.getGateName());
+			if (g == null) {
+				this.logWarn(r.getGateName() + " does not exists!");
+			}
+			else {
+				g.setResponseFunction(r);
+			}			
+		}
 		// run Algorithm
 		TMAlgorithmFactory TMAF = new TMAlgorithmFactory();
 		TMAlgorithm algo = TMAF.getAlgorithm(AProfile);
 		if (algo == null){
 	    	throw new RuntimeException("Algorithm not found!");
 		}
-		algo.execute(this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
+		algo.execute(gates, this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
 	}
 
 }
