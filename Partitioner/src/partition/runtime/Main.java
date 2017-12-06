@@ -21,7 +21,15 @@
 package partition.runtime;
 
 import common.CObject;
+import common.netlist.Netlist;
+import common.netlist.NetlistUtils;
 import common.runtime.environment.RuntimeEnv;
+import common.stage.StageConfiguration;
+import common.stage.StageUtils;
+import common.target.data.TargetData;
+import common.target.data.TargetDataUtils;
+import partition.runtime.environment.PTArgString;
+import partition.runtime.environment.PTRuntimeEnv;
 
 /**
  * @author: Vincent Mirian
@@ -35,7 +43,20 @@ public class Main extends CObject{
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RuntimeEnv runEnv = new RuntimeEnv(args);
+		RuntimeEnv runEnv = new PTRuntimeEnv(args);
 		runEnv.setName("Partitioner");
+		// Read Netlist
+		Netlist netlist = NetlistUtils.getNetlist(runEnv, PTArgString.INPUTNETLIST);
+		// get StageConfiguration
+		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, PTArgString.CONFIGFILE);
+		// get TargetData
+		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, PTArgString.TARGETDATAFILE, PTArgString.TARGETDATADIR);
+		// Execute
+		PTRuntimeObject PT = new PTRuntimeObject(sc, td, netlist, runEnv);
+		PT.setName("Partitioner");
+		PT.execute();
+		// Write Netlist
+		String outputFilename = runEnv.getOptionValue(PTArgString.OUTPUTNETLIST);
+		NetlistUtils.writeJSONForNetlist(netlist, outputFilename);
 	}
 }
