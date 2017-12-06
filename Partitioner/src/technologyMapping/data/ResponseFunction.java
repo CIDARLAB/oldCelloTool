@@ -24,6 +24,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import common.CObject;
+import common.profile.ProfileUtils;
 
 /**
  * @author: Vincent Mirian
@@ -50,19 +51,19 @@ public class ResponseFunction extends CObject{
 		this.parseResponseFunctionObj(jobj);
 	}
 	
-	private void parseResponseFunctionObj(JSONObject jobj) {
-		String equation = (String) jobj.get("equation");
-		JSONArray variableArr = (JSONArray) jobj.get("variables");
-		JSONArray paramArr = (JSONArray) jobj.get("parameters");
+	private void parseResponseFunctionObj(JSONObject jObj) {
+		JSONArray variableArr = (JSONArray) jObj.get("variables");
+		JSONArray paramArr = (JSONArray) jObj.get("parameters");
 		
 		JSONObject variableObject = (JSONObject) variableArr.get(0); //single array present
 		JSONArray paramArrObject = (JSONArray) paramArr;
 		
 		//read straight from variable object
-		String gate_name = (String) variableObject.get("gate_name");
-		String var_name = (String) variableObject.get("name");
-		double off_thresh = (double) variableObject.get("off_threshold");
-		double on_thresh = (double) variableObject.get("on_threshold");
+		String gate_name = ProfileUtils.getString(jObj, "gate_name");
+		String equation = ProfileUtils.getString(jObj, "equation");
+		String var_name = ProfileUtils.getString(variableObject, "name");
+		double off_thresh = (double) ProfileUtils.getDouble(variableObject, "off_threshold");
+		double on_thresh = (double) ProfileUtils.getDouble(variableObject, "on_threshold");
 
 		//set response function values identically to UCF
 		//param object is an array of JSONobjects which are hashmaps
@@ -73,9 +74,8 @@ public class ResponseFunction extends CObject{
 		
 		for(Object obj:paramArrObject) {
 			JSONObject data_obj = (JSONObject) obj;
-			String name = (String) data_obj.get("name");
-			Double value = (Double) data_obj.get("value");
-			
+			String name = ProfileUtils.getString(data_obj, "name");
+			Double value = ProfileUtils.getDouble(data_obj, "value");		
 			if(name.equals("ymax")) {
 				ymax = value;
 			}
