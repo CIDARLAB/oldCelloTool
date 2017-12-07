@@ -25,11 +25,11 @@ import java.util.List;
 import common.CObjectCollection;
 import common.Utils;
 import common.algorithm.Algorithm;
-import common.netlist.Netlist;
 import common.profile.AlgorithmProfile;
 import common.runtime.environment.RuntimeEnv;
 import common.target.data.TargetData;
 import technologyMapping.data.Gate;
+import technologyMapping.netlist.TMNetlist;
 
 /**
  * @author: Vincent Mirian
@@ -41,7 +41,7 @@ public abstract class TMAlgorithm extends Algorithm{
 
 	public void execute(
 			final CObjectCollection<Gate> gates,
-			final Netlist netlist,
+			final TMNetlist netlist,
 			final TargetData targetData,
 			final AlgorithmProfile AProfile,
 			final RuntimeEnv runtimeEnv
@@ -76,10 +76,10 @@ public abstract class TMAlgorithm extends Algorithm{
 		return this.gates;
 	}
 
-	private void setNetlist (final Netlist netlist) {
+	private void setNetlist (final TMNetlist netlist) {
 		this.netlist = netlist;
 	}
-	protected Netlist getNetlist() {
+	protected TMNetlist getNetlist() {
 		return this.netlist;
 	}
 
@@ -105,7 +105,7 @@ public abstract class TMAlgorithm extends Algorithm{
 	}
 
 	private CObjectCollection<Gate> gates;
-	private Netlist netlist;
+	private TMNetlist netlist;
 	private TargetData targetData;
 	private AlgorithmProfile AProfile;
 	private RuntimeEnv runtimeEnv;
