@@ -102,6 +102,7 @@ public class TMRuntimeObject extends RuntimeObject{
 			TMNode tmNode = new TMNode();
 			tmNode.setName(node.getName());
 			tmNode.setType(node.getType());
+			tmNode.setVertexType(node.getVertexType());
 			NetlistToTMNetlistVertex.put(node, tmNode);
 			TMNetlistToNetlistNode.put(tmNode, node);
 			rtn.addVertex(tmNode);

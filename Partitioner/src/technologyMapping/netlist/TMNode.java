@@ -66,7 +66,7 @@ public class TMNode extends VertexTemplate<TMEdge>{
 	/*
 	 * Gate
 	 */
-	public void setGates (final Gate gate) {
+	public void setGate (final Gate gate) {
 		this.gate = gate;
 	}
 	public Gate getGate() {
