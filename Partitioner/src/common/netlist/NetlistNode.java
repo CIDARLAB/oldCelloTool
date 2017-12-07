@@ -71,6 +71,13 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		String value = ProfileUtils.getString(JObj, "nodeType");
 		if (value != null) {
 			this.setNodeType(value);
+			this.setVertexType(VertexType.NONE);
+			if (value.equalsIgnoreCase("TopOutput")) {
+				this.setVertexType(VertexType.SINK);
+			}
+			else if (value.equalsIgnoreCase("TopInput")) {
+				this.setVertexType(VertexType.SOURCE);				
+			}
 		}
 	}
 	
