@@ -1,0 +1,26 @@
+{	
+	"name": "dnaCompiler",
+	"stages":
+	[
+		{
+			"name": "LogicSynthesis",
+			"algorithm_name": "Base"
+		},
+		{
+			"name": "Partitioning",
+			"algorithm_name": "HMetis"
+		},
+		{
+			"name": "TechnologyMapping",
+			"algorithm_name": "SimulatedAnnealing"
+		},
+		{
+			"name": "Placement",
+			"algorithm_name": "Base"
+		},
+		{
+			"name": "DNASequenceGeneration",
+			"algorithm_name": "Base"
+		}
+	]
+}
