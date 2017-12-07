@@ -108,6 +108,11 @@ public class RuntimeEnv extends CObject{
 		return rtn;
 	}
 	
+	protected Option getOptionsDirOption(){
+		Option rtn = new Option( TargetArgString.OPTIONS, true, TargetArgDescription.OPTIONS_DESCRIPTION);
+		return rtn;
+	}
+	
 	protected Option getOutputDirOption(){
 		Option rtn = new Option( TargetArgString.OUTPUTDIR, true, TargetArgDescription.OUTPUTDIR_DESCRIPTION);
 		return rtn;
