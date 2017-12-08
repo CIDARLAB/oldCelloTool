@@ -29,6 +29,7 @@ import common.target.data.TargetDataUtils;
 import common.target.runtime.environment.TargetArgString;
 import common.target.runtime.environment.TargetRuntimeEnv;
 import logicSynthesis.runtime.LSRuntimeObject;
+import partition.runtime.PTRuntimeObject;
 import technologyMapping.runtime.TMRuntimeObject;
 
 /**
@@ -60,6 +61,11 @@ public class Main {
 	    currentStage = targetCfg.getStageByName("LogicSynthesis");
 		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
 		LS.execute();
+		// Partition
+	    currentStage = targetCfg.getStageByName("Partition");
+		PTRuntimeObject PT = new PTRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		PT.execute();
+		// LogicOptomization
 		// TechnologyMapping
 	    currentStage = targetCfg.getStageByName("TechnologyMapping");
 		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);

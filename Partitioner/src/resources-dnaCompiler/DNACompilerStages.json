@@ -7,7 +7,7 @@
 			"algorithm_name": "Base"
 		},
 		{
-			"name": "Partitioning",
+			"name": "Partition",
 			"algorithm_name": "HMetis"
 		},
 		{
