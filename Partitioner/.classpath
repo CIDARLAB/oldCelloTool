@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/common/java"/>
+	<classpathentry kind="src" path="src/common/resources"/>
+	<classpathentry kind="src" path="src/logicSynthesis/java"/>
+	<classpathentry kind="src" path="src/logicSynthesis/resources"/>
+	<classpathentry kind="src" path="src/technologyMapping/java"/>
+	<classpathentry kind="src" path="src/technologyMapping/resources"/>
+	<classpathentry kind="src" path="src/partition/java"/>
+	<classpathentry kind="src" path="src/partition/resources"/>
+	<classpathentry kind="src" path="src/dnaCompiler/java"/>
+	<classpathentry kind="src" path="src/dnaCompiler/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DNACompilerlib"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
