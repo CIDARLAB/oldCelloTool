@@ -20,18 +20,6 @@
  */
 package dnaCompiler.runtime;
 
-import common.netlist.Netlist;
-import common.stage.Stage;
-import common.target.TargetConfiguration;
-import common.target.TargetUtils;
-import common.target.data.TargetData;
-import common.target.data.TargetDataUtils;
-import common.target.runtime.environment.TargetArgString;
-import common.target.runtime.environment.TargetRuntimeEnv;
-import logicSynthesis.runtime.LSRuntimeObject;
-import partition.runtime.PTRuntimeObject;
-import technologyMapping.runtime.TMRuntimeObject;
-
 /**
  * @author: Vincent Mirian
  * 
@@ -44,7 +32,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-	    Stage currentStage = null;
+	    /*Stage currentStage = null;
 		// RuntimeEnv
 	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("dnaCompiler");
@@ -74,6 +62,8 @@ public class Main {
 	    currentStage = targetCfg.getStageByName("Eugene");
 		//Eugene EU = new Eugene(netlist, runEnv);
 		//EU.execute();
+		 * 
+		 */
 	}
 
 }

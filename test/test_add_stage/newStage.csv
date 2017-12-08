@@ -1,0 +1,13 @@
+StagePrefix,LS,
+StageName,LogicSynthesis,
+AlgorithmName,Base,
+AlgorithmType,Base,
+BooleanType,TRUE,boolean
+ByteType,0,byte
+CharType,c,char
+ShortType,0,short
+IntegerType,0,int
+LongType,0,long
+FloatType,0,float
+DoubleType,0,double
+StringType,"str",string
