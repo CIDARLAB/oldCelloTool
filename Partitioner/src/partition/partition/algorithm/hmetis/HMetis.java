@@ -38,6 +38,7 @@ import common.Utils;
 import partition.algorithm.PTAlgorithm;
 import partition.common.Block;
 import partition.common.Move;
+import partition.common.PTUtils;
 import partition.graph.PEdge;
 import partition.graph.PGraph;
 import partition.graph.PNode;
@@ -135,7 +136,7 @@ public class HMetis extends PTAlgorithm{
 	private void callMetis() throws IOException {
 		String OSPath;
 		String line;
-		OSPath = this.getRuntimeEnv().getOptionValue(PTArgString.CELLODIR) + "/external_tools/";
+		OSPath = PTUtils.getResourcesFilepath() + "/external_tools/";
 		if (Utils.isMac()) {
 			OSPath = OSPath + "OSX/";
 		}
@@ -149,7 +150,7 @@ public class HMetis extends PTAlgorithm{
 		try{
 			String cmd = this.getRuntimeEnv().getOptionValue(PTArgString.PYTHONDIR);
 			cmd += " ";
-			cmd += this.getRuntimeEnv().getOptionValue(PTArgString.CELLODIR);
+			cmd += PTUtils.getResourcesFilepath();
 			cmd += "/scripts/run_metis_partitioner.py graph_file.txt ";
 			cmd += UBFactor;
 			cmd += " ";

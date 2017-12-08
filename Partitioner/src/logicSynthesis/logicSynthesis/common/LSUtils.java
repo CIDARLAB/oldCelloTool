@@ -18,24 +18,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package common.runtime.environment;
+package logicSynthesis.common;
+
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Nov 17, 2017
+ * @date: Dec 8, 2017
  *
  */
-public class ArgDescription {
+public class LSUtils {
 
-	/*
-	 * General
-	 */
-	final static public String HELP_DESCRIPTION = "print this message";
-	final static public String TARGETDATAFILE_DESCRIPTION = "target data file";
-	final static public String TARGETDATADIR_DESCRIPTION = "target data directory";
-	final static public String OPTIONS_DESCRIPTION = "options file";
-	final static public String OUTPUTDIR_DESCRIPTION = "output directory";
-	final static public String PYTHONDIR_DESCRIPTION = "python directory";
+	static public String getFilepath(){
+		String rtn = "";
+		rtn = LSUtils.class.getClassLoader().getResource(".").getPath();
+		return rtn;
+	}
+	
+	static public String getResourcesFilepath(){
+		String rtn = "";
+		rtn += LSUtils.getFilepath();
+		rtn += "resources-logicSynthesis";
+		return rtn;
+	}
 	
 }

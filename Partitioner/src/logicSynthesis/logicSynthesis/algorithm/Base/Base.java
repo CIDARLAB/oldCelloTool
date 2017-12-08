@@ -41,7 +41,7 @@ import edu.byu.ece.edif.core.EdifPortRef;
 import edu.byu.ece.edif.util.parse.EdifParser;
 import edu.byu.ece.edif.util.parse.ParseException;
 import logicSynthesis.algorithm.LSAlgorithm;
-import logicSynthesis.runtime.environment.LSArgString;
+import logicSynthesis.common.LSUtils;
 
 /**
  * @author: Vincent Mirian
@@ -71,7 +71,7 @@ public class Base extends LSAlgorithm{
 		this.setYosysEdifFilename(filename + ".edif");
 		// exec
 		String exec = "";
-		exec += this.getRuntimeEnv().getOptionValue(LSArgString.CELLODIR);
+		exec += LSUtils.getResourcesFilepath();
 		exec += Utils.getFileSeparator();
 		exec += "external_tools";
 		exec += Utils.getFileSeparator();

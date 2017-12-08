@@ -84,7 +84,6 @@ public class RuntimeEnv extends CObject{
 		options.addOption(this.getTargetDataFileOption());
 		options.addOption(this.getTargetDataDirOption());
 		options.addOption(this.getOutputDirOption());
-		options.addOption(this.getCelloDirOption());
 		options.addOption(this.getPythonDirOption());
 	}
 
@@ -118,11 +117,6 @@ public class RuntimeEnv extends CObject{
 		return rtn;
 	}
 	
-	protected Option getCelloDirOption(){
-		Option rtn = new Option( TargetArgString.CELLODIR, true, TargetArgDescription.CELLODIR_DESCRIPTION);
-		return rtn;
-	}
-	
 	protected Option getPythonDirOption(){
 		Option rtn = new Option( TargetArgString.PYTHONDIR, true, TargetArgDescription.PYTHONDIR_DESCRIPTION);
 		return rtn;
@@ -132,8 +126,7 @@ public class RuntimeEnv extends CObject{
 	protected String getDefault(final String str){
 		String rtn = null;
 		switch (str) {
-        case TargetArgString.OUTPUTDIR:  
-        case TargetArgString.CELLODIR:
+        case TargetArgString.OUTPUTDIR:
         	rtn = "";
         	rtn += Utils.getWorkingDirectory();
         	break; 
