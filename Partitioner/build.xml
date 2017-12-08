@@ -5,7 +5,7 @@
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="Partitioner">
-	<taskdef resource="net${file.separator}sf${file.separator}antcontrib${file.separator}antlib.xml" classpath="..${file.separator}external_jars${file.separator}ant-contrib.jar"/>
+	<taskdef resource="net${file.separator}sf${file.separator}antcontrib${file.separator}antlib.xml" classpath="external_jars${file.separator}ant-contrib.jar"/>
 	<!-- Build -->
     <property environment="env"/>
 	<property name="debuglevel" value="source,lines,vars"/>
@@ -14,10 +14,9 @@
 	<property name="source.dir" value="src"/>
 	<property name="build.dir" value="bin"/>
 	<property name="exec.dir" value="exec"/>
-	<property name="logger.dir" value="logger"/>
 	<property name="exec.dir.absolute.path" value="${basedir}${file.separator}${exec.dir}"/>
 	<property name="external-jars.dir" value="external_jars"/>
-	<property name="external-jars.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-jars.dir}${file.separator}"/>
+	<property name="external-jars.dir.absolute.path" value="${external-jars.dir}${file.separator}"/>
 	<property name="external-tools.dir" value="external_tools"/>
 	<property name="external-tools.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-tools.dir}${file.separator}"/>
 	<property name="scripts.dir" value="scripts"/>
@@ -27,7 +26,7 @@
         <pathelement location="${source.dir}"/>
         <pathelement location="${build.dir}"/>
         <pathelement path="${classpath}"/>
-		<fileset dir="..${file.separator}external_jars${file.separator}">
+		<fileset dir="external_jars${file.separator}">
 			<include name="**/*.jar"/>
 		</fileset>
     </path>
@@ -52,7 +51,6 @@
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" includeantruntime="false" source="${source}" target="${target}">
-            <src path="${logger.dir}"/>
             <src path="${source.dir}"/>
             <classpath refid="Partitioner.classpath"/>
         </javac>
@@ -77,7 +75,7 @@
 			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
 			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
 				<manifest>
-					<attribute name="Main-Class" value="@{name}${file.separator}${main-class}"/>
+					<attribute name="Main-Class" value="${main-class}"/>
 				</manifest>
 			</jar>
 		</sequential>
