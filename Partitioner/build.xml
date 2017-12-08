@@ -13,27 +13,32 @@
     <property name="source" value="1.8"/>
 	<property name="source.dir" value="src"/>
 	<property name="build.dir" value="bin"/>
+	<property name="jar.dir" value="${build.dir}${file.separator}jar"/>
 	<property name="exec.dir" value="exec"/>
 	<property name="exec.dir.absolute.path" value="${basedir}${file.separator}${exec.dir}"/>
 	<property name="external-jars.dir" value="external_jars"/>
-	<property name="external-jars.dir.absolute.path" value="${external-jars.dir}${file.separator}"/>
 	<property name="external-tools.dir" value="external_tools"/>
 	<property name="external-tools.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${external-tools.dir}${file.separator}"/>
 	<property name="scripts.dir" value="scripts"/>
 	<property name="scripts.dir.absolute.path" value="${basedir}${file.separator}..${file.separator}${scripts.dir}${file.separator}"/>
-	<property name="main-class" value="runtime${file.separator}Main"/>
-    <path id="Partitioner.classpath">
-        <pathelement location="${source.dir}"/>
-        <pathelement location="${build.dir}"/>
-        <pathelement path="${classpath}"/>
+	<property name="main-class" value="runtime.Main"/>
+	<property name="lib.dir" value="lib${file.separator}"/>
+	<!-- classpath -->
+    <path id="external_jars">
 		<fileset dir="external_jars${file.separator}">
 			<include name="**/*.jar"/>
 		</fileset>
     </path>
+    <path id="Partitioner.classpath">
+        <pathelement location="${source.dir}"/>
+        <pathelement location="${build.dir}"/>
+        <pathelement path="${classpath}"/>
+        <path refid="external_jars"/>
+    </path>
 	<!-- Init -->
     <target name="init">
         <mkdir dir="${build.dir}"/>
-        <copy includeemptydirs="false" todir="${build.dir}/">
+    	<copy includeemptydirs="false" todir="${build.dir}/">
             <fileset dir="${source.dir}/">
                 <exclude name="**${file.separator}*.launch"/>
                 <exclude name="**${file.separator}*.java"/>
@@ -46,7 +51,8 @@
         <delete dir="${exec.dir}"/>
     </target>
     <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project,makeExecDir,build-jars,copy-external-jars,copy-external-tools,copy-scripts" name="build"/>
+	<!-- Build -->
+    <target depends="build-subprojects,build-project,makeExecDir,build-jars,copy-external-jars" name="build"/>
     <target name="build-subprojects"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
@@ -55,33 +61,132 @@
             <classpath refid="Partitioner.classpath"/>
         </javac>
     </target>
-	<!-- Make Jars Directory -->
+	<!-- Make exec Directory -->
     <target name="makeExecDir">
-    	<echo>"Creating directory: ${exec.dir.absolute.path}"</echo>
-		<mkdir dir="${exec.dir.absolute.path}"/>
+    	<echo>"Creating directory: ${exec.dir}"</echo>
+		<mkdir dir="${exec.dir}"/>
     </target>
+	<!-- copy external_jars -->
+	<macrodef name="copy_external_jars">
+		<sequential>
+			<mkdir dir="${jar.dir}/lib"/>
+			<copy todir="${jar.dir}/lib">
+				<fileset dir="${external-jars.dir}" excludes="ant-contrib.jar"/>
+			</copy>
+		</sequential>
+	</macrodef>
+	<!-- copy common_jars -->
+	<macrodef name="copy_common_jars">
+		<sequential>
+			<mkdir dir="${jar.dir}/lib"/>
+			<copy todir="${jar.dir}/lib">
+				<fileset dir="${exec.dir}" includes="common.jar"/>
+			</copy>
+		</sequential>
+	</macrodef>
+	<!-- copy stage_jars -->
+	<macrodef name="copy_stage_jars">
+		<sequential>
+			<mkdir dir="${jar.dir}/lib"/>
+			<copy todir="${jar.dir}/lib">
+				<fileset dir="${exec.dir}" excludes="common.jar,dnaCompiler.jar"/>
+			</copy>
+		</sequential>
+	</macrodef>
+	<!-- copy resources -->
+	<macrodef name="copy_resources">
+		<attribute name="name"/>
+		<sequential>
+			<mkdir dir="${jar.dir}/resources-@{name}"/>
+			<copy todir="${jar.dir}/resources-@{name}">
+				<fileset dir="${source.dir}${file.separator}/resources-@{name}"/>
+			</copy>
+		</sequential>
+	</macrodef>
 	<!-- Build-Jar Macro -->
 	<macrodef name="build_jar">
 		<attribute name="name"/>
 		<sequential>
-			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
-			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
+			<!-- make jar directory -->
+	        <mkdir dir="${jar.dir}"/>
+			<!-- copy files for jar -->
+			<copy todir="${jar.dir}${file.separator}@{name}">
+				<fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
+			</copy>
+			<!-- copy external_jars -->
+			<!-- <copy_external_jars/> -->
+			<!-- copy resources -->
+			<copy_resources name="@{name}"/>
+			<!-- make jar -->
+			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${jar.dir}">
+				<!-- <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/> -->
 			</jar>
+	        <delete dir="${jar.dir}"/>
 		</sequential>
 	</macrodef>
-	<macrodef name="build_exec_jar">
+	<!-- Build-Exec-Jar Macro for Stage -->
+	<macrodef name="build_exec_jar_for_stage">
 		<attribute name="name"/>
 		<sequential>
-			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${build.dir}">
-			    <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
+			<!-- make jar directory -->
+	        <mkdir dir="${jar.dir}"/>
+			<!-- copy files for jar -->
+			<copy todir="${jar.dir}${file.separator}@{name}">
+				<fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
+			</copy>
+			<!-- copy external_jars -->
+			<!-- <copy_external_jars/> -->
+			<!-- copy common_jars -->
+			<!-- <copy_common_jars/> -->
+			<!-- copy resources -->
+			<copy_resources name="@{name}"/>
+			<!-- make jar -->
+			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${jar.dir}">
+				<!-- <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/> -->
 				<manifest>
-					<attribute name="Main-Class" value="${main-class}"/>
+					<attribute name="Main-Class" value="@{name}.${main-class}"/>
 				</manifest>
 			</jar>
+	        <delete dir="${jar.dir}"/>
 		</sequential>
 	</macrodef>
-	<!-- Jars -->
-	<target name="build-jars"> 
+	<!-- Build-Exec-Jar Macro for DNACompiler -->
+	<macrodef name="build_exec_jar_for_dnaCompiler">
+		<attribute name="name"/>
+		<sequential>
+			<!-- make jar directory -->
+	        <mkdir dir="${jar.dir}"/>
+			<!-- copy files for jar -->
+			<copy todir="${jar.dir}${file.separator}@{name}">
+				<fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/>
+			</copy>
+			<!-- copy external_jars -->
+			<!-- <copy_external_jars/> -->
+			<!-- copy common_jars -->
+			<!-- <copy_common_jars/> -->
+			<!-- copy stage_jars -->
+			<!-- <copy_stage_jars/> -->
+			<!-- copy resources -->
+			<copy_resources name="@{name}"/>
+			<!-- make jar -->
+			<jar jarfile="${exec.dir}${file.separator}@{name}.jar" basedir="${jar.dir}">
+				<!-- <fileset dir="${build.dir}${file.separator}@{name}${file.separator}"/> -->
+				<manifest>
+					<attribute name="Main-Class" value="@{name}.${main-class}"/>
+				</manifest>
+			</jar>
+	        <delete dir="${jar.dir}"/>
+		</sequential>
+	</macrodef>
+	<!-- Build Jars -->
+	<target depends="build-common-jars,build-stage-jars,build-dnacompiler-jars" name="build-jars"/>
+	<!-- Common Jars -->
+	<target name="build-common-jars">
+		<echo message="Building jar for: common" />
+		<build_jar name="common"/>
+	</target>
+	<!-- Stage Jars -->
+	<target name="build-stage-jars"> 
 		<for param="file">
 			<path>
 				<dirset dir="${source.dir}" includes="*"/>
@@ -90,24 +195,39 @@
 				<var name="name" unset="true"/>
 				<basename file="@{file}" property="name" />
 				<!-- <echo message="@{file}, ${name}"/> -->
-				<echo message="Building jar for ${name}" />
 				<if>
-					<equals arg1="${name}" arg2="common"/> 
+					<!-- it's a stage -->
+					<and>
+						<not>
+							<equals arg1="${name}" arg2="common"/>
+						</not>
+						<not>
+							<equals arg1="${name}" arg2="dnaCompiler"/>
+						</not>
+						<not>
+							<contains string="${name}" substring="resources"/>
+						</not>
+					</and>
 				<then>
-					<build_jar name="${name}"/>
+					<echo message="Building jar for stage: ${name}" />
+					<build_exec_jar_for_stage name="${name}"/>
 				</then>
 				<else>
-					<build_exec_jar name="${name}"/>
+					<!-- it's not a stage -->
 				</else>
 				</if>
 			</sequential>
 		</for>  
 	</target>
-	<!-- Copy External Jars -->
+	<!-- DNACompiler Jars -->
+	<target name="build-dnacompiler-jars">
+		<build_exec_jar_for_dnaCompiler name="dnaCompiler"/>
+	</target>
+	<!-- Copy External tools -->
     <target name="copy-external-jars">
-		<echo>"Copying External jars to directory: ${exec.dir.absolute.path}"</echo>
-		<copy todir="${exec.dir.absolute.path}">
-			<fileset dir="${external-jars.dir.absolute.path}" excludes="ant-contrib.jar"/>
+		<echo>"Copying External jars to directory: ${exec.dir}"</echo>
+		<copy todir="${exec.dir}${file.separator}${external-jars.dir}">
+			<fileset dir="${external-jars.dir}" includes="**" excludes="ant-contrib.jar"/>
 		</copy>
     </target>
 	<!-- Copy External tools -->
