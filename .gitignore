@@ -6,3 +6,4 @@ derby.log
 *pyc
 **/.DS_Store
 addons
+.project
