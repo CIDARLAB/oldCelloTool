@@ -75,6 +75,15 @@ public class ResponseFunction extends CObject{
 		this.setK(kd);
 		this.setN(hill_constant);
 	}
+	
+	public double computeOutput(double x) {
+		//hardcoded transfer function until symbolic evaluation math library is imported in
+		double output = 0;
+		double denominator = 1.0 + Math.pow(x/this.K, n);
+		output = (this.yMax - this.yMin)/denominator; 
+		output += this.yMin;
+		return output;
+	}
 
 	public String getGateName() {
 		return gateName;

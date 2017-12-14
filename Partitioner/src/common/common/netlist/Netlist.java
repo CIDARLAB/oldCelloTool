@@ -173,7 +173,7 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 		NetlistNode rtn = new NetlistNode(other);
 		return rtn;
 	}
-
+	
 	@Override
 	public NetlistEdge createE(final NetlistEdge other) {
 		NetlistEdge rtn = new NetlistEdge(other);
