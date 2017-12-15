@@ -26,10 +26,10 @@ public class SimulatedAnnealing extends CObject{
 		this.td = td;
 	}
 	
-	public SimulatedAnnealing(CObjectCollection<LogicNode> logicNodes, TargetData td) {
-		//this.nodes = nodes;
+	public SimulatedAnnealing(CObjectCollection<NetlistNode> nodes, TargetData td) {
+		this.nodes = nodes;
 		this.td = td;
-		this.logicNodes = logicNodes;
+		//this.logicNodes = logicNodes;
 	}
 	
 	public void setDefaultParameterValues() {
@@ -57,14 +57,16 @@ public class SimulatedAnnealing extends CObject{
 	}
 
 	public void setParameterValues() {
-		// TODO Auto-generated method stub
-		
+		//computes and sets all node logics
 		computeNodeLogics();
 	}
 
 	
 	public void validateParameterValues() {
 		// TODO Auto-generated method stub
+		for(NetlistNode node:this.nodes) {
+			
+		}
 		
 	}
 
@@ -89,8 +91,8 @@ public class SimulatedAnnealing extends CObject{
 	private void computeNodeLogics() {
 		//each logicNode has a vector of size 2^num_inputs representing all possible logic states (essentially columns of a truth table)
 		
-		List<LogicNode> inputNodes = new ArrayList<LogicNode>();
-		for(LogicNode node:this.logicNodes) {
+		List<NetlistNode> inputNodes = new ArrayList<NetlistNode>();
+		for(NetlistNode node:this.nodes) {
 			if(node.getVertexType().equals(VertexType.SOURCE)) {
 				inputNodes.add(node);
 			}
@@ -98,27 +100,40 @@ public class SimulatedAnnealing extends CObject{
 		
 
 		setInputLogics(inputNodes);
-	    System.out.println(inputNodes.get(0).getLogics());
-	    System.out.println(inputNodes.get(1).getLogics());
+	    System.out.println(inputNodes.get(0).getNetListData().getLogics());
+	    System.out.println(inputNodes.get(1).getNetListData().getLogics());
 	    
 		
 		
-		//now compute actual node logics
+		//now compute actual node logics --> have to iterate through gates in order so that all parents of node have logics set 
+	    //before getting to given node
+	    // i.e. if for example AND gate of NOT/NOR, if NOR comes first in list will be wrong b/c NOR gate doesn't
+	    // won't have parent NOT gate logics set yet --> in other words, this only works if netlist is constructed properly
+	    // and is not well designed = would need to sort NetlistNodes by distance to input to make this more robust
+	    for(NetlistNode node:this.nodes) {
+			if(!node.getVertexType().equals(VertexType.SOURCE)) {
+				computeNodeLogic(node);
+			}
+			
+			System.out.println("Node: " + node.getName() + ", logics: " + node.getNetListData().getLogics());
+	    }
+	    
+	    
 	    
 	    
 		
 		
 	}
 	
-	private void setInputLogics(List<LogicNode> inputNodes) {
+	private void setInputLogics(List<NetlistNode> inputNodes) {
 		//dump code here just to look a bit cleaner for now --> most of this code is taken from original cello and modified slightly
 		//initialize logicVectors to appropriate sizes
 				int n_inputs = inputNodes.size();
 				int numTruthTableRows = (int) Math.pow(2, inputNodes.size());
 				List<Integer> logicVector = new ArrayList<Integer>();
 				
-				for(LogicNode node:this.logicNodes) {
-					node.setLogics(logicVector);
+				for(NetlistNode node:this.nodes) {
+					node.getNetListData().setLogics(logicVector);
 				}
 				
 				int[] n  = new int[n_inputs];
@@ -146,10 +161,34 @@ public class SimulatedAnnealing extends CObject{
 			    			logicVector1.add(new Integer(arr[i]));
 			    			//System.out.println(Arrays.toString(arr));
 			    		}
-			    		inputNodes.get(i).setLogics(logicVector1);
+			    		inputNodes.get(i).getNetListData().setLogics(logicVector1);
 			    		
 			    }
-				
+			    
+	}
+	
+	private void computeNodeLogic(NetlistNode node) {
+		//requires nodes at incoming edges to have logic already set
+		List<NetlistNode> inNodes = new ArrayList<NetlistNode>();
+		List<List<Integer>> inNodeLogics = new ArrayList<List<Integer>>();
+		List<Integer> nodeLogic = new ArrayList<Integer>();
+		for(int i=0; i<node.getNumInEdge();++i) {
+			NetlistNode incomingNode = node.getInEdgeAtIdx(i).getSrc();
+			inNodeLogics.add(incomingNode.getNetListData().getLogics());
+		}
+		
+		//if inNodes.size == 1 --> have a NOT gate, if inNodes.size == 2 --> have a NOR gate
+		int logicsVectorSize = inNodeLogics.get(0).size();
+		
+		for(int i=0; i<logicsVectorSize;++i) {
+			List<Integer> logicInput = new ArrayList<Integer>(); //inputs for a function
+			for(List<Integer> inNode_logics:inNodeLogics) {
+				logicInput.add(inNode_logics.get(i));
+			}
+			Integer output = BooleanLogicCalculator.computeLogic(node, logicInput);
+			nodeLogic.add(output);
+		}
+		node.getNetListData().setLogics(nodeLogic);
 		
 	}
 	public Netlist getNetlist() {

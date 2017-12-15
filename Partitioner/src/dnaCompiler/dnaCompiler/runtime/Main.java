@@ -25,6 +25,7 @@ import java.util.List;
 
 import common.CObjectCollection;
 import common.graph.AbstractVertex.VertexType;
+import common.netlist.NetListData;
 import common.netlist.Netlist;
 import common.netlist.NetlistEdge;
 import common.netlist.NetlistNode;
@@ -60,19 +61,21 @@ public class Main {
 		// Netlist
 		//hardcoding NAND circuit composed of NOT/NORs as test case
 		Netlist netlist = new Netlist();
-//		NetlistNode in1 = new NetlistNode();
-//		NetlistNode in2 = new NetlistNode();
-//		NetlistNode A = new NetlistNode();
-//		NetlistNode B = new NetlistNode();
-//		NetlistNode C = new NetlistNode();
-		//NetlistNode out = new NetlistNode();
+		NetlistNode in1 = new NetlistNode();
+		NetlistNode in2 = new NetlistNode();
+		NetlistNode A = new NetlistNode();
+		NetlistNode B = new NetlistNode();
+		NetlistNode C = new NetlistNode();
+		NetlistNode out = new NetlistNode();
 		
-		LogicNode in1 = new LogicNode();
-		LogicNode in2 = new LogicNode();
-		LogicNode A = new LogicNode();
-		LogicNode B = new LogicNode();
-		LogicNode C = new LogicNode();
-		LogicNode out  = new LogicNode();
+//		LogicNode in1 = new LogicNode();
+//		LogicNode in2 = new LogicNode();
+//		LogicNode A = new LogicNode();
+//		LogicNode B = new LogicNode();
+//		LogicNode C = new LogicNode();
+//		LogicNode out  = new LogicNode();
+//		NetlistNode jai = new NetlistNode();
+//		
 		NetlistEdge e1 = new NetlistEdge(in1, A);
 		NetlistEdge e2 = new NetlistEdge(in2, B);
 		NetlistEdge e3 = new NetlistEdge(A, C);
@@ -97,9 +100,24 @@ public class Main {
 		C.setNodeType("NOR");
 		out.setNodeType("OUTPUT");
 		
+		in1.setName("in1");
+		in2.setName("in2");
+		A.setName("A");
+		B.setName("B");
+		C.setName("C");
+		out.setName("out");
+		
+		
 		in1.setVertexType(VertexType.SOURCE);
 		in2.setVertexType(VertexType.SOURCE);
 		out.setVertexType(VertexType.SINK);
+		
+		in1.setNetListData(new NetListData());
+		in2.setNetListData(new NetListData());
+		A.setNetListData(new NetListData());
+		B.setNetListData(new NetListData());
+		C.setNetListData(new NetListData());
+		out.setNetListData(new NetListData());		
 		
 		CObjectCollection<NetlistNode> netListNodes = new CObjectCollection<NetlistNode>();
 		CObjectCollection<LogicNode> logicNodes = new CObjectCollection<LogicNode>();
@@ -110,12 +128,12 @@ public class Main {
 		netListNodes.add(C);
 		netListNodes.add(out);
 		
-		logicNodes.add(in1);
-		logicNodes.add(in2);
-		logicNodes.add(A);
-		logicNodes.add(B);
-		logicNodes.add(C);
-		logicNodes.add(out);
+//		logicNodes.add(in1);
+//		logicNodes.add(in2);
+//		logicNodes.add(A);
+//		logicNodes.add(B);
+//		logicNodes.add(C);
+//		logicNodes.add(out);
 		
 
 		
@@ -125,7 +143,7 @@ public class Main {
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
 		
 		runGateAssignment(netlist, td);
-		SimulatedAnnealing algorithm = new SimulatedAnnealing(logicNodes, td);	
+		SimulatedAnnealing algorithm = new SimulatedAnnealing(netListNodes, td);	
 		algorithm.setDefaultParameterValues();
 		algorithm.setParameterValues();
 		algorithm.validateParameterValues();

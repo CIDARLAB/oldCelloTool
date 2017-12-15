@@ -41,8 +41,12 @@ public class BooleanLogicCalculator {
 			output = computeNOR(inputs);
 		}
 		
+		else if(node.getNodeType() == "OUTPUT") {
+			output = inputs.get(0); //just a buffer gate for now
+		}
+		
 		else { //unrecognized NodeType
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Unrecognized node type");
 		}
 		
 		return output;
@@ -58,7 +62,7 @@ public class BooleanLogicCalculator {
 			out = 0;
 		}
 		else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Input integer must be 0 or 1 and is not");
 		}
 		
 		return out;
@@ -77,7 +81,7 @@ public class BooleanLogicCalculator {
 		//sanity check on inputs
 		for(Integer input:inputs) {
 			if(input > 1 || input < 0) {
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Input integers must be 0 or 1, at least of one them is not");
 			}
 		}
 		return out;

@@ -145,6 +145,19 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	}
 	
 	private String gate;
+	
+	/*
+	 * NetListData placeholder class
+	 */
+	public void setNetListData(NetListData nodeType) {
+		this.netListData = nodeType;
+	}
+	
+	public NetListData getNetListData() {
+		return this.netListData;
+	}
+	
+	private NetListData netListData;
 
 	/*
 	 * Write
