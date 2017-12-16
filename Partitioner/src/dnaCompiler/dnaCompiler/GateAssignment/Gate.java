@@ -16,9 +16,9 @@ public class Gate extends NetlistNode{
 	private ResponseFunction responseFunction;
 	private String partsMapVariable; //'maps_to_variable' in 'gate_parts'
 	private String promoter; //'output' promoter, i.e. promoter repressor binds too
-	private List<Integer> logics;
-	private List<Integer> inputs; //input RPUs
-	private List<Integer> outputs; //output RPUs, calculated from inputRPUs
+	//private List<Integer> logics; IN NETLISTDATA
+	private List<Double> inputs; //input RPUs
+	private List<Double> outputs; //output RPUs, calculated from inputRPUs
 	
 	
 	public Gate() {
@@ -91,6 +91,26 @@ public class Gate extends NetlistNode{
 	public String toString() {
 		return "Gate [group=" + group + ", responseFunction=" + responseFunction 
 				+ ", partsMapVariable=" + partsMapVariable + ", promoter=" + promoter + "]";
+	}
+
+
+	public List<Double> getInputs() {
+		return inputs;
+	}
+
+
+	public void setInputs(List<Double> inputs) {
+		this.inputs = inputs;
+	}
+
+
+	public List<Double> getOutputs() {
+		return outputs;
+	}
+
+
+	public void setOutputs(List<Double> outputs) {
+		this.outputs = outputs;
 	}
 	
 }

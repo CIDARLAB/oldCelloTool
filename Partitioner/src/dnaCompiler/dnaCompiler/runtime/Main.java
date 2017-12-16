@@ -38,6 +38,7 @@ import common.target.runtime.environment.TargetRuntimeEnv;
 import dnaCompiler.GateAssignment.Gate;
 import dnaCompiler.GateAssignment.LogicNode;
 import dnaCompiler.GateAssignment.ResponseFunction;
+import dnaCompiler.GateAssignment.SimulateAnnealingNodeData;
 import dnaCompiler.GateAssignment.SimulatedAnnealing;
 
 /**
@@ -117,6 +118,7 @@ public class Main {
 		A.setNetListData(new NetListData());
 		B.setNetListData(new NetListData());
 		C.setNetListData(new NetListData());
+		//C.setNetListData(new SimulateAnnealingNodeData());
 		out.setNetListData(new NetListData());		
 		
 		CObjectCollection<NetlistNode> netListNodes = new CObjectCollection<NetlistNode>();

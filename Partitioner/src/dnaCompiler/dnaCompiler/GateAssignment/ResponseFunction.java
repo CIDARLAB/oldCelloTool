@@ -1,6 +1,9 @@
 package dnaCompiler.GateAssignment;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -83,6 +86,15 @@ public class ResponseFunction extends CObject{
 		output = (this.yMax - this.yMin)/denominator; 
 		output += this.yMin;
 		return output;
+	}
+	
+	public List<Double> computeOutput(List<Double> x_vals) {
+		List<Double> outputs = new ArrayList<Double>();
+		for(double x:x_vals) {
+			double out = computeOutput(x);
+			outputs.add(out);
+		}
+		return outputs;
 	}
 
 	public String getGateName() {

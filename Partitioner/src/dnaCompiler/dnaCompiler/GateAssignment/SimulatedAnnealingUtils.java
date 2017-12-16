@@ -1,6 +1,12 @@
 package dnaCompiler.GateAssignment;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
+import common.netlist.NetlistNode;
 
 public class SimulatedAnnealingUtils {
 	
@@ -25,5 +31,26 @@ public class SimulatedAnnealingUtils {
             getLogicPermutation(input_logics_set, n, Nr, idx+1);
         }
     }
+	
+	public static List<Gate> drawNRandomGates(List<Gate> listToDrawFrom, int n){
+		 List<Gate> copy = new ArrayList<Gate>(listToDrawFrom);
+		 Collections.shuffle(copy);
+		 return copy.subList(0, n);
+		 
+	}
+	
+	public static List<Gate> drawNRandomGates(List<Gate> listToDrawFrom, int n, int seed){
+		 List<Gate> copy = new ArrayList<Gate>(listToDrawFrom);
+		 Collections.shuffle(copy, new Random(seed));
+		 return copy.subList(0, n);
+		 
+	}
+	
+	public static List<NetlistNode> drawNRandomNodes(List<NetlistNode> listToDrawFrom, int n){
+		List<NetlistNode> copy = new ArrayList<NetlistNode>(listToDrawFrom);
+		Collections.shuffle(copy);
+		return copy.subList(0, n);
+	}
+	
 	
 }

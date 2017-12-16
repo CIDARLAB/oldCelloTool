@@ -3,6 +3,7 @@ package dnaCompiler.GateAssignment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import common.CObject;
 import common.CObjectCollection;
@@ -16,7 +17,7 @@ public class SimulatedAnnealing extends CObject{
 	
 	private Netlist netlist;
 	private TargetData td;
-	private CObjectCollection<Gate> gates;
+	private CObjectCollection<Gate> gates; //library of available gates
 	CObjectCollection<NetlistNode> nodes;
 	CObjectCollection<LogicNode> logicNodes;
 	
@@ -64,21 +65,35 @@ public class SimulatedAnnealing extends CObject{
 	
 	public void validateParameterValues() {
 		// TODO Auto-generated method stub
-		for(NetlistNode node:this.nodes) {
-			
-		}
 		
 	}
 
 	
 	public void preprocessing() {
-		// TODO Auto-generated method stub
+		//randomly assign gates
+		Random random = new Random(100); //set seed w/ 100
+		int seed = 100;
+		List<NetlistNode> netlistGates = new CObjectCollection<NetlistNode>(); //num nodes in netlist that require a gate to be assigned to them
+		for(NetlistNode node: this.nodes) {
+			if(node.getVertexType().equals(VertexType.NONE)) {
+				netlistGates.add(node);
+			}
+		}
+		List<Gate> randomGates = SimulatedAnnealingUtils.drawNRandomGates(this.gates, netlistGates.size(), seed);
+		
+		for(int i=0; i<netlistGates.size();++i) {
+			netlistGates.get(i).setGate(randomGates.get(i).getName());
+		}
+		
+		//test gate evaluation
+		
 		
 	}
 
 	
 	public void run() {
 		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -100,10 +115,23 @@ public class SimulatedAnnealing extends CObject{
 		
 
 		setInputLogics(inputNodes);
+		
+		//hardcoded values for input and output RPUs
+		List<Double> in1outputRPU = new ArrayList<Double>();
+		List<Double> in2outputRPU = new ArrayList<Double>();
+		in1outputRPU.add(0.0);
+		in1outputRPU.add(0.0);
+		in1outputRPU.add(3.0);
+		in1outputRPU.add(3.0);
+		in2outputRPU.add(0.0);
+		in2outputRPU.add(3.0);
+		in2outputRPU.add(0.0);
+		in2outputRPU.add(3.0);
+		
+		
 	    System.out.println(inputNodes.get(0).getNetListData().getLogics());
 	    System.out.println(inputNodes.get(1).getNetListData().getLogics());
-	    
-		
+	
 		
 		//now compute actual node logics --> have to iterate through gates in order so that all parents of node have logics set 
 	    //before getting to given node
@@ -119,10 +147,6 @@ public class SimulatedAnnealing extends CObject{
 	    }
 	    
 	    
-	    
-	    
-		
-		
 	}
 	
 	private void setInputLogics(List<NetlistNode> inputNodes) {
@@ -190,6 +214,10 @@ public class SimulatedAnnealing extends CObject{
 		}
 		node.getNetListData().setLogics(nodeLogic);
 		
+	}
+	
+	private Gate getNodeGate(NetlistNode node) {
+		return this.gates.findCObjectByName(node.getGate());
 	}
 	public Netlist getNetlist() {
 		return netlist;
