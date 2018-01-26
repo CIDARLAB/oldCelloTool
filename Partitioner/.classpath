@@ -10,6 +10,7 @@
 	<classpathentry kind="src" path="src/partition/resources"/>
 	<classpathentry kind="src" path="src/dnaCompiler/java"/>
 	<classpathentry kind="src" path="src/dnaCompiler/resources"/>
+	<classpathentry kind="src" path="src/eugene/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DNACompilerlib"/>
 	<classpathentry kind="output" path="bin"/>
