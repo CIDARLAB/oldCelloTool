@@ -28,6 +28,8 @@ import org.json.simple.JSONObject;
 import common.JSON.JSONUtils;
 import common.graph.graph.VertexTemplate;
 import common.profile.ProfileUtils;
+import common.CObject;
+import common.CObjectCollection;
 
 /**
  * @author: Vincent Mirian
@@ -146,6 +148,25 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	
 	private String gate;
 
+	/*
+	 * Parts
+	 */
+	/**
+	 * @param parts the parts to set
+	 */
+	public void setParts(CObjectCollection<CObject> parts) {
+		this.parts = parts;
+	}
+
+	/**
+	 * @return The collection of parts that comprise the gate
+	 */
+	public CObjectCollection<CObject> getParts() {
+		return this.parts;
+	}
+
+	private CObjectCollection<CObject> parts;
+	
 	/*
 	 * Write
 	 */	

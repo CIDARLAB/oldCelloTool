@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Massachusetts Institute of Technology (MIT)
+ * Copyright (C) 2017 Boston University (BU)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -28,6 +28,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +50,7 @@ import eugene.algorithm.EugeneAlgorithm;
 import eugene.data.Direction;
 import eugene.data.Gate;
 import eugene.data.Part;
+import eugene.data.PartType;
 import eugene.data.UcfReader;
 import eugene.runtime.environment.EugeneArgString;
 
@@ -139,19 +141,19 @@ public class Base extends EugeneAlgorithm{
 			eugeneCircuitRules.add("   " + String.format("%-12s", "gate_" + g.getName()) + " EXACTLY 1 AND" + Utils.getNewLine());
 
 			for (Part p : g.getParts()){
-				if (p.getPartType().equals("scar")) {
+				if (p.getPartType().toString().equals("scar")) {
 					scars.add(p.getName());
 				}
 						
 				eugenePartTypes.add("PartType " + p.getPartType() + ";" + Utils.getNewLine());
 
-				String partSequence = p.getPartType();
+				String partSequence = p.getPartType().toString();
 				partSequence += " " + p.getName();
 				partSequence += "(.SEQUENCE(\"" + p.getSequence();
 				partSequence += "\"));" + Utils.getNewLine();
 				eugenePartSequences.add(partSequence);
 
-				if (p.getPartType().equals("promoter")) {
+				if (p.getPartType().equals(PartType.PROMOTER)) {
 					devDef += "   " + p.getPartType() + "," + Utils.getNewLine();
 					partRule += "   CONTAINS " + p.getName() + " AND" + Utils.getNewLine();
 				} else {
@@ -244,32 +246,47 @@ public class Base extends EugeneAlgorithm{
 
 	@Override
 	protected void postprocessing() {
-		NamedElement circuit = this.getEugenePlasmids().getElement(0);
+		NamedElement circuit = null;
+		try {
+			circuit = this.getEugenePlasmids().getElement(0);
+		} catch (EugeneException e) {
+			e.printStackTrace();
+		}
 
 		if (circuit instanceof org.cidarlab.eugene.dom.Device) {
 
 			List<Part> module = new ArrayList<Part>();
 
 			int gIndex = 0;
+            int idx;
 
-			for (NamedElement e : ((Device) circuit).getComponentList()) {
+			for (NamedElement el : ((Device) circuit).getComponentList()) {
 
-				if (e instanceof org.cidarlab.eugene.dom.Part) {
+				if (el instanceof org.cidarlab.eugene.dom.Part) {
 					Part p = new Part();
-					p.setName(e.getName());
+					p.setName(el.getName());
 					p.setDirection(Direction.UP);
-
+                    p.setIdx(idx);
 					module.add(p);
-				} else if (e instanceof org.cidarlab.eugene.dom.Device) {
-					String gateName = e.getName();
+				} else if (el instanceof org.cidarlab.eugene.dom.Device) {
+					String gateName = el.getName();
 					Direction gateDirection = Direction.UP;
 
-					String o = ((Device) circuit).getOrientations(gIndex).toString();
+					String o = "[FORWARD]";
+					try {
+						o = ((Device) circuit).getOrientations(gIndex).toString();
+					} catch (EugeneException e) {
+						e.printStackTrace();
+					}
 
 					if (o.equals("[REVERSE]")) {
-						gateDirection = Direction.DOWN;
-						Device reverse_gate = DeviceUtils.flipAndInvert((Device) e);
-						e = reverse_gate;
+						try {
+							Device reverse_gate = DeviceUtils.flipAndInvert((Device) el);
+							gateDirection = Direction.DOWN;
+							el = reverse_gate;
+						} catch (EugeneException e) {
+							e.printStackTrace();
+						}
 					}
 
 					String egate = gateDirection + gateName;
@@ -278,17 +295,21 @@ public class Base extends EugeneAlgorithm{
 
 					int pIndex = 0;
 
-					for (NamedElement part : ((Device) e)
+					for (NamedElement part : ((Device) el)
 							.getComponentList()) {
 
 						String partName = part.getName();
 
 						Direction pDirection = Direction.UP;
 
-						String op = ((Device) e).getOrientations(pIndex).toString();
+						try {
+							String op = ((Device) el).getOrientations(pIndex).toString();
 
-						if (op.equals("[REVERSE]")) {
-							pDirection = Direction.DOWN;
+							if (op.equals("[REVERSE]")) {
+								pDirection = Direction.DOWN;
+							}
+						} catch (EugeneException e) {
+							e.printStackTrace();
 						}
 
 						Part p = new Part();
@@ -306,12 +327,22 @@ public class Base extends EugeneAlgorithm{
 				gIndex++;
 
 			}
-
 			// module_variants.add(module);
 			this.setModule(module);
-
 		}
-		// TODO: update netlist with parts and directions
+
+        Netlist netlist = this.getNetlist();
+        for (int i = 0; i<netlist.getNumVertex(); i++) {
+            NetlistNode node = netlist.getVertexAtIdx(i);
+            String gate = node.getGate();
+            
+        }
+
+        for (Part p : module) {
+            findPartInNetlist();
+        // loop through module parts
+        // find node in netlist by name
+        // update index
 	}
 
 	private Gate gateFromNetlistNode(NetlistNode node) {
