@@ -2,6 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src/resources-common"/>
 	<classpathentry kind="src" path="src/common"/>
+	<classpathentry kind="src" path="src/logicSynthesis"/>
+	<classpathentry kind="src" path="src/technologyMapping"/>
+	<classpathentry kind="src" path="src/partition"/>
 	<classpathentry kind="src" path="src/dnaCompiler"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DNACompilerlib"/>
