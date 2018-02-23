@@ -1,4 +1,5 @@
 exec/
+*_YosysScript
 
 ###########################################################################
 # Java ( https://github.com/github/gitignore/blob/master/Java.gitignore ) #

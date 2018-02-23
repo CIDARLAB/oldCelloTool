@@ -1,0 +1,12 @@
+{
+    "name": "dnaCompiler",
+    "stages":
+    [
+        {
+            "name": "LogicSynthesis",
+            "algorithm_name": "Base",
+            "configuration_type": "file",
+            "configuration_data": "logicsynthesis.json"
+        },
+    ]
+}

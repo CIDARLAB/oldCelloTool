@@ -13,6 +13,8 @@
     <property name="source" value="1.8"/>
 	<property name="source.dir" value="src"/>
 	<property name="build.dir" value="bin"/>
+	<property name="test.source.dir" value="src/test/"/>
+	<property name="test.build.dir" value="bin/test"/>
 	<property name="jar.dir" value="${build.dir}${file.separator}jar"/>
 	<property name="exec.dir" value="exec"/>
 	<property name="exec.dir.absolute.path" value="${basedir}${file.separator}${exec.dir}"/>
@@ -44,10 +46,18 @@
                 <exclude name="**${file.separator}*.java"/>
             </fileset>
         </copy>
+	<mkdir dir="${test.build.dir}"/>
+	<copy includeemptydirs="false" todir="${test.build.dir}/">
+	  <fileset dir="${test.source.dir}/">
+            <exclude name="**${file.separator}*.launch"/>
+            <exclude name="**${file.separator}*.java"/>
+	  </fileset>
+	</copy>
     </target>
 	<!-- Clean -->
     <target name="clean">
         <delete dir="${build.dir}"/>
+	<delete dir="${test.build.dir}"/>
         <delete dir="${exec.dir}"/>
     </target>
     <target depends="clean" name="cleanall"/>
@@ -243,5 +253,25 @@
 		<copy todir="${exec.dir.absolute.path}">
 			<fileset dir="${scripts.dir.absolute.path}..${file.separator}" includes="${scripts.dir}/**"/>
 		</copy>
+    </target>
+    <target name="test-compile" depends="build">
+      <mkdir dir="${test.build.dir}"/>
+      <javac srcdir="${test.source.dir}" destdir="${test.build.dir}" includeantruntime="false">
+	<classpath refid="Partitioner.classpath"/>
+      </javac>
+    </target>
+    <target name="test" depends="test-compile">
+      <junit printsummary="on" haltonfailure="yes" fork="true">
+	<classpath>
+          <path refid="Partitioner.classpath"/>
+          <pathelement location="${test.build.dir}"/>
+	</classpath>
+	<formatter type="brief" usefile="false" />
+	<batchtest>
+	  <fileset dir="${test.source.dir}" includes="**/*.java">
+            <exclude name="test/common/*.java"/>
+          </fileset>
+	</batchtest>
+      </junit>
     </target>
 </project>
