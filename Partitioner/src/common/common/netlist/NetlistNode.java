@@ -25,11 +25,11 @@ import java.io.Writer;
 
 import org.json.simple.JSONObject;
 
+import common.CObject;
+import common.CObjectCollection;
 import common.JSON.JSONUtils;
 import common.graph.graph.VertexTemplate;
 import common.profile.ProfileUtils;
-import common.CObject;
-import common.CObjectCollection;
 
 /**
  * @author: Vincent Mirian
@@ -138,8 +138,8 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	/*
 	 * Gate
 	 */
-	public void setGate(String nodeType) {
-		this.nodeType = nodeType;
+	public void setGate(String gate) {
+		this.gate = gate;
 	}
 	
 	public String getGate() {
@@ -147,6 +147,19 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	}
 	
 	private String gate;
+	
+	/*
+	 * Promoter
+	 */
+	public void setPromoter(String promoter) {
+		this.promoter = promoter;
+	}
+	
+	public String getPromoter() {
+		return this.promoter;
+	}
+	
+	private String promoter;
 	
 	/*
 	 * NetListData placeholder class

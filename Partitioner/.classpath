@@ -8,6 +8,7 @@
 	<classpathentry kind="src" path="src/eugene"/>
 	<classpathentry kind="src" path="src/dnaCompiler"/>
 	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="src" path="src/sbolGenerator"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DNACompilerlib"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
