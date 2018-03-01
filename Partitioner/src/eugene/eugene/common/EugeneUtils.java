@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Boston University (BU)
+ * Copyright (C) 2017 Massachusetts Institute of Technology (MIT)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,55 +18,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package eugene.data;
+package eugene.common;
 
-import common.CObject;
 
 /**
- * @author: Timothy Jones
+ * @author: Vincent Mirian
  * 
- * @date: Feb 27, 2018
+ * @date: Dec 8, 2017
  *
  */
-public class Part extends CObject{
+public class EugeneUtils {
 
-	private PartType partType;
-	private String sequence;
-	private Direction direction;
-
-	/**
-	 * @return the partType
-	 */
-	public PartType getPartType() {
-		return partType;
+	static public String getFilepath(){
+		String rtn = "";
+		rtn = EugeneUtils.class.getClassLoader().getResource(".").getPath();
+		return rtn;
 	}
-
-	/**
-	 * @param partType the partType to set
-	 */
-	public void setPartType(PartType partType) {
-		this.partType = partType;
+	
+	static public String getResourcesFilepath(){
+		String rtn = "";
+		rtn += EugeneUtils.getFilepath();
+		rtn += "resources-eugene";
+		return rtn;
 	}
-
-	/**
-	 * @return the sequence
-	 */
-	public String getSequence() {
-		return sequence;
-	}
-
-	/**
-	 * @param sequence the sequence to set
-	 */
-	public void setSequence(String sequence) {
-		this.sequence = sequence;
-	}
-
-	public Direction getDirection() {
-		return direction;
-	}
-
-	public void setDirection(Direction direction) {
-		this.direction = direction;
-	}
+	
 }

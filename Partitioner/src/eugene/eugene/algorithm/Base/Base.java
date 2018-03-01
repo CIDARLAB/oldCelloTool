@@ -28,7 +28,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,17 +41,19 @@ import org.cidarlab.eugene.dom.imp.container.EugeneCollection;
 import org.cidarlab.eugene.exception.EugeneException;
 import org.cidarlab.eugene.util.DeviceUtils;
 
+import common.CObject;
+import common.CObjectCollection;
 import common.Utils;
 import common.netlist.Netlist;
 import common.netlist.NetlistNode;
 
 import eugene.algorithm.EugeneAlgorithm;
+import eugene.common.EugeneUtils;
+import eugene.common.UCFReader;
 import eugene.data.Direction;
 import eugene.data.Gate;
 import eugene.data.Part;
 import eugene.data.PartType;
-import eugene.data.UcfReader;
-import eugene.runtime.environment.EugeneArgString;
 
 /**
  * @author: Timothy Jones
@@ -61,19 +62,22 @@ import eugene.runtime.environment.EugeneArgString;
  *
  */
 public class Base extends EugeneAlgorithm{
+	// TODO: generate circuit and output plasmids separately
+	// TODO: support partitions
+	// TODO: netlist nodes should be transcriptional units (promoter...terminator), not cds...promoter "gates"
 
 	@Override
 	protected void setDefaultParameterValues() {
-		String filename = this.getRuntimeEnv().getOptionValue(EugeneArgString.CELLODIR) + "eugene";
+		String filename = EugeneUtils.getResourcesFilepath() + Utils.getFileSeparator() + "eugene";
 		this.setEugeneInputFilename(filename + "_input.eug");
 	}
 
 	@Override
 	protected void setParameterValues() {
-		this.setPartRules(UcfReader.getPartRules(this.getTargetData()));
-		this.setGateRules(UcfReader.getGateRules(this.getTargetData()));
-		this.setPartLibrary(UcfReader.getParts(this.getTargetData()));
-		this.setGateLibrary(UcfReader.getGates(this.getTargetData()));
+		this.setPartRules(UCFReader.getPartRules(this.getTargetData()));
+		this.setGateRules(UCFReader.getGateRules(this.getTargetData()));
+		this.setPartLibrary(UCFReader.getParts(this.getTargetData()));
+		this.setGateLibrary(UCFReader.getGates(this.getTargetData()));
 	}
 
 	@Override
@@ -82,24 +86,17 @@ public class Base extends EugeneAlgorithm{
 
 	@Override
 	protected void preprocessing() {
-		// generate input file for eugene
-		// adapted from generateEugeneFile in EugeneAdaptor.java:261
-		
-		Collection<Gate> netlistGates = new HashSet<>();
-
+		Set<Gate> netlistGates = new HashSet<>();
 		Netlist netlist = this.getNetlist();
 
-		// dnacompiler just collects "logic" and "output" gates
 		for (int i = 0; i < netlist.getNumVertex(); i++) {
-			Gate g = gateFromNetlistNode(netlist.getVertexAtIdx(i));
-			// TODO set transcriptional units? i.e., which parts compose the gate. DNACompiler.java:1134:PlasmidUtil.setTxnUnits(...)
-			netlistGates.add(g);
+            NetlistNode node = netlist.getVertexAtIdx(i);
+            if (!node.getNodeType().equals("TopInput") && !node.getNodeType().equals("TopOutput")) {
+                Gate g = gateLibrary.findCObjectByName(node.getGate());
+                netlistGates.add(g);
+            }
 		}
 
-		// TODO: set sensor module lists?
-		// TODO: selectively add scars to part library, according to flag
-		// TODO: generate 'circuit' and 'output' plasmids separately
-		
 		String script = "";
 
 		Set<String> eugenePartTypes = new HashSet<>();
@@ -116,65 +113,81 @@ public class Base extends EugeneAlgorithm{
 		List<String> eugeneGateNames = new ArrayList<>();
 		
 		Set<String> gateNames = new HashSet<>();
-		List<String> scars = new ArrayList<>();
+		// List<String> scars = new ArrayList<>();
 
 		Integer i = 1;
-		for (Gate g : netlistGates){
-			gateNames.add(g.getName());
+        for (int k = 0; k < netlist.getNumVertex(); k++) {
+            NetlistNode node = netlist.getVertexAtIdx(k);
+            if (!node.getNodeType().equals("TopInput") && !node.getNodeType().equals("TopOutput")) {
+                Gate g = gateLibrary.findCObjectByName(node.getGate());
+                gateNames.add(g.getName());
 
-			eugeneForLoops.add("for(num i" + i + "=0;  i" + i + "<sizeof(" + g.getName() + "_devices);  i" + i + "=i" + i + "+1) {");
-			eugeneArrays.add(String.format("%-12s", "gate_" + g.getName()) + " = " + g.getName() + "_devices[i" + i + "];");
-			i++;
+                eugeneForLoops.add("for(num i" + i + "=0;  i" + i + "<sizeof(" + g.getName() + "_devices);  i" + i + "=i" + i + "+1) {");
+                eugeneGateNames.add(String.format("%-12s", "gate_" + g.getName()));
+                eugeneArrays.add(String.format("%-12s", "gate_" + g.getName()) + " = " + g.getName() + "_devices[i" + i + "];");
+                i++;
 
-			String devDef = "Device ";
-			devDef += g.getName() + "_device(" + Utils.getNewLine();
+                String devDef = "Device ";
+                devDef += g.getName() + "_device(" + Utils.getNewLine();
 
-			String partRule = "Rule ";
-			partRule += g.getName() + "_rules ( On ";
-			partRule += g.getName() + "_device:" + Utils.getNewLine();
+                String partRule = "Rule ";
+                partRule += g.getName() + "_rules ( ON ";
+                partRule += g.getName() + "_device:" + Utils.getNewLine();
 
-			String product = String.format("%-15s", g.getName() + "_devices");
-			product += " = product(" + g.getName() + "_device" + ");" + Utils.getNewLine();
-			eugeneProductDefinitions.add(product);
+                String product = String.format("%-15s", g.getName() + "_devices");
+                product += " = product(" + g.getName() + "_device" + ");";
+                eugeneProductDefinitions.add(product);
 
-			eugeneGateDeclarations.add("Device gate_" + g.getName() + "();" + Utils.getNewLine());
-			eugeneCircuitRules.add("   " + String.format("%-12s", "gate_" + g.getName()) + " EXACTLY 1 AND" + Utils.getNewLine());
+                eugeneGateDeclarations.add("Device gate_" + g.getName() + "();");
+                eugeneCircuitRules.add("   " + String.format("%-12s", "gate_" + g.getName()) + " EXACTLY 1 AND");
 
-			for (Part p : g.getParts()){
-				if (p.getPartType().toString().equals("scar")) {
-					scars.add(p.getName());
-				}
-						
-				eugenePartTypes.add("PartType " + p.getPartType() + ";" + Utils.getNewLine());
+                CObjectCollection<Part> txnUnitParts = new CObjectCollection<>();
+                for (int j = 0; j < node.getNumInEdge(); j++) {
+                    NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
+                    for (CObject part : upstreamNode.getParts()) {
+                        Part p = this.getPartLibrary().findCObjectByName(part.getName());
+                        if (part.getType() == PartType.PROMOTER.ordinal()) {
+                            txnUnitParts.add(p);
+                            devDef += "   " + p.getPartType() + "," + Utils.getNewLine();
+                            partRule += "   CONTAINS " + p.getName() + " AND" + Utils.getNewLine();
+                        }
+                    }
+                }
+                for (Part p : g.getParts()){
+                    if (p.getType() != PartType.PROMOTER.ordinal()) {
+                        txnUnitParts.add(p);
+                    }
+                }
+                for (Part p : txnUnitParts){
+                    eugenePartTypes.add("PartType " + p.getPartType() + ";");
 
-				String partSequence = p.getPartType().toString();
-				partSequence += " " + p.getName();
-				partSequence += "(.SEQUENCE(\"" + p.getSequence();
-				partSequence += "\"));" + Utils.getNewLine();
-				eugenePartSequences.add(partSequence);
+                    String partSequence = p.getPartType().toString();
+                    partSequence += " " + p.getName();
+                    partSequence += "(.SEQUENCE(\"" + p.getSequence();
+                    partSequence += "\"));";
+                    eugenePartSequences.add(partSequence);
+                
+                    if (p.getType() != PartType.PROMOTER.ordinal()) {
+                        devDef += "   " + p.getName() + "," + Utils.getNewLine();
+                    }
 
-				if (p.getPartType().equals(PartType.PROMOTER)) {
-					devDef += "   " + p.getPartType() + "," + Utils.getNewLine();
-					partRule += "   CONTAINS " + p.getName() + " AND" + Utils.getNewLine();
-				} else {
-					devDef += "   " + p.getName() + "," + Utils.getNewLine();
-				}
+                    for (String r : this.getPartRules()) {
+                        if (r.contains(" " + p.getName())) {
+                            if (!partRule.toLowerCase().contains("startswith")) {
+                                partRule += "   " + r + " AND" + Utils.getNewLine();
+                            } else {
+                                // TODO log something about duplicate startswith
+                            }
+                        }
+                    }
+                }
+                devDef = devDef.substring(0, devDef.length() - 2);
+                devDef += Utils.getNewLine() + ");" + Utils.getNewLine();
+                eugeneDeviceDefinitions.add(devDef);
 
-				for (String r : this.getPartRules()) {
-					if (r.contains(p.getName())) {
-						if (!partRule.toLowerCase().contains("startswith")) {
-							partRule += "   " + r + " AND" + Utils.getNewLine();
-						} else {
-							// TODO log something about duplicate startswith
-						}
-					}
-				}
-			}
-			devDef = devDef.substring(0, devDef.length() - 2);
-			devDef += Utils.getNewLine() + ");" + Utils.getNewLine();
-			eugeneDeviceDefinitions.add(devDef);
-
-			partRule += "ALL_FORWARD"  + Utils.getNewLine() + ");" + Utils.getNewLine();
+                partRule += "   ALL_FORWARD"  + Utils.getNewLine() + ");" + Utils.getNewLine();
+                eugenePartRules.add(partRule);
+            }
 		}
 
 		for (String r : this.getGateRules()) {
@@ -183,40 +196,46 @@ public class Base extends EugeneAlgorithm{
 				eugeneGateOrderRules.add("   " + r + " AND");
 			}
 		}
-		for (String s : scars) {
-			eugeneCircuitRules.add("   EXACTLY 1 " + s + " AND");
-		}
-		for (String s : scars) {
-			eugeneCircuitRules.add("   FORWARD " + s + " AND");
-		}
-		for (int j = 0; j < scars.size(); j++) {
-			eugeneCircuitRules.add("   [" + (j*2) + "] EQUALS " + scars.get(j) + "AND");
-		}
+		// for (String s : scars) {
+		// 	eugeneCircuitRules.add("   EXACTLY 1 " + s + " AND");
+		// }
+		// for (String s : scars) {
+		// 	eugeneCircuitRules.add("   FORWARD " + s + " AND");
+		// }
+		// for (int j = 0; j < scars.size(); j++) {
+		// 	eugeneCircuitRules.add("   [" + (j*2) + "] EQUALS " + scars.get(j) + "AND");
+		// }
 
-		script += String.join(Utils.getNewLine(), eugenePartTypes) + Utils.getNewLine();
-		script += String.join(Utils.getNewLine(), eugenePartSequences) + Utils.getNewLine();
-		script += String.join(Utils.getNewLine(), eugeneDeviceDefinitions) + Utils.getNewLine();
-		script += String.join(Utils.getNewLine(), eugenePartRules) + Utils.getNewLine();
-		script += String.join(Utils.getNewLine(), eugeneProductDefinitions) + Utils.getNewLine();
+		script += String.join(Utils.getNewLine(), eugenePartTypes);
+        script += Utils.getNewLine() + Utils.getNewLine();
+		script += String.join(Utils.getNewLine(), eugenePartSequences);
+        script += Utils.getNewLine() + Utils.getNewLine();
+		script += String.join(Utils.getNewLine(), eugeneDeviceDefinitions);
+        script += Utils.getNewLine() + Utils.getNewLine();
+		script += String.join(Utils.getNewLine(), eugenePartRules);
+        script += Utils.getNewLine() + Utils.getNewLine();
+		script += String.join(Utils.getNewLine(), eugeneProductDefinitions);
+        script += Utils.getNewLine() + Utils.getNewLine();
 		script += String.join(Utils.getNewLine(), eugeneGateDeclarations) + Utils.getNewLine();
 		script += "Device circuit();" + Utils.getNewLine() + Utils.getNewLine();
 		script += "Rule allRules( ON circuit:" + Utils.getNewLine();
 		script += String.join(Utils.getNewLine(), eugeneGateOrderRules);
+        script += Utils.getNewLine();
 		script += String.join(Utils.getNewLine(), eugeneCircuitRules);
+        script += Utils.getNewLine();
 		script += "   ALL_FORWARD" + Utils.getNewLine() + ");" + Utils.getNewLine() + Utils.getNewLine();
 		script += "Array allResults;" + Utils.getNewLine() + Utils.getNewLine();
 		script += String.join(Utils.getNewLine(), eugeneForLoops) + Utils.getNewLine() + Utils.getNewLine();
 		script += String.join(Utils.getNewLine(), eugeneArrays) + Utils.getNewLine() + Utils.getNewLine();
-		script += "Device circuit(" + Utils.getNewLine() + Utils.getNewLine();
-		script += String.join(Utils.getNewLine(), eugeneGateNames);
+		script += "Device circuit(" + Utils.getNewLine();
 		script += String.join("," + Utils.getNewLine(), eugeneGateNames);
-		script += String.join("," + Utils.getNewLine(), scars);
+		// script += String.join("," + Utils.getNewLine(), scars);
 		script += Utils.getNewLine() + ");" + Utils.getNewLine() + Utils.getNewLine();
 		script += "result = permute(circuit);" + Utils.getNewLine() + Utils.getNewLine();
 		script += "allResults = allResults + result;" + Utils.getNewLine() + Utils.getNewLine();
-		script += Collections.nCopies(gateNames.size(),"}" + Utils.getNewLine());
+		script += String.join(Utils.getNewLine(),Collections.nCopies(gateNames.size(),"}"));
+        script += Utils.getNewLine() + Utils.getNewLine();
 		this.setEugeneInputScript(script);
-		
 		try {
 			OutputStream outputStream = new FileOutputStream(this.getEugeneInputFilename());
 			Writer outputStreamWriter = new OutputStreamWriter(outputStream);
@@ -226,15 +245,10 @@ public class Base extends EugeneAlgorithm{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		// differences from dnacompiler:
-		// part definitions not alphabetically sorted in input eugene file
-		// dna sequences included by default (no flag to choose)
 	}
 
 	@Override
 	protected void run() {
-		// TODO executeScript(this.getEugeneInputFilename());
 		try {
 			Eugene eug = new Eugene();
 			EugeneCollection ec = eug.executeScript(this.getEugeneInputScript());
@@ -253,12 +267,11 @@ public class Base extends EugeneAlgorithm{
 			e.printStackTrace();
 		}
 
+		CObjectCollection<Part> module = new CObjectCollection<>();
 		if (circuit instanceof org.cidarlab.eugene.dom.Device) {
 
-			List<Part> module = new ArrayList<Part>();
-
 			int gIndex = 0;
-            int idx;
+            int idx = 0;
 
 			for (NamedElement el : ((Device) circuit).getComponentList()) {
 
@@ -268,6 +281,7 @@ public class Base extends EugeneAlgorithm{
 					p.setDirection(Direction.UP);
                     p.setIdx(idx);
 					module.add(p);
+					idx++;
 				} else if (el instanceof org.cidarlab.eugene.dom.Device) {
 					String gateName = el.getName();
 					Direction gateDirection = Direction.UP;
@@ -289,22 +303,14 @@ public class Base extends EugeneAlgorithm{
 						}
 					}
 
-					String egate = gateDirection + gateName;
-
 					List<Part> txnUnit = new ArrayList<Part>();
-
 					int pIndex = 0;
-
-					for (NamedElement part : ((Device) el)
-							.getComponentList()) {
-
+					for (NamedElement part : ((Device) el).getComponentList()) {
 						String partName = part.getName();
-
 						Direction pDirection = Direction.UP;
 
 						try {
 							String op = ((Device) el).getOrientations(pIndex).toString();
-
 							if (op.equals("[REVERSE]")) {
 								pDirection = Direction.DOWN;
 							}
@@ -315,39 +321,46 @@ public class Base extends EugeneAlgorithm{
 						Part p = new Part();
 						p.setName(part.getName());
 						p.setDirection(pDirection);
+						p.setType(this.getPartLibrary().findCObjectByName(part.getName()).getType());
+                        p.setIdx(idx);
 						txnUnit.add(p);
-
+                        idx++;
 						pIndex++;
-
 					}
-
 					module.addAll(txnUnit);
 				}
-
 				gIndex++;
-
 			}
-			// module_variants.add(module);
+			// moduleVariants.add(module);
 			this.setModule(module);
 		}
-
         Netlist netlist = this.getNetlist();
         for (int i = 0; i<netlist.getNumVertex(); i++) {
             NetlistNode node = netlist.getVertexAtIdx(i);
-            String gate = node.getGate();
-            
-        }
-
-        for (Part p : module) {
-            findPartInNetlist();
-        // loop through module parts
-        // find node in netlist by name
-        // update index
-	}
-
-	private Gate gateFromNetlistNode(NetlistNode node) {
-		// TODO gateFromNetlistNode function
-		return new Gate();
+			if (node.getNodeType().equals("TopOutput")) {
+				for (int j = 0; j < node.getNumInEdge(); j++) {
+					NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
+					for (CObject part : upstreamNode.getParts()) {
+						if ((part.getType() == PartType.PROMOTER.ordinal()) &&
+							(part.getIdx() != UNASSIGNED)){
+							part.setIdx(UNASSIGNED); // unassigned -- part of an output plasmid
+							break;
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i<netlist.getNumVertex(); i++) {
+            NetlistNode node = netlist.getVertexAtIdx(i);
+			if (!node.getNodeType().equals("TopOutput")) {
+				for (CObject part : node.getParts()) {
+					if (part.getIdx() != UNASSIGNED) {
+						Part modulePart = module.findCObjectByName(part.getName());
+						part.setIdx(modulePart.getIdx());
+					}
+				}
+			}
+		}
 	}
 
 	private Set<String> getDeviceNamesFromRule(String rule) {
@@ -486,51 +499,52 @@ public class Base extends EugeneAlgorithm{
 	/**
 	 * @return the parts
 	 */
-	protected Collection<Part> getPartLibrary() {
+	protected CObjectCollection<Part> getPartLibrary() {
 		return partLibrary;
 	}
 
 	/**
 	 * @param parts the parts to set
 	 */
-	protected void setPartLibrary(final Collection<Part> parts) {
+	protected void setPartLibrary(final CObjectCollection<Part> parts) {
 		this.partLibrary = parts;
 	}
 
 	/**
 	 * @return the gates
 	 */
-	protected Collection<Gate> getGateLibrary() {
+	protected CObjectCollection<Gate> getGateLibrary() {
 		return gateLibrary;
 	}
 
 	/**
 	 * @param gates the gates to set
 	 */
-	protected void setGateLibrary(final Collection<Gate> gates) {
+	protected void setGateLibrary(final CObjectCollection<Gate> gates) {
 		this.gateLibrary = gates;
 	}
 
 	/**
 	 * @return the module
 	 */
-	protected List<Part> getModule() {
+	protected CObjectCollection<Part> getModule() {
 		return module;
 	}
 
 	/**
 	 * @param module the module to set
 	 */
-	protected void setModule(final List<Part> module) {
+	protected void setModule(final CObjectCollection<Part> module) {
 		this.module = module;
 	}
 
+	public static final int UNASSIGNED = -9999;
 	private String eugeneInputScript;
 	private String eugeneInputFilename;
 	private EugeneArray eugenePlasmids;
 	private Collection<String> partRules;
 	private Collection<String> gateRules;
-	private Collection<Part> partLibrary;
-	private Collection<Gate> gateLibrary;
-	private List<Part> module;
+	private CObjectCollection<Part> partLibrary;
+	private CObjectCollection<Gate> gateLibrary;
+	private CObjectCollection<Part> module;
 }
