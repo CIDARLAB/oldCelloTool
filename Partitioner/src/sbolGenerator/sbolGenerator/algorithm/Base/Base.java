@@ -30,8 +30,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.sbolstandard.core2.AccessType;
+import org.sbolstandard.core2.Component;
 import org.sbolstandard.core2.ComponentDefinition;
+import org.sbolstandard.core2.RestrictionType;
 import org.sbolstandard.core2.Sequence;
+import org.sbolstandard.core2.SequenceAnnotation;
 import org.sbolstandard.core2.SBOLConversionException;
 import org.sbolstandard.core2.SBOLDocument;
 import org.sbolstandard.core2.SBOLValidationException;
@@ -189,7 +192,7 @@ public class Base extends SGAlgorithm{
 			}
 		}
 
-		// create transcriptional unit component definitions
+		// create transcriptional unit component definitions and sequences
         for (int i = 0; i < netlist.getNumVertex(); i++) {
             NetlistNode node = netlist.getVertexAtIdx(i);
             if (!node.getNodeType().equals("TopInput") && !node.getNodeType().equals("TopOutput")) {
@@ -212,10 +215,29 @@ public class Base extends SGAlgorithm{
 				URI txnUnitUri = URI.create("http://cellocad.org/v2/" + unitNamePrefix + node.getGate());
 				ComponentDefinition cd = null;
 				cd = sbolDocument.createComponentDefinition(unitNamePrefix + node.getGate(),txnUnitUri);
-				for (String partName : txnUnit) {
+				// for (String partName : txnUnit) {
+				int seqCounter = 1;
+				String sequence = "";
+				for (int j = 0; j < txnUnit.size(); j++) {
+					String partName = txnUnit.get(j);
 					Part p = this.getPartLibrary().findCObjectByName(partName);
-					cd.createComponent(partName,AccessType.PUBLIC,p.getUri());
+					Component c = cd.createComponent(partName,AccessType.PUBLIC,p.getUri());
+					SequenceAnnotation sa =
+						cd.createSequenceAnnotation("SequenceAnnotation" + String.valueOf(j),
+													"SequenceAnnotation" + String.valueOf(j) + "_Range",
+													seqCounter,
+													seqCounter + p.getSequence().length());
+					sa.setComponent(c.getIdentity());
+					seqCounter += p.getSequence().length() + 1;
+					sequence += p.getSequence();
+					if (j != 0) {
+						cd.createSequenceConstraint(cd.getDisplayId() + "Constraint" + String.valueOf(j),
+													RestrictionType.PRECEDES,
+													cd.getComponent(txnUnit.get(j-1)).getIdentity(),
+													cd.getComponent(partName).getIdentity());
+					}
 				}
+				sbolDocument.createSequence(cd.getDisplayId() + "_sequence",sequence,Sequence.IUPAC_DNA);
             }
 		}
 		return sbolDocument;

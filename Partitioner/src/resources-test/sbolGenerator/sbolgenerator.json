@@ -13,7 +13,7 @@
 	    {
 		"name" : "repository_url",
 		"type" : "string",
-		"value": "https://synbiohub.programmingbiology.org/"
+		"value": "https://synbiohub.utah.edu/"
 	    }
 	]
     }
