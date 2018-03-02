@@ -20,8 +20,6 @@
  */
 package eugene.data;
 
-import java.net.URI;
-
 /**
  * @author: Timothy Jones
  * 
