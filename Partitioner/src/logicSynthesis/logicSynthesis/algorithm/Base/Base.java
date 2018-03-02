@@ -20,6 +20,7 @@
  */
 package logicSynthesis.algorithm.Base;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -59,7 +60,6 @@ public class Base extends LSAlgorithm{
 	protected void setParameterValues() {		
 	}
 
-
 	@Override
 	protected void validateParameterValues() {		
 	}
@@ -69,6 +69,25 @@ public class Base extends LSAlgorithm{
 		String filename = Utils.getFilename(this.getVerilogFile());
 		this.setYosysScriptFilename(filename + "_YosysScript");	
 		this.setYosysEdifFilename(filename + ".edif");
+
+		String cellLibraryFile = "";
+		String cellLibraryParameter = this.getAlgorithmProfile().getStringParameter("cell_library").getSecond();
+		if (cellLibraryParameter.equals("notnor")) {
+			cellLibraryFile += LSUtils.getResourcesFilepath();
+			cellLibraryFile += Utils.getFileSeparator();
+			cellLibraryFile += "libraries";
+			cellLibraryFile += Utils.getFileSeparator();
+			cellLibraryFile += "notnor";
+		} else if (cellLibraryParameter.substring(0,Math.min(cellLibraryParameter.length(),5)).equals("file:")) {
+			cellLibraryFile = cellLibraryParameter.substring(5,cellLibraryParameter.length());
+			if (!(new File(cellLibraryFile + ".v")).isFile()) {
+				throw new RuntimeException("'" + cellLibraryFile + ".v is not a file!");
+			}
+			if (!(new File(cellLibraryFile + ".lib")).isFile()) {
+				throw new RuntimeException("'" + cellLibraryFile + ".lib is not a file!");
+			}
+		}
+		
 		// exec
 		String exec = "";
 		exec += LSUtils.getResourcesFilepath();
@@ -88,11 +107,20 @@ public class Base extends LSAlgorithm{
 		script += Utils.getNewLine();
 		script += "flatten";
 		script += Utils.getNewLine();
-		script += "proc";
+		script += "proc; opt";
 		script += Utils.getNewLine();
-		script += "techmap";
+		script += "techmap; opt";
+		script += Utils.getNewLine();
+		script += "dfflibmap";
+		if (!cellLibraryFile.isEmpty()) { script += " -liberty " + cellLibraryFile + ".lib";}
 		script += Utils.getNewLine();
 		script += "abc";
+		if (!cellLibraryFile.isEmpty()) { script += " -liberty " + cellLibraryFile + ".lib";}
+		script += Utils.getNewLine();
+		script += "clean";
+		script += Utils.getNewLine();
+		script += "show -format ps -prefix " + filename;
+		if (!cellLibraryFile.isEmpty()) { script += " -lib " + cellLibraryFile + ".v";}
 		script += Utils.getNewLine();
 		script += "write_edif ";
 		script += this.getYosysEdifFilename();

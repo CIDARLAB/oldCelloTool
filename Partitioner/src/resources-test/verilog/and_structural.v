@@ -1,6 +1,6 @@
-module A(output out1, input in1, in2);
+module and_structural(output out1, input in1, in2);
 
-  wire w1,w2,w3;
+  wire w1,w2;
 
   not (w1, in1);
   not (w2, in2);
