@@ -23,6 +23,7 @@ package sbolGenerator.algorithm.Base;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,6 +36,7 @@ import org.sbolstandard.core2.ComponentDefinition;
 import org.sbolstandard.core2.RestrictionType;
 import org.sbolstandard.core2.Sequence;
 import org.sbolstandard.core2.SequenceAnnotation;
+import org.sbolstandard.core2.SequenceOntology;
 import org.sbolstandard.core2.SBOLConversionException;
 import org.sbolstandard.core2.SBOLDocument;
 import org.sbolstandard.core2.SBOLValidationException;
@@ -60,9 +62,7 @@ import sbolGenerator.data.RepositoryType;
 /**
  * @author: Timothy Jones
  *
- * @author
  * @date: Feb 27, 2018
- * @version
  *
  */
 public class Base extends SGAlgorithm{
@@ -71,7 +71,7 @@ public class Base extends SGAlgorithm{
 	protected void setDefaultParameterValues() {
 		this.setRepositoryType(RepositoryType.SYNBIOHUB);
 		try {
-			URL url = new URL("https://synbiohub.programmingbiology.org/");
+			URL url = new URL("https://synbiohub.utah.edu/");
 			this.setRepositoryUrl(url);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class Base extends SGAlgorithm{
 		try {
 			SBOLDocument sbolDocument = generateModel(this.getRepositoryUrl().toString(),this.getSbolDocument());
 			this.setSbolDocument(sbolDocument);
-		} catch (IOException | SBOLValidationException | SBOLConversionException | VPRException | VPRTripleStoreException e) {
+		} catch (IOException | SBOLValidationException | SBOLConversionException | VPRException | VPRTripleStoreException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
@@ -142,7 +142,6 @@ public class Base extends SGAlgorithm{
 	 */
 	private SBOLDocument createSBOLDocument(Netlist netlist) throws SynBioHubException, SBOLValidationException {
 		SBOLDocument sbolDocument = new SBOLDocument();
-		URI gateTypeUri = URI.create("http://www.biopax.org/release/biopax-level3.owl#DnaRegion");
 		
 		Set<String> uniquePartNames = new HashSet<>();
 
@@ -181,13 +180,11 @@ public class Base extends SGAlgorithm{
 						}
 					}
 				} else {
-					URI partTypeUri = URI.create("http://www.biopax.org/release/biopax-level3.owl#DnaRegion");
-					cd = sbolDocument.createComponentDefinition(partName,partTypeUri);
+					cd = sbolDocument.createComponentDefinition(partName,ComponentDefinition.DNA);
 					p.setUri(cd.getIdentity());
 				}
 			} else {
-				URI partTypeUri = URI.create("http://www.biopax.org/release/biopax-level3.owl#DnaRegion");
-				cd = sbolDocument.createComponentDefinition(partName,partTypeUri);
+				cd = sbolDocument.createComponentDefinition(partName,ComponentDefinition.DNA);
 				p.setUri(cd.getIdentity());
 			}
 		}
@@ -214,7 +211,8 @@ public class Base extends SGAlgorithm{
 				}
 				URI txnUnitUri = URI.create("http://cellocad.org/v2/" + unitNamePrefix + node.getGate());
 				ComponentDefinition cd = null;
-				cd = sbolDocument.createComponentDefinition(unitNamePrefix + node.getGate(),txnUnitUri);
+				cd = sbolDocument.createComponentDefinition(unitNamePrefix + node.getGate(),ComponentDefinition.DNA);
+				cd.addRole(SequenceOntology.ENGINEERED_REGION);
 				// for (String partName : txnUnit) {
 				int seqCounter = 1;
 				String sequence = "";
@@ -254,11 +252,10 @@ public class Base extends SGAlgorithm{
 	 * @throws VPRException - Unable to perform VPR Model Generation on the given SBOLDocument.
 	 * @throws VPRTripleStoreException - Unable to perform VPR Model Generation on the given SBOLDocument.
 	 */
-	public static SBOLDocument generateModel(String selectedRepo, SBOLDocument generatedModel) throws SBOLValidationException, IOException, SBOLConversionException, VPRException, VPRTripleStoreException
-	{ 
-		//"https://synbiohub.org/sparql"
-		String endpoint = selectedRepo + "/sparql";
-		SBOLInteractionAdder_GeneCentric interactionAdder = new SBOLInteractionAdder_GeneCentric(URI.create(endpoint));
+	public static SBOLDocument generateModel(String selectedRepo, SBOLDocument generatedModel) throws SBOLValidationException, IOException, SBOLConversionException, VPRException, VPRTripleStoreException, URISyntaxException
+	{
+		URI endpoint = new URL(new URL(selectedRepo),"/sparql").toURI();
+		SBOLInteractionAdder_GeneCentric interactionAdder = new SBOLInteractionAdder_GeneCentric(endpoint);
 		interactionAdder.addInteractions(generatedModel);
 		return generatedModel;
 	}
