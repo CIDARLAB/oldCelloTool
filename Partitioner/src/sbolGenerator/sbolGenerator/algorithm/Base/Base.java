@@ -193,6 +193,7 @@ public class Base extends SGAlgorithm{
         for (int i = 0; i < netlist.getNumVertex(); i++) {
             NetlistNode node = netlist.getVertexAtIdx(i);
             if (!node.getNodeType().equals("TopInput") && !node.getNodeType().equals("TopOutput")) {
+				// build transcriptional unit
 				List<String> txnUnit = new ArrayList<>();
 				String unitNamePrefix = "";
                 for (int j = 0; j < node.getNumInEdge(); j++) {
@@ -235,7 +236,8 @@ public class Base extends SGAlgorithm{
 													cd.getComponent(partName).getIdentity());
 					}
 				}
-				sbolDocument.createSequence(cd.getDisplayId() + "_sequence",sequence,Sequence.IUPAC_DNA);
+				Sequence s = sbolDocument.createSequence(cd.getDisplayId() + "_sequence",sequence,Sequence.IUPAC_DNA);
+				cd.addSequence(s);
             }
 		}
 		return sbolDocument;
