@@ -55,38 +55,13 @@ public class TMRuntimeObject extends RuntimeObject{
 	protected void run() {
 		// AlgorithmProfile
 		AlgorithmProfile AProfile = this.getStageConfiguration().getAlgorithmProfile();
-		// get list of Gates
-		CObjectCollection<Gate> gates = new CObjectCollection<Gate>();
-		for (int i = 0; i < this.getTargetData().getNumJSONObject("gates"); i++) {
-			JSONObject jObj = this.getTargetData().getJSONObjectAtIdx("gates", i);
-			Gate g = new Gate(jObj);
-			gates.add(g);
-		}
-		// get list of Response Function
-		CObjectCollection<ResponseFunction> rf = new CObjectCollection<ResponseFunction>();
-		for (int i = 0; i < this.getTargetData().getNumJSONObject("response_functions"); i++) {
-			JSONObject jObj = this.getTargetData().getJSONObjectAtIdx("response_functions", i);
-			ResponseFunction r = new ResponseFunction(jObj);
-			rf.add(r);
-		}
-		// associate response function to gate
-		for (int i = 0; i < rf.size(); i++) {
-			ResponseFunction r = rf.get(i);
-			Gate g = gates.findCObjectByName(r.getGateName());
-			if (g == null) {
-				this.logWarn(r.getGateName() + " does not exists!");
-			}
-			else {
-				g.setResponseFunction(r);
-			}			
-		}
 		// run Algorithm
 		TMAlgorithmFactory TMAF = new TMAlgorithmFactory();
 		TMAlgorithm algo = TMAF.getAlgorithm(AProfile);
 		if (algo == null){
 	    	throw new RuntimeException("Algorithm not found!");
 		}
-		algo.execute(gates, this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
+		algo.execute(this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
 	}
 
 }

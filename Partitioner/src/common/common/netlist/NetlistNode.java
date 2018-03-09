@@ -149,32 +149,6 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	private String gate;
 	
 	/*
-	 * Promoter
-	 */
-	public void setPromoter(String promoter) {
-		this.promoter = promoter;
-	}
-	
-	public String getPromoter() {
-		return this.promoter;
-	}
-	
-	private String promoter;
-	
-	/*
-	 * NetListData placeholder class
-	 */
-	public void setNetListData(NetListData nodeType) {
-		this.netListData = nodeType;
-	}
-	
-	public NetListData getNetListData() {
-		return this.netListData;
-	}
-	
-	private NetListData netListData;
-
-	/*
 	 * Parts
 	 */
 	/**

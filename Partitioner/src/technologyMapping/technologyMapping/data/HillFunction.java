@@ -20,70 +20,77 @@
  */
 package technologyMapping.data;
 
-import java.util.function.DoubleFunction;
-
-import common.CObject;
-
 /**
  * @author: Timothy Jones
  * 
  * @date: Mar 9, 2018
  *
  */
-public class ResponseFunction<T extends Curve> extends CObject implements DoubleFunction<Double>{
-	private Double offThreshold;
-	private Double onThreshold;
-	private T curve;
-
-	public ResponseFunction() {
-		super();
-	}
-
-	@Override
-	public Double apply(double value) {
-		return this.getCurve().apply(value);
-	}
+public class HillFunction extends Curve {
+	private Double ymax;
+	private Double ymin;
+	private Double k;
+	private Double n;
 	
-	/**
-	 * @return the offThreshold
-	 */
-	public Double getOffThreshold() {
-		return offThreshold;
+	@Override
+	public Double apply(double input) {
+		return this.getYmin()+(this.getYmax()-this.getYmin())/(1.0 + Math.pow(input/this.getK(),this.getN()));
 	}
 
 	/**
-	 * @param offThreshold the offThreshold to set
+	 * @return the ymax
 	 */
-	public void setOffThreshold(Double offThreshold) {
-		this.offThreshold = offThreshold;
+	public Double getYmax() {
+		return ymax;
 	}
 
 	/**
-	 * @return the onThreshold
+	 * @param ymax the ymax to set
 	 */
-	public Double getOnThreshold() {
-		return onThreshold;
+	public void setYmax(Double ymax) {
+		this.ymax = ymax;
 	}
 
 	/**
-	 * @param onThreshold the onThreshold to set
+	 * @return the ymin
 	 */
-	public void setOnThreshold(Double onThreshold) {
-		this.onThreshold = onThreshold;
+	public Double getYmin() {
+		return ymin;
 	}
 
 	/**
-	 * @return the curve
+	 * @param ymin the ymin to set
 	 */
-	public T getCurve() {
-		return curve;
+	public void setYmin(Double ymin) {
+		this.ymin = ymin;
 	}
 
 	/**
-	 * @param curve the curve to set
+	 * @return the k
 	 */
-	public void setCurve(T curve) {
-		this.curve = curve;
+	public Double getK() {
+		return k;
+	}
+
+	/**
+	 * @param k the k to set
+	 */
+	public void setK(Double k) {
+		this.k = k;
+	}
+
+	/**
+	 * @return the n
+	 */
+	public Double getN() {
+		return n;
+	}
+
+	/**
+	 * @param n the n to set
+	 */
+	public void setN(Double n) {
+		this.n = n;
 	}
 
 }

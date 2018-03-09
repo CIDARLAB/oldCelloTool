@@ -18,72 +18,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package technologyMapping.data;
+package technologyMapping.common;
 
-import java.util.function.DoubleFunction;
-
-import common.CObject;
+import common.netlist.Netlist;
+import common.netlist.NetlistNode;
 
 /**
  * @author: Timothy Jones
  * 
- * @date: Mar 9, 2018
+ * @date: Mar 7, 2018
  *
  */
-public class ResponseFunction<T extends Curve> extends CObject implements DoubleFunction<Double>{
-	private Double offThreshold;
-	private Double onThreshold;
-	private T curve;
+public class NetlistUtil{
 
-	public ResponseFunction() {
-		super();
-	}
-
-	@Override
-	public Double apply(double value) {
-		return this.getCurve().apply(value);
+	public static int getNumInputNodes(Netlist netlist) {
+		int num = netlist.getNumVertex();
+		int rtn = 0;
+		for (int i = 0; i < num; i++) {
+			NetlistNode node = netlist.getVertexAtIdx(i);
+			if (node.getNodeType().equals("TopInput")) {
+				rtn++;
+			}
+		}
+		return rtn;
 	}
 	
-	/**
-	 * @return the offThreshold
-	 */
-	public Double getOffThreshold() {
-		return offThreshold;
-	}
-
-	/**
-	 * @param offThreshold the offThreshold to set
-	 */
-	public void setOffThreshold(Double offThreshold) {
-		this.offThreshold = offThreshold;
-	}
-
-	/**
-	 * @return the onThreshold
-	 */
-	public Double getOnThreshold() {
-		return onThreshold;
-	}
-
-	/**
-	 * @param onThreshold the onThreshold to set
-	 */
-	public void setOnThreshold(Double onThreshold) {
-		this.onThreshold = onThreshold;
-	}
-
-	/**
-	 * @return the curve
-	 */
-	public T getCurve() {
-		return curve;
-	}
-
-	/**
-	 * @param curve the curve to set
-	 */
-	public void setCurve(T curve) {
-		this.curve = curve;
+	public static int getNumOutputNodes(Netlist netlist) {
+		int num = netlist.getNumVertex();
+		int rtn = 0;
+		for (int i = 0; i < num; i++) {
+			NetlistNode node = netlist.getVertexAtIdx(i);
+			if (node.getNodeType().equals("TopOutput")) {
+				rtn++;
+			}
+		}
+		return rtn;
 	}
 
 }

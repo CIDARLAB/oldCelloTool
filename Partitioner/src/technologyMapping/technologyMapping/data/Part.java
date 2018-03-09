@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018 Boston University (BU)
+ * Copyright (C) 2017 Boston University (BU)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -20,70 +20,30 @@
  */
 package technologyMapping.data;
 
-import java.util.function.DoubleFunction;
-
 import common.CObject;
 
 /**
  * @author: Timothy Jones
  * 
- * @date: Mar 9, 2018
+ * @date: Mar 6, 2018
  *
  */
-public class ResponseFunction<T extends Curve> extends CObject implements DoubleFunction<Double>{
-	private Double offThreshold;
-	private Double onThreshold;
-	private T curve;
+public class Part extends CObject{
 
-	public ResponseFunction() {
-		super();
-	}
+	private PartType partType;
 
-	@Override
-	public Double apply(double value) {
-		return this.getCurve().apply(value);
-	}
-	
 	/**
-	 * @return the offThreshold
+	 * @return the partType
 	 */
-	public Double getOffThreshold() {
-		return offThreshold;
+	public PartType getPartType() {
+		return partType;
 	}
 
 	/**
-	 * @param offThreshold the offThreshold to set
+	 * @param partType the partType to set
 	 */
-	public void setOffThreshold(Double offThreshold) {
-		this.offThreshold = offThreshold;
-	}
-
-	/**
-	 * @return the onThreshold
-	 */
-	public Double getOnThreshold() {
-		return onThreshold;
-	}
-
-	/**
-	 * @param onThreshold the onThreshold to set
-	 */
-	public void setOnThreshold(Double onThreshold) {
-		this.onThreshold = onThreshold;
-	}
-
-	/**
-	 * @return the curve
-	 */
-	public T getCurve() {
-		return curve;
-	}
-
-	/**
-	 * @param curve the curve to set
-	 */
-	public void setCurve(T curve) {
-		this.curve = curve;
+	public void setPartType(PartType partType) {
+		this.partType = partType;
 	}
 
 }

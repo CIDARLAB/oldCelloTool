@@ -20,8 +20,10 @@
  */
 package technologyMapping.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import common.CObject;
-import common.CObjectCollection;
 import common.Utils;
 
 /**
@@ -30,47 +32,62 @@ import common.Utils;
  * @date: Mar 6, 2018
  *
  */
-public class Gate extends CObject{
+public class TechNode extends CObject{
 
-	private CObjectCollection<Part> parts;
-	private ResponseFunction responseFunction;
+	private Gate gate;
+	private List<Boolean> logic;
+	private List<Double> activity;
 
-	public Gate() {
+	public TechNode() {
 		super();
 		init();
 	}
 
 	private void init() {
-		parts = new CObjectCollection<Part>();
-		responseFunction = new ResponseFunction();
+		logic = new ArrayList<Boolean>();
+		activity = new ArrayList<Double>();
 	}
 	
 	/**
-	 * @return the parts
+	 * @return the gate
 	 */
-	public CObjectCollection<Part> getParts() {
-		return parts;
+	public Gate getGate() {
+		return gate;
 	}
 
 	/**
-	 * @param parts the parts to set
+	 * @param gate the gate to set
 	 */
-	public void setParts(CObjectCollection<Part> parts) {
-		this.parts = parts;
-	}
-	
-	/**
-	 * @return the responseFunction
-	 */
-	public ResponseFunction getResponseFunction() {
-		return responseFunction;
+	public void setGate(Gate gate) {
+		this.gate = gate;
 	}
 
 	/**
-	 * @param responseFunction the responseFunction to set
+	 * @return the logic
 	 */
-	public void setResponseFunction(ResponseFunction responseFunction) {
-		this.responseFunction = responseFunction;
+	public List<Boolean> getLogic() {
+		return logic;
+	}
+
+	/**
+	 * @param logic the logic to set
+	 */
+	public void setLogic(List<Boolean> logic) {
+		this.logic = logic;
+	}
+
+	/**
+	 * @return the activity
+	 */
+	public List<Double> getActivity() {
+		return activity;
+	}
+
+	/**
+	 * @param activity the activity to set
+	 */
+	public void setActivity(List<Double> activity) {
+		this.activity = activity;
 	}
 
 	/*
@@ -80,8 +97,9 @@ public class Gate extends CObject{
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((parts == null) ? 0 : parts.hashCode());
-		result = prime * result + ((responseFunction == null) ? 0 : responseFunction.hashCode());
+		result = prime * result + ((gate == null) ? 0 : gate.hashCode());
+		result = prime * result + ((logic == null) ? 0 : logic.hashCode());
+		result = prime * result + ((activity == null) ? 0 : activity.hashCode());
 		return result;
 	}
 
@@ -99,16 +117,16 @@ public class Gate extends CObject{
 		if (!(obj instanceof Gate)) {
 			return false;
 		}
-		Gate other = (Gate) obj;
-		if (parts == null) {
-			if (other.parts != null)
+		TechNode other = (TechNode) obj;
+		if (gate == null) {
+			if (other.gate != null)
 				return false;
-		} else if (!parts.equals(other.parts))
+		} else if (!gate.equals(other.gate))
 			return false;
-		if (responseFunction == null) {
-			if (other.responseFunction != null)
+		if (logic == null) {
+			if (other.logic != null)
 				return false;
-		} else if (!responseFunction.equals(other.responseFunction))
+		} else if (!logic.equals(other.logic))
 			return false;
 		return true;
 	}
@@ -119,33 +137,10 @@ public class Gate extends CObject{
 		String indentStr = "";
 		rtn = rtn + "[ ";
 		rtn = rtn + Utils.getNewLine();
-		// reponse function
-		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + "responseFunction = ";
-		indentStr = indentStr + Utils.getNewLine();
-		indentStr = indentStr + this.getResponseFunction().toString();
-		indentStr = indentStr + ",";
-		indentStr = Utils.addIndent(2, indentStr);
-		rtn = rtn + indentStr;
-		rtn = rtn + Utils.getNewLine();
-		// parts
-		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + "parts = [";
-		indentStr = "";
-		if (this.getParts().size() > 0) {
-			for (Part p : this.getParts()) {
-				indentStr = indentStr + Utils.getNewLine();
-				indentStr = indentStr + p.toString();
-				indentStr = indentStr + ",";
-			}
-			indentStr = Utils.addIndent(3, indentStr);
-			rtn = rtn + indentStr;
-			rtn = rtn + Utils.getNewLine();
-			rtn = rtn + Utils.getTabCharacter();
-			rtn = rtn + Utils.getTabCharacter();
-		}
-		rtn = rtn + "]";
-		rtn = rtn + Utils.getNewLine();
+		// logic
+		rtn = rtn + this.getEntryToString("logic", this.getLogic().toString());
+		// activity
+		rtn = rtn + this.getEntryToString("activity", this.getActivity().toString());		
 		// toString
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "toString() = ";

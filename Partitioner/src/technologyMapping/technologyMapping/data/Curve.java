@@ -30,60 +30,6 @@ import common.CObject;
  * @date: Mar 9, 2018
  *
  */
-public class ResponseFunction<T extends Curve> extends CObject implements DoubleFunction<Double>{
-	private Double offThreshold;
-	private Double onThreshold;
-	private T curve;
-
-	public ResponseFunction() {
-		super();
-	}
-
-	@Override
-	public Double apply(double value) {
-		return this.getCurve().apply(value);
-	}
+public abstract class Curve extends CObject implements DoubleFunction<Double>{
 	
-	/**
-	 * @return the offThreshold
-	 */
-	public Double getOffThreshold() {
-		return offThreshold;
-	}
-
-	/**
-	 * @param offThreshold the offThreshold to set
-	 */
-	public void setOffThreshold(Double offThreshold) {
-		this.offThreshold = offThreshold;
-	}
-
-	/**
-	 * @return the onThreshold
-	 */
-	public Double getOnThreshold() {
-		return onThreshold;
-	}
-
-	/**
-	 * @param onThreshold the onThreshold to set
-	 */
-	public void setOnThreshold(Double onThreshold) {
-		this.onThreshold = onThreshold;
-	}
-
-	/**
-	 * @return the curve
-	 */
-	public T getCurve() {
-		return curve;
-	}
-
-	/**
-	 * @param curve the curve to set
-	 */
-	public void setCurve(T curve) {
-		this.curve = curve;
-	}
-
 }

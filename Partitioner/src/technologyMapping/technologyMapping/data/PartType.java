@@ -20,70 +20,27 @@
  */
 package technologyMapping.data;
 
-import java.util.function.DoubleFunction;
-
-import common.CObject;
-
 /**
  * @author: Timothy Jones
  * 
- * @date: Mar 9, 2018
+ * @date: Mar 6, 2018
  *
  */
-public class ResponseFunction<T extends Curve> extends CObject implements DoubleFunction<Double>{
-	private Double offThreshold;
-	private Double onThreshold;
-	private T curve;
-
-	public ResponseFunction() {
-		super();
-	}
-
-	@Override
-	public Double apply(double value) {
-		return this.getCurve().apply(value);
-	}
+public enum PartType {
+	PROMOTER("promoter"),
+	CDS("cds"),
+	TERMINATOR("terminator"),
+	RBS("rbs"),
+	RIBOZYME("ribozyme"),
+	SCAR("scar");
 	
-	/**
-	 * @return the offThreshold
-	 */
-	public Double getOffThreshold() {
-		return offThreshold;
+	private final String partType;
+
+	PartType(String partType) {
+		this.partType = partType;
 	}
 
-	/**
-	 * @param offThreshold the offThreshold to set
-	 */
-	public void setOffThreshold(Double offThreshold) {
-		this.offThreshold = offThreshold;
+	public String toString() {
+		return partType;
 	}
-
-	/**
-	 * @return the onThreshold
-	 */
-	public Double getOnThreshold() {
-		return onThreshold;
-	}
-
-	/**
-	 * @param onThreshold the onThreshold to set
-	 */
-	public void setOnThreshold(Double onThreshold) {
-		this.onThreshold = onThreshold;
-	}
-
-	/**
-	 * @return the curve
-	 */
-	public T getCurve() {
-		return curve;
-	}
-
-	/**
-	 * @param curve the curve to set
-	 */
-	public void setCurve(T curve) {
-		this.curve = curve;
-	}
-
 }
