@@ -18,41 +18,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package technologyMapping.common;
-
-import common.netlist.Netlist;
-import common.netlist.NetlistNode;
+package technologyMapping.data;
 
 /**
  * @author: Timothy Jones
  * 
- * @date: Mar 7, 2018
+ * @date: Mar 9, 2018
  *
  */
-public class NetlistUtil{
+public class LinearFunction extends Curve {
+	private Double slope;
+	private Double offset;
 
-	public static int getNumInputNodes(Netlist netlist) {
-		int num = netlist.getNumVertex();
-		int rtn = 0;
-		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (node.getNodeType().equals("TopInput")) {
-				rtn++;
-			}
-		}
-		return rtn;
+	public LinearFunction() {
+		this.setSlope(1.0);
+		this.setOffset(0.0);
+	}
+
+	public LinearFunction(Double slope, Double offset) {
+		this.setSlope(slope);
+		this.setOffset(offset);
 	}
 	
-	public static int getNumOutputNodes(Netlist netlist) {
-		int num = netlist.getNumVertex();
-		int rtn = 0;
-		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (node.getNodeType().equals("TopOutput")) {
-				rtn++;
-			}
-		}
-		return rtn;
+	@Override
+	public Double apply(double input) {
+		return this.getSlope()*input + this.getOffset();
 	}
 
+	/**
+	 * @return the slope
+	 */
+	public Double getSlope() {
+		return slope;
+	}
+
+	/**
+	 * @param slope the slope to set
+	 */
+	public void setSlope(Double slope) {
+		this.slope = slope;
+	}
+
+	/**
+	 * @return the offset
+	 */
+	public Double getOffset() {
+		return offset;
+	}
+
+	/**
+	 * @param offset the offset to set
+	 */
+	public void setOffset(Double offset) {
+		this.offset = offset;
+	}
+	
 }

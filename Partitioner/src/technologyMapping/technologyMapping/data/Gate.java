@@ -33,7 +33,8 @@ import common.Utils;
 public class Gate extends CObject{
 
 	private CObjectCollection<Part> parts;
-	private ResponseFunction responseFunction;
+	private ResponseFunction<?> responseFunction;
+	private String group;
 
 	public Gate() {
 		super();
@@ -42,7 +43,7 @@ public class Gate extends CObject{
 
 	private void init() {
 		parts = new CObjectCollection<Part>();
-		responseFunction = new ResponseFunction();
+		responseFunction = null;
 	}
 	
 	/**
@@ -62,15 +63,29 @@ public class Gate extends CObject{
 	/**
 	 * @return the responseFunction
 	 */
-	public ResponseFunction getResponseFunction() {
+	public ResponseFunction<?> getResponseFunction() {
 		return responseFunction;
 	}
 
 	/**
 	 * @param responseFunction the responseFunction to set
 	 */
-	public void setResponseFunction(ResponseFunction responseFunction) {
+	public void setResponseFunction(ResponseFunction<?> responseFunction) {
 		this.responseFunction = responseFunction;
+	}
+
+	/**
+	 * @return the group
+	 */
+	public String getGroup() {
+		return group;
+	}
+
+	/**
+	 * @param group the group to set
+	 */
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	/*

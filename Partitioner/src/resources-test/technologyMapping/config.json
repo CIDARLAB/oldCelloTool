@@ -1,0 +1,12 @@
+{
+    "name": "dnaCompiler",
+    "stages":
+    [
+        {
+            "name": "TechnologyMapping",
+            "algorithm_name": "SimulatedAnnealing",
+            "configuration_type": "file",
+            "configuration_data": "technologymapping.json"
+        },
+    ]
+}

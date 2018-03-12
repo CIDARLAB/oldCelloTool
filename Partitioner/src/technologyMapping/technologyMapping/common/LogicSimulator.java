@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Arrays;
-import java.util.Collections;
 
 import common.Utils;
 import common.netlist.Netlist;
@@ -33,7 +31,6 @@ import common.netlist.NetlistEdge;
 import common.netlist.NetlistNode;
 
 import technologyMapping.common.graph.algorithm.UpstreamDFS;
-import technologyMapping.data.Gate;
 import technologyMapping.data.TechNode;
 
 /**
@@ -59,7 +56,7 @@ public class LogicSimulator {
 	}
 
 	private void computeBooleanLogic(Netlist netlist, Map<String,TechNode> techNodeMap) {
-		List<List<Boolean>> inputLogic = getInputLogic(NetlistUtil.getNumInputNodes(netlist));
+		List<List<Boolean>> inputLogic = getInputLogic(TMUtils.getInputNodes(netlist).size());
 
 		UpstreamDFS<NetlistNode,NetlistEdge,Netlist> dfs = new UpstreamDFS<>(netlist);
 		Iterator<List<Boolean>> it = inputLogic.iterator();

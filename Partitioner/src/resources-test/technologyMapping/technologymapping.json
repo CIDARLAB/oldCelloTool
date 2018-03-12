@@ -1,0 +1,8 @@
+{	
+    "name": "technologyMappingProfile0",
+    "AlgorithmProfile":	{
+	"name": "AProfile0",
+	"type": "SimulatedAnnealing",
+	"parameters": []
+    }
+}

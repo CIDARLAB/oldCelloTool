@@ -140,7 +140,17 @@ public class TechNode extends CObject{
 		// logic
 		rtn = rtn + this.getEntryToString("logic", this.getLogic().toString());
 		// activity
-		rtn = rtn + this.getEntryToString("activity", this.getActivity().toString());		
+		rtn = rtn + this.getEntryToString("activity", this.getActivity().toString());
+		// gate
+		if (this.getGate() != null) {
+			indentStr = this.getGate().toString();
+			indentStr = Utils.addIndent(1, indentStr);
+			rtn = rtn + this.getEntryToString("gate", indentStr);
+		} else {
+			rtn = rtn + Utils.getTabCharacter();
+			rtn = rtn + "gate = null,";
+			rtn = rtn + Utils.getNewLine();
+		}
 		// toString
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "toString() = ";

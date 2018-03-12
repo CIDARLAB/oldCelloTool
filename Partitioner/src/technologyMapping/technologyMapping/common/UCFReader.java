@@ -20,24 +20,23 @@
  */
 package technologyMapping.common;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import common.CObjectCollection;
-import common.target.data.TargetData;
 import common.Pair;
+import common.target.data.TargetData;
 
 import technologyMapping.data.Gate;
+import technologyMapping.data.GateType;
+import technologyMapping.data.HillFunction;
+import technologyMapping.data.LinearFunction;
 import technologyMapping.data.Part;
 import technologyMapping.data.PartType;
 import technologyMapping.data.ResponseFunction;
-import technologyMapping.data.HillFunction;
 
 /**
  * @author: Timothy Jones
@@ -46,6 +45,17 @@ import technologyMapping.data.HillFunction;
  *
  */
 public class UCFReader {
+
+	public static final Double getUnitConversion(TargetData td) {
+		Integer num = td.getNumJSONObject("genetic_locations");
+		if (num > 0) {
+			JSONObject json = td.getJSONObjectAtIdx("genetic_locations",0);
+			JSONArray loc = (JSONArray)json.get("output_module_location");
+			return (Double)((JSONObject)loc.get(0)).get("unit_conversion");
+		} else {
+			return 1.0;
+		}
+	}
 
 	public static final CObjectCollection<Part> getParts(TargetData td) {
 		CObjectCollection<Part> parts = new CObjectCollection<Part>();
@@ -63,17 +73,68 @@ public class UCFReader {
 
 	public static final Map<String,Pair<Double,Double>> getInputPromoterActivities(TargetData td) {
 		Map<String,Pair<Double,Double>> map = new HashMap<>();
-		Integer num = td.getNumJSONObject("promoter_rpu");
+		Integer num = td.getNumJSONObject("input_sensors");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("promoter_rpu",i);
+			JSONObject json = td.getJSONObjectAtIdx("input_sensors",i);
 			map.put((String)json.get("promoter"),
-					new Pair<Double,Double>((Double)json.get("low"),(Double)json.get("high")));
+					new Pair<Double,Double>((Double)json.get("rpu_low"),(Double)json.get("rpu_high")));
 		}
 		return map;
 	}
+
+	public static final CObjectCollection<Gate> getInputSensors(TargetData td) {
+		CObjectCollection<Gate> gates = new CObjectCollection<>();
+		Integer num = td.getNumJSONObject("input_sensors");
+		CObjectCollection<Part> parts = getParts(td);
+		for (int i = 0; i < num; i++) {
+			JSONObject json = td.getJSONObjectAtIdx("input_sensors",i);
+			Gate g = new Gate();
+			ResponseFunction<LinearFunction> rf = new ResponseFunction<>();
+			LinearFunction lf = new LinearFunction();
+			rf.setCurve(lf);
+			g.setResponseFunction(rf);
+			String name = (String)json.get("promoter");
+			if (name != null) {g.setName(name);}
+			Part part = parts.findCObjectByName(name);
+			if (part != null) {
+				CObjectCollection<Part> promoter = new CObjectCollection<>();
+				promoter.add(part);
+				g.setParts(promoter);
+			}
+			gates.add(g);
+		}
+		return gates;
+	}
+
+	public static final CObjectCollection<Gate> getOutputReporters(TargetData td) {
+		CObjectCollection<Gate> gates = new CObjectCollection<>();
+		Integer num = td.getNumJSONObject("output_reporters");
+		CObjectCollection<Part> parts = getParts(td);
+		for (int i = 0; i < num; i++) {
+			JSONObject json = td.getJSONObjectAtIdx("output_reporters",i);
+			Gate g = new Gate();
+			ResponseFunction<LinearFunction> rf = new ResponseFunction<>();
+			LinearFunction lf = new LinearFunction(getUnitConversion(td),0.0);
+			rf.setCurve(lf);
+			g.setResponseFunction(rf);
+			String name = (String)json.get("name");
+			if (name != null) {g.setName(name);}
+			JSONArray jsonParts = (JSONArray)json.get("parts");
+			CObjectCollection<Part> outputParts = new CObjectCollection<>();
+			for (Object obj : outputParts) {
+				Part part = parts.findCObjectByName((String)obj);
+				if (part != null) {
+					outputParts.add(part);
+				}
+			}
+			g.setParts(outputParts);
+			gates.add(g);
+		}
+		return gates;
+	}
 	
-	public static final Map<String,ResponseFunction> getGateResponseFunctions(TargetData td) {
-		Map<String,ResponseFunction> map = new HashMap<>();
+	public static final Map<String,ResponseFunction<?>> getGateResponseFunctions(TargetData td) {
+		Map<String,ResponseFunction<?>> map = new HashMap<>();
 		Integer num = td.getNumJSONObject("response_functions");
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("response_functions",i);
@@ -126,17 +187,21 @@ public class UCFReader {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
 		Integer num = td.getNumJSONObject("gates");
 		Map<String,CObjectCollection<Part>> gateParts = getGateParts(td);
-		Map<String,ResponseFunction> responseFunctions = getGateResponseFunctions(td);
+		Map<String,ResponseFunction<?>> responseFunctions = getGateResponseFunctions(td);
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("gates",i);
 			Gate g = new Gate();
-			String name = json.get("gate_name").toString();
-			g.setName(name);
+			String name = (String)json.get("gate_name");
+			if (name != null) {g.setName(name);}
+			String type = (String)json.get("gate_type");
+			if (type != null) {g.setType(GateType.valueOf(type.toUpperCase()).ordinal());}
+			String group = (String)json.get("group_name");
+			if (group != null) {g.setGroup(group);}
 			CObjectCollection<Part> parts = gateParts.get(name);
 			if (parts != null) {
 				g.setParts(gateParts.get(name));
 			}
-			ResponseFunction rf = responseFunctions.get(name);
+			ResponseFunction<?> rf = responseFunctions.get(name);
 			if (rf != null) {
 				g.setResponseFunction(responseFunctions.get(name));
 			}

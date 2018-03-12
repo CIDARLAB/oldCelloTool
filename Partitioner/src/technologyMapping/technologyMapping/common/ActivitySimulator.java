@@ -20,17 +20,11 @@
  */
 package technologyMapping.common;
 
-import java.util.Map;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Arrays;
-import java.util.Collections;
 
 import common.Utils;
-import common.Pair;
 import common.netlist.Netlist;
 import common.netlist.NetlistEdge;
 import common.netlist.NetlistNode;
@@ -47,7 +41,7 @@ import technologyMapping.data.TechNode;
  */
 public class ActivitySimulator {
 
-	public ActivitySimulator(Netlist netlist, Map<String,TechNode> techNodeMap, Map<String,Pair<Double,Double>> inputActivityReference) {
+	public ActivitySimulator(Netlist netlist, Map<String,TechNode> techNodeMap) {
 		Utils.isNullRuntimeException(netlist, "netlist");
 		Utils.isNullRuntimeException(techNodeMap, "techNodeMap");
 		int num = netlist.getNumVertex();
@@ -58,21 +52,18 @@ public class ActivitySimulator {
 			}
 			Utils.isNullRuntimeException(techNodeMap.get(node.getName()), "TechNode for node " + node.getName());
 		}
-		computeActivity(netlist,techNodeMap,inputActivityReference);
+		computeActivity(netlist,techNodeMap);
 	}
 
-	private void computeActivity(Netlist netlist, Map<String,TechNode> techNodeMap, Map<String,Pair<Double,Double>> inputActivityReference) {
+	private void computeActivity(Netlist netlist, Map<String,TechNode> techNodeMap) {
 		UpstreamDFS<NetlistNode,NetlistEdge,Netlist> dfs = new UpstreamDFS<>(netlist);
 		NetlistNode node = null;
 		while ((node = dfs.getNextVertex()) != null) {
 			TechNode tn = techNodeMap.get(node.getName());
 			Gate g = tn.getGate();
 			Utils.isNullRuntimeException(tn.getLogic(), "gate logic");
-			if (node.getNodeType().equals("TopInput")) {
-				Pair<Double,Double> inputRef = inputActivityReference.get(node.getGate());
-				Utils.isNullRuntimeException(inputRef, "Input activity reference for " + node.getGate());
-				tn.setActivity(getInputActivity(tn.getLogic(),inputRef));
-			} else {
+			String type = node.getNodeType();
+			if (!type.equals("TopInput")) {
 				List<List<Double>> inputs = new ArrayList<>();
 				for (int i = 0; i < node.getNumInEdge(); i++) {
 					NetlistEdge e = node.getInEdgeAtIdx(i);
@@ -81,24 +72,12 @@ public class ActivitySimulator {
 				}
 
 				if (node.getNodeType().equals("TopOutput")) {
-					tn.setActivity(getOutputActivity(inputs));
+					tn.setActivity(getOutputActivity(inputs,g));
 				} else {
 					tn.setActivity(getGateActivity(inputs,g));
 				}
 			}
 		}
-	}
-
-	private static List<Double> getInputActivity(List<Boolean> logic, Pair<Double,Double> inputActivity) {
-		List<Double> activity = new ArrayList<>();
-		for (Boolean b : logic) {
-			if (b) {
-				activity.add(inputActivity.getSecond());
-			} else {
-				activity.add(inputActivity.getFirst());
-			}
-		}
-		return activity;
 	}
 
 	private static List<Double> getGateActivity(List<List<Double>> input, Gate gate) {
@@ -114,16 +93,8 @@ public class ActivitySimulator {
 		return rtn;
 	}
 
-	private static List<Double> getOutputActivity(List<List<Double>> input) {
-		isRaggedInputListException(input);
-		List<Double> rtn = new ArrayList<>();
-		Double x = 0.0;
-		for (int i = 0; i < input.get(0).size(); i++) {
-			List<Double> col = getInputColumn(input,i);
-			x = col.stream().mapToDouble(Double::doubleValue).sum();
-			rtn.add(x);
-		}
-		return rtn;
+	private static List<Double> getOutputActivity(List<List<Double>> input, Gate gate) {
+		return getGateActivity(input,gate);
 	}
 
 	private static List<Double> getInputColumn(List<List<Double>> input, int i) {
