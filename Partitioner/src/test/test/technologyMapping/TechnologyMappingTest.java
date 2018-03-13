@@ -22,8 +22,6 @@ package test.technologyMapping;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import common.CObject;
 import common.CObjectCollection;
 import common.graph.AbstractVertex.VertexType;

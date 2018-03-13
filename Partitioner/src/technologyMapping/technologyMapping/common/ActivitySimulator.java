@@ -41,7 +41,7 @@ import technologyMapping.data.TechNode;
  */
 public class ActivitySimulator {
 
-	public ActivitySimulator(Netlist netlist, Map<String,TechNode> techNodeMap) {
+	public ActivitySimulator(final Netlist netlist, Map<String,TechNode> techNodeMap) {
 		Utils.isNullRuntimeException(netlist, "netlist");
 		Utils.isNullRuntimeException(techNodeMap, "techNodeMap");
 		int num = netlist.getNumVertex();

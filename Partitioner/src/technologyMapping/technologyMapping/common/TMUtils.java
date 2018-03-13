@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import common.CObject;
@@ -87,6 +88,26 @@ public class TMUtils{
 	}
 
 	/**
+	 * Get all the logic nodes in the netlist.
+	 * 
+	 * @param netlist the netlist from which to collect logic nodes.
+	 * @return the logic nodes in the netlist.
+	 */
+	public static List<NetlistNode> getLogicNodes(Netlist netlist) {
+		List<NetlistNode> rtn = new CObjectCollection<>();
+		int num = netlist.getNumVertex();
+		for (int i = 0; i < num; i++) {
+			NetlistNode node = netlist.getVertexAtIdx(i);
+			if (!node.getNodeType().equals("TopOutput")
+				&&
+				!node.getNodeType().equals("TopInput")) {
+				rtn.add(node);
+			}
+		}
+		return rtn;
+	}
+
+	/**
 	 * Get the set of groups present in a gate library.
 	 * 
 	 * @param gateLibrary the gate library from which to build the list of groups.
@@ -135,6 +156,21 @@ public class TMUtils{
 			if (str == null)
 				continue;
 			if (str.equals(group))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Check if a particular gate exists in a collection of tech nodes.
+	 * 
+	 * @param techNodes the collection of tech nodes in which to check for the gate.
+	 * @param gate the gate for which to check.
+	 * @return true if the tech nodes contain the given gate.
+	 */
+	public static Boolean hasGate(Collection<TechNode> techNodes, Gate gate) {
+		for (TechNode tn : techNodes) {
+			if (tn.getGate().equals(gate))
 				return true;
 		}
 		return false;
@@ -200,14 +236,14 @@ public class TMUtils{
 	}
 
 	/**
-	 * Do a random assignment of gates on the netlist.
+	 * Do a random assignment of gates onto the tech node map. Don't update the netlist.
 	 * 
 	 * @param netlist the netlist on which to make the assignment.
 	 * @param techNodeMap the map from netlist node name to TechNode object.
 	 * @param gateLibrary the gate library from which to make assignments.
 	 */
-	public static void doRandomAssignment(Netlist netlist, Map<String,TechNode> techNodeMap, List<Gate> gateLibrary) {
-		Set<String> groups = TMUtils.getGateGroups(gateLibrary);
+	public static void doRandomAssignment(final Netlist netlist, Map<String,TechNode> techNodeMap, List<Gate> gateLibrary) {
+		// Set<String> groups = TMUtils.getGateGroups(gateLibrary);
 
 		// Map<String,List<Gate>> gatesByType = TMUtils.getGatesByType(gateLibrary);
 		// Map<String,Iterator<Gate>> it = new HashMap<>();
@@ -240,7 +276,7 @@ public class TMUtils{
 			}
 		}
 	}
-
+	
 	/**
 	 * Assign input sensors from a library to a netlist.
 	 * 
@@ -257,7 +293,8 @@ public class TMUtils{
 			}
 			Gate g = it.next();
 			TechNode tn = techNodeMap.get(node.getName());
-			setNodeGate(node,tn,g);
+			tn.setGate(g);
+			setNodeGate(node,tn);
 		}
 	}
 
@@ -277,7 +314,8 @@ public class TMUtils{
 			}
 			Gate g = it.next();
 			TechNode tn = techNodeMap.get(node.getName());
-			setNodeGate(node,tn,g);
+			tn.setGate(g);
+			setNodeGate(node,tn);
 		}
 	}
 
@@ -288,14 +326,138 @@ public class TMUtils{
 	 * @param the techNode to which to assign the gate. 
 	 * @param gate the gate to assign.
 	 */
-	public static void setNodeGate(NetlistNode node, TechNode techNode, Gate gate) {
-		node.setGate(gate.getName());
-		techNode.setGate(gate);
+	public static void setNodeGate(NetlistNode node, TechNode techNode) {
+		node.setGate(techNode.getGate().getName());
 		CObjectCollection<CObject> parts = new CObjectCollection<>();
-		for (Part p : gate.getParts()) {
+		for (Part p : techNode.getGate().getParts()) {
 			parts.add((CObject) p);
 		}
 		node.setParts(parts);
 	}
-	
+
+	/**
+	 * Build an empty TechNode map for a given netlist.
+	 * 
+	 * @param netlist the netlist from which to build the map.
+	 * @return the TechNode map.
+	 */
+	public static Map<String,TechNode> buildTechNodeMap(Netlist netlist) {
+		int num = netlist.getNumVertex();
+		Map<String,TechNode> map = new HashMap<>();
+		for (int i = 0; i < num; i++) {
+			NetlistNode node = netlist.getVertexAtIdx(i);
+			TechNode tn = new TechNode();
+			tn.setIdx(node.getIdx());
+			tn.setName(node.getName());
+			map.put(node.getName(),tn);
+		}
+		return map;
+	}
+
+	/**
+	 * Build a TechNode map for a given netlist using an existing map.
+	 * 
+	 * @param netlist the netlist from which to build the map.
+	 * @return the TechNode map.
+	 */
+	public static Map<String,TechNode> buildTechNodeMap(Netlist netlist, Map<String,TechNode> techNodeMap) {
+		Map<String,TechNode> map = buildTechNodeMap(netlist);
+		int num = netlist.getNumVertex();
+		for (int i = 0; i < num; i++) {
+			NetlistNode node = netlist.getVertexAtIdx(i);
+			TechNode tn = null;
+			TechNode old = techNodeMap.get(node.getName());
+			if (old != null) {
+				tn = new TechNode(old);
+			} else {
+				tn = new TechNode();
+				tn.setIdx(node.getIdx());
+				tn.setName(node.getName());
+			}
+			map.put(node.getName(),tn);
+		}
+		return map;
+	}
+
+	/**
+	 * Evaluate the score for a given assignment.
+	 * 
+	 * @param netlist the netlist from which to build the map.
+	 * @return the TechNode map.
+	 */
+	public static Double getScore(final Netlist netlist, Map<String,TechNode> techNodeMap) {
+		Double lowestOn = Double.MAX_VALUE;
+        Double highestOff = Double.MIN_VALUE;
+		Double worst = Double.MAX_VALUE;
+
+		List<NetlistNode> nodes = getOutputNodes(netlist);
+		List<Double> scores = new ArrayList<>();
+		for(int j = 0; j < nodes.size(); j++) {// if multiple outputs, average _scores
+			TechNode tn = techNodeMap.get(nodes.get(j).getName());
+
+			for(int i = 0; i < tn.getLogic().size(); ++i) { // for each row in the truth table...
+				Double a = tn.getActivity().get(i);
+
+				if (tn.getLogic().get(i) == true
+					&&
+					lowestOn > a) {
+					lowestOn = a;
+				} else if (tn.getLogic().get(i) == false
+						   &&
+						   highestOff < a) {
+					highestOff = a;
+				}
+			}
+			Double score = lowestOn/highestOff;
+			scores.add(score);
+			if(score < worst) {
+                worst = score;
+            }
+        }
+		return worst;	
+	}
+
+	/**
+	 * Update a netlist to reflect a gate assignment in a TechNode map.
+	 * 
+	 * @param netlist the netlist to update.
+	 * @param techNodeMap the TechNode map from which to copy the assignment.
+	 */
+	public static void updateNetlist(Netlist netlist, Map<String,TechNode> techNodeMap) {
+		int num = netlist.getNumVertex();
+		for (int i = 0; i < num; i++) {
+			NetlistNode node = netlist.getVertexAtIdx(i);
+			String name = node.getName();
+			TechNode tn = techNodeMap.get(name);
+			if (techNodeMap.keySet().contains(name)) {
+				setNodeGate(node,tn);
+			}
+		}
+	}
+
+	/**
+	 * Get a candidate gate for assignment.
+	 * 
+	 * @param techNodeMap the TechNode map to use when checking for gate validity.
+	 * @param gateLibrary the gate library from which to pull candidates.
+	 * @param gate the gate to be swapped or subsituted
+	 */
+	public static Gate getSwapOrSubGate(Map<String,TechNode> techNodeMap, Collection<Gate> gateLibrary, Gate gate) {
+		List<Gate> options = new ArrayList<>();
+		for(Gate g : gateLibrary) {
+			if(g.getName().equals(gate.getName())) {
+                continue;
+            }
+			if(g.getGroup().equals(gate.getGroup())) {
+                options.add(g);
+            }
+			if (!TMUtils.hasGatesOfGroup(techNodeMap.values(), g.getGroup())
+				||
+				TMUtils.hasGate(techNodeMap.values(), g)) {
+                options.add(g);
+            }
+		}
+		return options.get(new Random().nextInt(options.size()));
+	}
+		
 }

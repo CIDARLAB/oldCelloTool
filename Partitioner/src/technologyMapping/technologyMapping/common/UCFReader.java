@@ -121,7 +121,7 @@ public class UCFReader {
 			if (name != null) {g.setName(name);}
 			JSONArray jsonParts = (JSONArray)json.get("parts");
 			CObjectCollection<Part> outputParts = new CObjectCollection<>();
-			for (Object obj : outputParts) {
+			for (Object obj : jsonParts) {
 				Part part = parts.findCObjectByName((String)obj);
 				if (part != null) {
 					outputParts.add(part);

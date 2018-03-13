@@ -20,9 +20,6 @@
  */
 package technologyMapping.runtime;
 
-import org.json.simple.JSONObject;
-
-import common.CObjectCollection;
 import common.netlist.Netlist;
 import common.profile.AlgorithmProfile;
 import common.runtime.RuntimeObject;
@@ -31,8 +28,6 @@ import common.stage.StageConfiguration;
 import common.target.data.TargetData;
 import technologyMapping.algorithm.TMAlgorithm;
 import technologyMapping.algorithm.TMAlgorithmFactory;
-import technologyMapping.data.Gate;
-import technologyMapping.data.ResponseFunction;
 
 /**
  * @author: Vincent Mirian

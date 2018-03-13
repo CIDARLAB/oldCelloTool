@@ -42,6 +42,15 @@ public class TechNode extends CObject{
 		super();
 		init();
 	}
+	
+	public TechNode(final TechNode other){
+		super(other);
+		this.setActivity(other.getActivity());
+		this.setLogic(other.getLogic());
+		if (other.getGate() != null) {
+			this.setGate(other.getGate());
+		}
+	}
 
 	private void init() {
 		logic = new ArrayList<Boolean>();
