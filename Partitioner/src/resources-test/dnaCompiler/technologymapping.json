@@ -1,0 +1,15 @@
+{	
+    "name": "technologyMappingProfile0",
+    "AlgorithmProfile":	{
+	"name": "AProfile0",
+	"type": "SimulatedAnnealing",
+	"parameters":
+	[
+	    {
+		"name" : "trajectories",
+		"type" : "int",
+		"value": "50"
+	    },
+	]	
+    }
+}
