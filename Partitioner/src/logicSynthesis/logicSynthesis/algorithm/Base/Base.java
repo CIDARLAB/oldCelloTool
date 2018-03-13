@@ -102,6 +102,11 @@ public class Base extends LSAlgorithm{
 		this.setYosysExec(exec);
 		// create Yosys script
 		String script = "";
+		if (!cellLibraryFile.isEmpty()) {
+			script += "read_verilog -lib ";
+			script += cellLibraryFile + ".v";
+			script += Utils.getNewLine();
+		}
 		script += "read_verilog ";
 		script += this.getVerilogFile();
 		script += Utils.getNewLine();
@@ -120,11 +125,10 @@ public class Base extends LSAlgorithm{
 		script += "clean";
 		script += Utils.getNewLine();
 		script += "show -format ps -prefix " + filename;
-		if (!cellLibraryFile.isEmpty()) { script += " -lib " + cellLibraryFile + ".v";}
 		script += Utils.getNewLine();
 		script += "write_edif ";
 		script += this.getYosysEdifFilename();
-		script += Utils.getNewLine();	
+		script += Utils.getNewLine();
 		// write Yosys script
 		try {
 			OutputStream outputStream = new FileOutputStream(this.getYosysScriptFilename());
