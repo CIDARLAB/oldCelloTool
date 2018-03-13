@@ -35,9 +35,9 @@ import eugene.algorithm.EugeneAlgorithmFactory;
  * @date: Dec 6, 2017
  *
  */
-public class EugeneRuntimeObject extends RuntimeObject{
+public class EURuntimeObject extends RuntimeObject{
 
-	public EugeneRuntimeObject(
+	public EURuntimeObject(
 			final StageConfiguration stageConfiguration,
 			final TargetData targetData,
 			final Netlist netlist,

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Boston University (BU)
+ * Copyright (C) 2018 Boston University (BU)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -21,8 +21,6 @@
 package test.sbolGenerator;
 
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import common.CObject;
 import common.CObjectCollection;

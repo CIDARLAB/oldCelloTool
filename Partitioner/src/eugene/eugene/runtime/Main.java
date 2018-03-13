@@ -51,7 +51,7 @@ public class Main {
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, EugeneArgString.TARGETDATAFILE, EugeneArgString.TARGETDATADIR);
 		// Execute
-		EugeneRuntimeObject eugene = new EugeneRuntimeObject(sc, td, netlist, runEnv);
+		EURuntimeObject eugene = new EURuntimeObject(sc, td, netlist, runEnv);
 		eugene.setName("Eugene");
 		eugene.execute();
 		// Write Netlist

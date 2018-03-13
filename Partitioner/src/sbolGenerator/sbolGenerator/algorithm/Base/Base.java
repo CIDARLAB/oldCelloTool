@@ -210,7 +210,6 @@ public class Base extends SGAlgorithm{
 						txnUnit.add(part.getName());
 					}
 				}
-				URI txnUnitUri = URI.create("http://cellocad.org/v2/" + unitNamePrefix + node.getGate());
 				ComponentDefinition cd = null;
 				cd = sbolDocument.createComponentDefinition(unitNamePrefix + node.getGate(),ComponentDefinition.DNA);
 				cd.addRole(SequenceOntology.ENGINEERED_REGION);

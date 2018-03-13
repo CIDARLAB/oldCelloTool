@@ -22,8 +22,6 @@ package test.eugene;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import common.CObject;
 import common.CObjectCollection;
 import common.graph.AbstractVertex.VertexType;
@@ -39,7 +37,7 @@ import common.target.data.TargetDataUtils;
 import common.target.runtime.environment.TargetArgString;
 import common.target.runtime.environment.TargetRuntimeEnv;
 
-import eugene.runtime.EugeneRuntimeObject;
+import eugene.runtime.EURuntimeObject;
 import eugene.data.PartType;
 
 import test.common.TestUtils;
@@ -75,7 +73,7 @@ public class EugeneTest{
 		// Stages
 		// Eugene
 	    currentStage = targetCfg.getStageByName("Eugene");
-		EugeneRuntimeObject EU = new EugeneRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		EURuntimeObject EU = new EURuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		EU.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, "eugenetest.json");
 	}
