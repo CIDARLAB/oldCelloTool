@@ -187,10 +187,6 @@ public class SimulatedAnnealing extends TMAlgorithm{
 	@Override
 	protected void postprocessing() {
 		TMUtils.updateNetlist(this.getNetlist(),this.getTechNodeMap());
-		int num = this.getNetlist().getNumVertex();
-		for (int i = 0; i < num; i++) {
-			NetlistNode node = this.getNetlist().getVertexAtIdx(i);
-		}
 	}
 
 	/* Getter & Setter */
