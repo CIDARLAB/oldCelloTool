@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Boston University (BU)
+ * Copyright (C) 2018 Boston University (BU)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import common.CObject;
 import common.CObjectCollection;
+import common.Utils;
 import common.graph.AbstractVertex.VertexType;
 import common.netlist.Netlist;
 import common.netlist.NetlistEdge;
@@ -37,8 +38,8 @@ import common.target.data.TargetDataUtils;
 import common.target.runtime.environment.TargetArgString;
 import common.target.runtime.environment.TargetRuntimeEnv;
 
-import eugene.runtime.EURuntimeObject;
 import eugene.data.PartType;
+import eugene.runtime.EURuntimeObject;
 
 import test.common.TestUtils;
 
@@ -52,27 +53,31 @@ public class EugeneTest{
 
 	@Test
 	public void test() {
-		String resourcesFilepath = TestUtils.getResourcesFilepath() + "/eugene/";
+		String resourcesFilepath = TestUtils.getResourcesFilepath()
+			+ Utils.getFileSeparator()
+			+ "eugene"
+			+ Utils.getFileSeparator();
+
 
 		String[] args = new String[] {"-verilogFile","foo.v",
 									  "-targetDataDir",resourcesFilepath,
 									  "-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
 									  "-configDir",resourcesFilepath,
 									  "-configFile","config.json"};
-		
+
 		Stage currentStage = null;
 		// RuntimeEnv
-	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
+		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("dnaCompiler");
 		// Netlist
 		Netlist netlist = generateTestNetlist();
 		// TargetConfiguration
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
 		// Stages
 		// Eugene
-	    currentStage = targetCfg.getStageByName("Eugene");
+		currentStage = targetCfg.getStageByName("Eugene");
 		EURuntimeObject EU = new EURuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		EU.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, "eugenetest.json");
@@ -80,16 +85,15 @@ public class EugeneTest{
 
 	public Netlist generateTestNetlist() {
 		Netlist netlist = new Netlist();
-		
+
 		netlist.setName("eugene");
-		
 		NetlistNode in1 = new NetlistNode();
 		NetlistNode in2 = new NetlistNode();
 		NetlistNode A = new NetlistNode();
 		NetlistNode B = new NetlistNode();
 		NetlistNode C = new NetlistNode();
 		NetlistNode out = new NetlistNode();
-		
+
 		NetlistEdge e1 = new NetlistEdge(in1, A);
 		NetlistEdge e2 = new NetlistEdge(in2, B);
 		NetlistEdge e3 = new NetlistEdge(A, C);
@@ -101,7 +105,7 @@ public class EugeneTest{
 		e3.setName("e3");
 		e4.setName("e4");
 		e5.setName("e5");
-		
+
 		in1.addOutEdge(e1);
 		in2.addOutEdge(e2);
 		A.addInEdge(e1);
@@ -119,7 +123,7 @@ public class EugeneTest{
 		B.setNodeType("NOT");
 		C.setNodeType("NOR");
 		out.setNodeType("TopOutput");
-		
+
 		in1.setName("in1");
 		in2.setName("in2");
 		A.setName("A");
@@ -151,14 +155,15 @@ public class EugeneTest{
 		CObject pPhlF = new CObject("pPhlF",PartType.PROMOTER.ordinal(),14);
 		CObject pSrpR = new CObject("pSrpR",PartType.PROMOTER.ordinal(),15);
 		CObject pAmtR = new CObject("pAmtR",PartType.PROMOTER.ordinal(),16);
-		
+		CObject YFP = new CObject("YFP",PartType.CDS.ordinal(),17);
+
 		CObjectCollection<CObject> parts = null;
 		parts = new CObjectCollection<CObject>();
 		parts.add(pTac);
 		in1.setParts(parts);
 		parts = new CObjectCollection<CObject>();
 		parts.add(pTet);
-		in2.setParts(parts);		
+		in2.setParts(parts);
 		parts = new CObjectCollection<CObject>();
 		parts.add(BydvJ);
 		parts.add(A1);
@@ -179,7 +184,10 @@ public class EugeneTest{
 		parts.add(PhlF);
 		parts.add(ECK120033737);
 		parts.add(pPhlF);
-		C.setParts(parts);		
+		C.setParts(parts);
+		parts = new CObjectCollection<CObject>();
+		parts.add(YFP);
+		out.setParts(parts);
 
 		in1.setVertexType(VertexType.SOURCE);
 		in2.setVertexType(VertexType.SOURCE);

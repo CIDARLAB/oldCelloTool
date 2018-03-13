@@ -22,6 +22,7 @@ package test.dnaCompiler;
 
 import org.junit.Test;
 
+import common.Utils;
 import common.netlist.Netlist;
 import common.netlist.NetlistUtils;
 import common.stage.Stage;
@@ -32,64 +33,67 @@ import common.target.data.TargetDataUtils;
 import common.target.runtime.environment.TargetArgString;
 import common.target.runtime.environment.TargetRuntimeEnv;
 
-import logicSynthesis.runtime.LSRuntimeObject;
-
-import technologyMapping.runtime.TMRuntimeObject;
-
 import eugene.runtime.EURuntimeObject;
 
+import logicSynthesis.runtime.LSRuntimeObject;
+
 import sbolGenerator.runtime.SGRuntimeObject;
+
+import technologyMapping.runtime.TMRuntimeObject;
 
 import test.common.TestUtils;
 
 /**
  * @author: Timothy Jones
  * 
- * @date: Feb 23, 2018
+ * @date: Mar 12, 2018
  *
  */
 public class DnaCompilerTest{
 
 	@Test
 	public void test() {
-	String resourcesFilepath = TestUtils.getResourcesFilepath() + "/dnaCompiler/";
+		String resourcesFilepath = TestUtils.getResourcesFilepath()
+			+ Utils.getFileSeparator()
+			+ "dnaCompiler"
+			+ Utils.getFileSeparator();
 
 		String[] args = new String[] {"-verilogFile",resourcesFilepath + "and_structural.v",
 									  "-targetDataDir",resourcesFilepath,
 									  "-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
 									  "-configDir",resourcesFilepath,
 									  "-configFile","config.json"};
-		
+
 		Stage currentStage = null;
 		// RuntimeEnv
-	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
+		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("dnaCompiler");
 		// VerilogFile
 		String verilogFile = runEnv.getOptionValue(TargetArgString.VERILOG);
 		// Netlist
 		Netlist netlist = new Netlist();
 		// TargetConfiguration
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
 		// Stages
 		// LogicSynthesis
-	    currentStage = targetCfg.getStageByName("LogicSynthesis");
+		currentStage = targetCfg.getStageByName("LogicSynthesis");
 		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
 		LS.execute();
 		// TechnologyMapping
-	    currentStage = targetCfg.getStageByName("TechnologyMapping");
+		currentStage = targetCfg.getStageByName("TechnologyMapping");
 		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		TM.execute();
 		// Eugene
-	    currentStage = targetCfg.getStageByName("Eugene");
+		currentStage = targetCfg.getStageByName("Eugene");
 		EURuntimeObject EU = new EURuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		EU.execute();
 		// SbolGenerator
 		currentStage = targetCfg.getStageByName("SbolGenerator");
 		SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		SG.execute();
-		NetlistUtils.writeJSONForNetlist(netlist, "and_structural.json");
+		NetlistUtils.writeJSONForNetlist(netlist, "dnacompiler.json");
 	}
 
 }

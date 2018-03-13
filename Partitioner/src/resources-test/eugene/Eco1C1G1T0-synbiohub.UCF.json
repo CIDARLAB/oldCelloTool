@@ -4918,6 +4918,58 @@
     "uri": "https://synbiohub.utah.edu/public/Cello_Parts/S4_SrpR/1"
   },
   {
+    "collection": "input_sensors",
+    "promoter": "pTac",
+    "rpu_low": 0.0034,
+    "rpu_high": 2.8
+  },
+  {
+    "collection": "input_sensors",
+    "promoter": "pTet",
+    "rpu_low": 0.0013,
+    "rpu_high": 4.4
+  },
+  {
+    "collection": "input_sensors",
+    "promoter": "pBAD",
+    "rpu_low": 0.0082,
+    "rpu_high": 2.5
+  },
+  {
+    "collection": "input_sensors",
+    "promoter": "pLuxStar",
+    "rpu_low": 0.025,
+    "rpu_high": 0.31
+  },
+  {
+    "collection": "output_reporters",
+    "name": "YFP",
+    "parts": [
+	"YFP"
+    ]
+  },
+  {
+    "collection": "output_reporters",
+    "name": "GFP",
+    "parts": [
+	"GFP"
+    ]
+  },
+  {
+    "collection": "output_reporters",
+    "name": "RFP",
+    "parts": [
+	"RFP"
+    ]
+  },
+  {
+    "collection": "output_reporters",
+    "name": "BFP",
+    "parts": [
+	"BFP"
+    ]
+  },    
+  {
     "collection": "response_functions",
     "gate_name": "A1_AmtR",
     "equation": "ymin+(ymax-ymin)/(1.0+(x/K)^n)",

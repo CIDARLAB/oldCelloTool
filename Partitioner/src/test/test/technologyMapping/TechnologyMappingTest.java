@@ -22,6 +22,7 @@ package test.technologyMapping;
 
 import org.junit.Test;
 
+import common.Utils;
 import common.CObject;
 import common.CObjectCollection;
 import common.graph.AbstractVertex.VertexType;
@@ -52,28 +53,30 @@ public class TechnologyMappingTest{
 
 	@Test
 	public void test() {
-		String resourcesFilepath = TestUtils.getResourcesFilepath() + "/technologyMapping/";
+		String resourcesFilepath = TestUtils.getResourcesFilepath()
+			+ Utils.getFileSeparator()
+			+ "technologyMapping"
+			+ Utils.getFileSeparator();
 
 		String[] args = new String[] {"-verilogFile","foo.v",
 									  "-targetDataDir",resourcesFilepath,
 									  "-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
 									  "-configDir",resourcesFilepath,
 									  "-configFile","config.json"};
-										  
-		
+
 		Stage currentStage = null;
 		// RuntimeEnv
-	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
+		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("dnaCompiler");
 		// Netlist
 		Netlist netlist = generateTestNetlist();
 		// TargetConfiguration
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
 		// Stages
 		// TechnologyMapping
-	    currentStage = targetCfg.getStageByName("TechnologyMapping");
+		currentStage = targetCfg.getStageByName("TechnologyMapping");
 		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		TM.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, "techmaptest.json");
@@ -81,16 +84,16 @@ public class TechnologyMappingTest{
 
 	public Netlist generateTestNetlist() {
 		Netlist netlist = new Netlist();
-		
+
 		netlist.setName("technologyMapping");
-		
+
 		NetlistNode in1 = new NetlistNode();
 		NetlistNode in2 = new NetlistNode();
 		NetlistNode A = new NetlistNode();
 		NetlistNode B = new NetlistNode();
 		NetlistNode C = new NetlistNode();
 		NetlistNode out = new NetlistNode();
-		
+
 		NetlistEdge e1 = new NetlistEdge(in1, A);
 		NetlistEdge e2 = new NetlistEdge(in2, B);
 		NetlistEdge e3 = new NetlistEdge(A, C);
@@ -102,7 +105,7 @@ public class TechnologyMappingTest{
 		e3.setName("e3");
 		e4.setName("e4");
 		e5.setName("e5");
-		
+
 		in1.addOutEdge(e1);
 		in2.addOutEdge(e2);
 		A.addInEdge(e1);
@@ -120,7 +123,7 @@ public class TechnologyMappingTest{
 		B.setNodeType("NOT");
 		C.setNodeType("NOR");
 		out.setNodeType("TopOutput");
-		
+
 		in1.setName("in1");
 		in2.setName("in2");
 		A.setName("A");
@@ -134,14 +137,14 @@ public class TechnologyMappingTest{
 
 		CObject pTac = new CObject("pTac",PartType.PROMOTER.ordinal(),0);
 		CObject pTet = new CObject("pTet",PartType.PROMOTER.ordinal(),1);
-		
+
 		CObjectCollection<CObject> parts = null;
 		parts = new CObjectCollection<CObject>();
 		parts.add(pTac);
 		in1.setParts(parts);
 		parts = new CObjectCollection<CObject>();
 		parts.add(pTet);
-		in2.setParts(parts);		
+		in2.setParts(parts);
 
 		in1.setVertexType(VertexType.SOURCE);
 		in2.setVertexType(VertexType.SOURCE);
@@ -153,20 +156,12 @@ public class TechnologyMappingTest{
 		netlist.addVertex(B);
 		netlist.addVertex(C);
 		netlist.addVertex(out);
-		
+
 		netlist.addEdge(e1);
 		netlist.addEdge(e2);
 		netlist.addEdge(e3);
 		netlist.addEdge(e4);
 		netlist.addEdge(e5);
-		
-		CObjectCollection<NetlistNode> netListNodes = new CObjectCollection<NetlistNode>();
-		netListNodes.add(in1);
-		netListNodes.add(in2);
-		netListNodes.add(A);
-		netListNodes.add(B);
-		netListNodes.add(C);
-		netListNodes.add(out);
 
 		return netlist;
 	}

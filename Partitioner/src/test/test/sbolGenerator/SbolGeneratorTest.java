@@ -22,6 +22,7 @@ package test.sbolGenerator;
 
 import org.junit.Test;
 
+import common.Utils;
 import common.CObject;
 import common.CObjectCollection;
 import common.graph.AbstractVertex.VertexType;
@@ -52,28 +53,30 @@ public class SbolGeneratorTest{
 
 	@Test
 	public void test() {
-		String resourcesFilepath = TestUtils.getResourcesFilepath() + "/sbolGenerator/";
+		String resourcesFilepath = TestUtils.getResourcesFilepath()
+			+ Utils.getFileSeparator()
+			+ "sbolGenerator"
+			+ Utils.getFileSeparator();
 
 		String[] args = new String[] {"-verilogFile","foo.v",
 									  "-targetDataDir",resourcesFilepath,
 									  "-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
 									  "-configDir",resourcesFilepath,
 									  "-configFile","config.json"};
-										  
-		
+
 		Stage currentStage = null;
 		// RuntimeEnv
-	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
+		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("dnaCompiler");
 		// Netlist
 		Netlist netlist = generateTestNetlist();
 		// TargetConfiguration
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
 		// Stages
 		// SbolGenerator
-	    currentStage = targetCfg.getStageByName("SbolGenerator");
+		currentStage = targetCfg.getStageByName("SbolGenerator");
 		SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		SG.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, "sboltest.json");
@@ -81,16 +84,16 @@ public class SbolGeneratorTest{
 
 	public Netlist generateTestNetlist() {
 		Netlist netlist = new Netlist();
-		
+
 		netlist.setName("sbolGenerator");
-		
+
 		NetlistNode in1 = new NetlistNode();
 		NetlistNode in2 = new NetlistNode();
 		NetlistNode A = new NetlistNode();
 		NetlistNode B = new NetlistNode();
 		NetlistNode C = new NetlistNode();
 		NetlistNode out = new NetlistNode();
-		
+
 		NetlistEdge e1 = new NetlistEdge(in1, A);
 		NetlistEdge e2 = new NetlistEdge(in2, B);
 		NetlistEdge e3 = new NetlistEdge(A, C);
@@ -102,7 +105,7 @@ public class SbolGeneratorTest{
 		e3.setName("e3");
 		e4.setName("e4");
 		e5.setName("e5");
-		
+
 		in1.addOutEdge(e1);
 		in2.addOutEdge(e2);
 		A.addInEdge(e1);
@@ -120,7 +123,7 @@ public class SbolGeneratorTest{
 		B.setNodeType("NOT");
 		C.setNodeType("NOR");
 		out.setNodeType("TopOutput");
-		
+
 		in1.setName("in1");
 		in2.setName("in2");
 		A.setName("A");
@@ -152,14 +155,14 @@ public class SbolGeneratorTest{
 		CObject pPhlF = new CObject("pPhlF",PartType.PROMOTER.ordinal(),14);
 		CObject pSrpR = new CObject("pSrpR",PartType.PROMOTER.ordinal(),15);
 		CObject pAmtR = new CObject("pAmtR",PartType.PROMOTER.ordinal(),16);
-		
+
 		CObjectCollection<CObject> parts = null;
 		parts = new CObjectCollection<CObject>();
 		parts.add(pTac);
 		in1.setParts(parts);
 		parts = new CObjectCollection<CObject>();
 		parts.add(pTet);
-		in2.setParts(parts);		
+		in2.setParts(parts);
 		parts = new CObjectCollection<CObject>();
 		parts.add(BydvJ);
 		parts.add(A1);
@@ -180,7 +183,7 @@ public class SbolGeneratorTest{
 		parts.add(PhlF);
 		parts.add(ECK120033737);
 		parts.add(pPhlF);
-		C.setParts(parts);		
+		C.setParts(parts);
 
 		in1.setVertexType(VertexType.SOURCE);
 		in2.setVertexType(VertexType.SOURCE);
@@ -192,20 +195,12 @@ public class SbolGeneratorTest{
 		netlist.addVertex(B);
 		netlist.addVertex(C);
 		netlist.addVertex(out);
-		
+
 		netlist.addEdge(e1);
 		netlist.addEdge(e2);
 		netlist.addEdge(e3);
 		netlist.addEdge(e4);
 		netlist.addEdge(e5);
-		
-		CObjectCollection<NetlistNode> netListNodes = new CObjectCollection<NetlistNode>();
-		netListNodes.add(in1);
-		netListNodes.add(in2);
-		netListNodes.add(A);
-		netListNodes.add(B);
-		netListNodes.add(C);
-		netListNodes.add(out);
 
 		return netlist;
 	}

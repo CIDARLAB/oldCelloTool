@@ -18,10 +18,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package test.verilog;
+package test.logicSynthesis;
 
 import org.junit.Test;
 
+import common.Utils;
 import common.netlist.Netlist;
 import common.netlist.NetlistUtils;
 import common.stage.Stage;
@@ -42,7 +43,7 @@ import test.common.TestUtils;
  * @date: Feb 23, 2018
  *
  */
-public class VerilogTest{
+public class LogicSynthesisTest{
 
 	@Test
 	public void test() {
@@ -53,30 +54,32 @@ public class VerilogTest{
 	}
 
 	private void runLogicSynthesis(String verilogFilePrefix) {
-		String resourcesFilepath = TestUtils.getResourcesFilepath() + "/verilog/";
+		String resourcesFilepath = TestUtils.getResourcesFilepath()
+			+ Utils.getFileSeparator()
+			+ "logicSynthesis"
+			+ Utils.getFileSeparator();
 
 		String[] args = new String[] {"-verilogFile",resourcesFilepath + verilogFilePrefix + ".v",
 									  "-targetDataDir",resourcesFilepath,
 									  "-targetDataFile","Eco1C1G1T1.UCF.json",
 									  "-configDir",resourcesFilepath,
 									  "-configFile","config.json"};
-										  
-		
+
 		Stage currentStage = null;
 		// RuntimeEnv
-	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
+		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("dnaCompiler");
 		// VerilogFile
 		String verilogFile = runEnv.getOptionValue(TargetArgString.VERILOG);
 		// Netlist
 		Netlist netlist = new Netlist();
 		// TargetConfiguration
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
 		// Stages
 		// LogicSynthesis
-	    currentStage = targetCfg.getStageByName("LogicSynthesis");
+		currentStage = targetCfg.getStageByName("LogicSynthesis");
 		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
 		LS.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, verilogFilePrefix + ".json");
