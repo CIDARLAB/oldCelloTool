@@ -23,6 +23,7 @@ package common.netlist;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import common.CObject;
@@ -82,11 +83,49 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 			this.setPartitionID(value.intValue());
 		}
 	}
+
+	private void parseGate(final JSONObject JObj){
+		String value = ProfileUtils.getString(JObj, "gate");
+		if (value != null) {
+			this.setGate(value);
+		}
+	}
+
+	private void parseParts(final JSONObject JObj){
+		Object value = ProfileUtils.getObject(JObj, "parts");
+		if (value != null) {
+			JSONArray array = (JSONArray) value;
+			CObjectCollection<CObject> parts = new CObjectCollection<>();
+			for (Object obj : array) {
+				parts.add(this.parsePart((JSONObject)obj));
+			}
+			this.setParts(parts);
+		}
+	}
+
+	private CObject parsePart(final JSONObject JObj){
+		CObject obj = new CObject();
+		String name = ProfileUtils.getString(JObj, "name");
+		if (name != null) {
+			obj.setName(name);
+		}
+		Integer type = ProfileUtils.getInteger(JObj, "type");
+		if (type != null) {
+			obj.setType(type);
+		}
+		Integer idx = ProfileUtils.getInteger(JObj, "idx");
+		if (idx != null) {
+			obj.setIdx(idx);
+		}
+		return obj;
+	}
 	
 	private void parse(final JSONObject JObj){
     	this.parseName(JObj);
     	this.parseNodeType(JObj);
     	this.parsePartitionID(JObj);
+		this.parseGate(JObj);
+		this.parseParts(JObj);
 	}
 	
 	/*
@@ -159,7 +198,7 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	}
 
 	/**
-	 * @return The collection of parts that comprise the gate
+	 * @return the collection of parts that comprise the gate
 	 */
 	public CObjectCollection<CObject> getParts() {
 		return this.parts;
@@ -178,6 +217,29 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		rtn += JSONUtils.getEntryToString("nodeType", this.getNodeType());
 		// partitionID
 		rtn += JSONUtils.getEntryToString("partitionID", this.getPartitionID());
+		// gate
+		rtn += JSONUtils.getEntryToString("gate", this.getGate());
+		// parts
+		if (this.getParts() != null
+			&&
+			this.getParts().size() > 0)
+			{
+				rtn += JSONUtils.getStartArrayWithMemberString("parts");
+				for (CObject p : this.getParts()) {
+					String str = "";
+					String entryStr = "";
+					str += JSONUtils.getStartEntryString();
+					entryStr += JSONUtils.getEntryToString("name",p.getName());
+					entryStr += JSONUtils.getEntryToString("type",p.getType());
+					entryStr += JSONUtils.getEntryToString("idx",p.getIdx());
+					entryStr = JSONUtils.addIndent(1,entryStr);
+					str += entryStr;
+					str += JSONUtils.getEndEntryString();
+					entryStr = JSONUtils.addIndent(1,str);
+					rtn += entryStr;
+				}
+				rtn += JSONUtils.getEndArrayString();
+			}
 		return rtn;
 	}
 	
