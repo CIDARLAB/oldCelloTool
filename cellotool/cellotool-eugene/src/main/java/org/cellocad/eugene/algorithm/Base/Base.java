@@ -39,7 +39,6 @@ import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.eugene.algorithm.EugeneAlgorithm;
-import org.cellocad.eugene.common.EugeneUtils;
 import org.cellocad.eugene.common.UCFReader;
 import org.cellocad.eugene.data.Direction;
 import org.cellocad.eugene.data.Gate;
