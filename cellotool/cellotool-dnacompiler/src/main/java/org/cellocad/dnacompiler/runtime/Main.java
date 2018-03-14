@@ -20,7 +20,9 @@
  */
 package org.cellocad.dnacompiler.runtime;
 
+import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
+import org.cellocad.common.netlist.NetlistUtils;
 import org.cellocad.common.stage.Stage;
 import org.cellocad.common.target.TargetConfiguration;
 import org.cellocad.common.target.TargetUtils;
@@ -28,8 +30,10 @@ import org.cellocad.common.target.data.TargetData;
 import org.cellocad.common.target.data.TargetDataUtils;
 import org.cellocad.common.target.runtime.environment.TargetArgString;
 import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
+import org.cellocad.eugene.runtime.EURuntimeObject;
 import org.cellocad.logicsynthesis.runtime.LSRuntimeObject;
 import org.cellocad.partition.runtime.PTRuntimeObject;
+import org.cellocad.sbolgenerator.runtime.SGRuntimeObject;
 import org.cellocad.technologymapping.runtime.TMRuntimeObject;
 
 /**
@@ -62,18 +66,22 @@ public class Main {
 		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
 		LS.execute();
 		// Partition
-	    currentStage = targetCfg.getStageByName("Partition");
-		PTRuntimeObject PT = new PTRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
-		PT.execute();
-		// LogicOptomization
+	    // currentStage = targetCfg.getStageByName("Partition");
+		// PTRuntimeObject PT = new PTRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		// PT.execute();
 		// TechnologyMapping
 	    currentStage = targetCfg.getStageByName("TechnologyMapping");
 		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		TM.execute();
 		// Eugene
-	    currentStage = targetCfg.getStageByName("Eugene");
-		//Eugene EU = new Eugene(netlist, runEnv);
-		//EU.execute();
+        currentStage = targetCfg.getStageByName("Eugene");
+		EURuntimeObject EU = new EURuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		EU.execute();
+        // SbolGenerator
+	    currentStage = targetCfg.getStageByName("SbolGenerator");
+        SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		SG.execute();
+        NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir") + Utils.getFileSeparator() + netlist.getName() + ".json");
 	}
 
 }
