@@ -111,12 +111,14 @@ public class Base extends SGAlgorithm{
 	@Override
 	protected void run() {
 		Netlist netlist = this.getNetlist();
+		logInfo("creating SBOL document");
 		try {
 			SBOLDocument sbolDocument = this.createSBOLDocument(netlist);
 			this.setSbolDocument(sbolDocument);
 		} catch (SynBioHubException | SBOLValidationException e) {
 			e.printStackTrace();
 		}
+		logInfo("modeling component interactions");
 		try {
 			SBOLDocument sbolDocument = generateModel(this.getRepositoryUrl().toString(),this.getSbolDocument());
 			this.setSbolDocument(sbolDocument);
@@ -127,6 +129,8 @@ public class Base extends SGAlgorithm{
 
 	@Override
 	protected void postprocessing() {
+		logInfo("writing SBOL document");
+		logDebug("SBOL filename " + getSbolFilename());
 		try {
 			SBOLWriter.write(this.getSbolDocument(),getSbolFilename());
 		} catch (SBOLConversionException | IOException e) {

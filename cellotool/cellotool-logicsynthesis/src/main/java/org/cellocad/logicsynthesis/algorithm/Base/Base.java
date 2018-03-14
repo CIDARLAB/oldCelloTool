@@ -67,6 +67,8 @@ public class Base extends LSAlgorithm{
 
 	@Override
 	protected void preprocessing() {
+		logInfo("building yosys input script");
+
 		String filename = Utils.getFilename(this.getVerilogFile());
 		this.setYosysScriptFilename(this.getRuntimeEnv().getOptionValue("outputDir") + Utils.getFileSeparator() + filename + "_YosysScript");	
 		this.setYosysEdifFilename(this.getRuntimeEnv().getOptionValue("outputDir") + Utils.getFileSeparator() + filename + ".edif");
@@ -152,11 +154,13 @@ public class Base extends LSAlgorithm{
 
 	@Override
 	protected void run() {
+		logInfo("calling yosys");
 		Utils.executeAndWaitForCommand(this.getYosysExec() + this.getYosysScriptFilename());
 	}
 
 	@Override
 	protected void postprocessing() {
+		logInfo("processing edif output");
 		this.convertEdifToNetlist();
 		// delete
 		Utils.deleteFilename(this.getYosysEdifFilename());

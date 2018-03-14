@@ -116,6 +116,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 
 	@Override
 	protected void run() {
+		logInfo("begin simulated annealing");
 		Random rand = new Random();
 
 		Double logMaxTemp = Math.log10(this.getMaxTemp());
@@ -126,6 +127,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		
 		Map<String,TechNode> map = null;
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
+			logInfo("trajectory " + String.valueOf(k) + " of " + this.getNumTrajectories().toString());
 			map = this.getTechNodeMap();
 			TMUtils.doRandomAssignment(this.getNetlist(),map,this.getGateLibrary());
 			new ActivitySimulator(this.getNetlist(),map);
@@ -186,6 +188,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 	
 	@Override
 	protected void postprocessing() {
+		logInfo("updating netlist");
 		TMUtils.updateNetlist(this.getNetlist(),this.getTechNodeMap());
 	}
 

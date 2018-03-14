@@ -83,6 +83,8 @@ public class Base extends EugeneAlgorithm{
 
 	@Override
 	protected void preprocessing() {
+		logInfo("building Eugene input script");
+
 		Set<Gate> netlistGates = new HashSet<>();
 		Netlist netlist = this.getNetlist();
 
@@ -246,6 +248,7 @@ public class Base extends EugeneAlgorithm{
 
 	@Override
 	protected void run() {
+		logInfo("running Eugene");
 		try {
 			Eugene eug = new Eugene();
 			EugeneCollection ec = eug.executeScript(this.getEugeneInputScript());
@@ -257,6 +260,7 @@ public class Base extends EugeneAlgorithm{
 
 	@Override
 	protected void postprocessing() {
+		logInfo("processing Eugene output");
 		NamedElement circuit = null;
 		try {
 			circuit = this.getEugenePlasmids().getElement(0);
@@ -331,6 +335,8 @@ public class Base extends EugeneAlgorithm{
 			// moduleVariants.add(module);
 			this.setModule(module);
 		}
+
+		logInfo("updating netlist");
 		Netlist netlist = this.getNetlist();
 		for (int i = 0; i<netlist.getNumVertex(); i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
