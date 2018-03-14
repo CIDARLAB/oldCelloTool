@@ -127,7 +127,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		
 		Map<String,TechNode> map = null;
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
-			logInfo("trajectory " + String.valueOf(k) + " of " + this.getNumTrajectories().toString());
+			logInfo("trajectory " + String.valueOf(k+1) + " of " + this.getNumTrajectories().toString());
 			map = this.getTechNodeMap();
 			TMUtils.doRandomAssignment(this.getNetlist(),map,this.getGateLibrary());
 			new ActivitySimulator(this.getNetlist(),map);
