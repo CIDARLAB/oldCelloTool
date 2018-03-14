@@ -1,0 +1,20 @@
+{	
+    "name": "sbolGeneratorProfile0",
+    "AlgorithmProfile":	{
+	"name": "AProfile0",
+	"type": "Base",
+	"parameters":
+	[
+	    {
+		"name" : "repository_type",
+		"type" : "string",
+		"value": "synbiohub"
+	    },
+	    {
+		"name" : "repository_url",
+		"type" : "string",
+		"value": "https://synbiohub.utah.edu/"
+	    }
+	]
+    }
+}

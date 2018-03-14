@@ -1,0 +1,15 @@
+{	
+    "name": "logicSynthesisProfile0",
+    "AlgorithmProfile":	{
+	"name": "AProfile0",
+	"type": "Base",
+	"parameters":
+	[
+	    {
+		"name" : "cell_library",
+		"type" : "string",
+		"value": "notnor"
+	    },
+	]
+    }
+}
