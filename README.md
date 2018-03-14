@@ -6,4 +6,7 @@ mvn install:install-file -Dfile=eugene-2.0.1-SNAPSHOT-jar-with-dependencies.jar 
 mvn install:install-file -Dfile=byuediftools-0.5.2.jar -DgroupId=edu.byu.ece -DartifactId=byuediftools -Dversion=0.5.2 -Dpackaging=jar
 cd ../cellotool
 mvn package
+cd target/
+java -cp "./*" org.cellocad.dnacompiler.runtime.Main
 ```
+
