@@ -108,7 +108,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		}
 		this.setTechNodeMap(TMUtils.buildTechNodeMap(this.getNetlist()));
 
-		LogicSimulator ls = new LogicSimulator(this.getNetlist(),techNodeMap);
+		new LogicSimulator(this.getNetlist(),techNodeMap);
 		TMUtils.assignInputSensors(this.getNetlist(),this.getTechNodeMap(),this.getInputLibrary());
 		TMUtils.assignOutputReporters(this.getNetlist(),this.getTechNodeMap(),this.getOutputLibrary());
 		TMUtils.assignInputActivities(this.getNetlist(),this.getTechNodeMap(),UCFReader.getInputPromoterActivities(this.getTargetData()));
@@ -128,7 +128,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
 			map = this.getTechNodeMap();
 			TMUtils.doRandomAssignment(this.getNetlist(),map,this.getGateLibrary());
-			ActivitySimulator as = new ActivitySimulator(this.getNetlist(),map);
+			new ActivitySimulator(this.getNetlist(),map);
 			for (int j = 0; j < (this.getNumSteps() + this.getNumT0Steps()); j++) {
 				Map<String,TechNode> tempMap = TMUtils.buildTechNodeMap(this.getNetlist(),map);
 				
@@ -162,7 +162,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
                 else {
 					tempMap.get(logicNodes.get(aIdx).getName()).setGate(bGate);
 				}
-				as = new ActivitySimulator(this.getNetlist(),tempMap);
+				new ActivitySimulator(this.getNetlist(),tempMap);
 
 				Double probability = Math.exp( (TMUtils.getScore(this.getNetlist(),tempMap)
 												-

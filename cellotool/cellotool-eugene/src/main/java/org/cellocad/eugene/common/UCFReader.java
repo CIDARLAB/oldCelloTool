@@ -47,7 +47,9 @@ public class UCFReader {
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("eugene_rules",i);
             JSONArray jsonPartRules = (JSONArray) json.get("eugene_part_rules");
-            partRules.addAll(jsonPartRules);
+			for (Object obj : jsonPartRules) {
+				partRules.add((String)obj);
+			}
 		}
 		return partRules;
 	}
@@ -58,7 +60,9 @@ public class UCFReader {
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("eugene_rules",i);
             JSONArray jsonGateRules = (JSONArray) json.get("eugene_gate_rules");
-            gateRules.addAll(jsonGateRules);
+			for (Object obj : jsonGateRules) {
+				gateRules.add((String)obj);
+			}
 		}
 		return gateRules;
 	}

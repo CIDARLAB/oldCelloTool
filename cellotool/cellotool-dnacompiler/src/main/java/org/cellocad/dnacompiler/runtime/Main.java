@@ -32,7 +32,6 @@ import org.cellocad.common.target.runtime.environment.TargetArgString;
 import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
 import org.cellocad.eugene.runtime.EURuntimeObject;
 import org.cellocad.logicsynthesis.runtime.LSRuntimeObject;
-import org.cellocad.partition.runtime.PTRuntimeObject;
 import org.cellocad.sbolgenerator.runtime.SGRuntimeObject;
 import org.cellocad.technologymapping.runtime.TMRuntimeObject;
 
