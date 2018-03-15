@@ -18,20 +18,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.technologymapping.common;
+package org.cellocad.technologymapping.common.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistEdge;
 import org.cellocad.common.netlist.NetlistNode;
-
 import org.cellocad.technologymapping.common.graph.algorithm.UpstreamDFS;
+import org.cellocad.technologymapping.common.techmap.TechMap;
+import org.cellocad.technologymapping.common.techmap.TechNode;
 import org.cellocad.technologymapping.data.Gate;
-import org.cellocad.technologymapping.data.TechNode;
 
 /**
  * @author: Timothy Jones
@@ -41,25 +40,34 @@ import org.cellocad.technologymapping.data.TechNode;
  */
 public class ActivitySimulator {
 
-	public ActivitySimulator(final Netlist netlist, Map<String,TechNode> techNodeMap) {
+	/**
+	 * Create a new ActivitySimulator and assign activities.
+	 * 
+	 * @param techMap the TechMap on which to assign activities.
+	 * @param netlist the netlist corresponding to the TechMap.
+	 */
+	public ActivitySimulator(TechMap techMap, final Netlist netlist) {
 		Utils.isNullRuntimeException(netlist, "netlist");
-		Utils.isNullRuntimeException(techNodeMap, "techNodeMap");
+		Utils.isNullRuntimeException(techMap, "techMap");
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (!techNodeMap.keySet().contains(node.getName())) {
-				throw new RuntimeException("Netlist node '" + node.getName() + "' is not in the tech node map.");
-			}
-			Utils.isNullRuntimeException(techNodeMap.get(node.getName()), "TechNode for node " + node.getName());
+			Utils.isNullRuntimeException(techMap.findTechNodeByName(node.getName()), "TechNode for node " + node.getName());
 		}
-		computeActivity(netlist,techNodeMap);
+		computeActivity(techMap,netlist);
 	}
 
-	private void computeActivity(Netlist netlist, Map<String,TechNode> techNodeMap) {
+	/**
+	 * Create a new ActivitySimulator and assign activities.
+	 * 
+	 * @param techMap the TechMap on which to assign activities.
+	 * @param netlist the netlist corresponding to the TechMap.
+	 */
+	private void computeActivity(TechMap techMap, Netlist netlist) {
 		UpstreamDFS<NetlistNode,NetlistEdge,Netlist> dfs = new UpstreamDFS<>(netlist);
 		NetlistNode node = null;
 		while ((node = dfs.getNextVertex()) != null) {
-			TechNode tn = techNodeMap.get(node.getName());
+			TechNode tn = techMap.findTechNodeByName(node.getName());
 			Gate g = tn.getGate();
 			Utils.isNullRuntimeException(tn.getLogic(), "gate logic");
 			String type = node.getNodeType();
@@ -68,7 +76,7 @@ public class ActivitySimulator {
 				for (int i = 0; i < node.getNumInEdge(); i++) {
 					NetlistEdge e = node.getInEdgeAtIdx(i);
 					NetlistNode src = e.getSrc();
-					inputs.add(techNodeMap.get(src.getName()).getActivity());
+					inputs.add(techMap.findTechNodeByName(src.getName()).getActivity());
 				}
 
 				if (node.getNodeType().equals("TopOutput")) {
@@ -80,6 +88,12 @@ public class ActivitySimulator {
 		}
 	}
 
+	/**
+	 * Get the activity for a logic gate given some input.
+	 * 
+	 * @param input the inputs to the gate.
+	 * @param gate the gate for which to compute input.
+	 */
 	private static List<Double> getGateActivity(List<List<Double>> input, Gate gate) {
 		isRaggedInputListException(input);
 		Utils.isNullRuntimeException(gate.getResponseFunction(),"gate response function");
@@ -93,10 +107,22 @@ public class ActivitySimulator {
 		return rtn;
 	}
 
+	/**
+	 * Get the activity for an output gate.
+	 * 
+	 * @param input the inputs to the gate.
+	 * @param gate the gate for which to compute input.
+	 */
 	private static List<Double> getOutputActivity(List<List<Double>> input, Gate gate) {
 		return getGateActivity(input,gate);
 	}
 
+	/**
+	 * Get a column of inputs from a matrix.
+	 * 
+	 * @param input the set of inputs.
+	 * @param i the column to select.
+	 */
 	private static List<Double> getInputColumn(List<List<Double>> input, int i) {
 		List<Double> rtn = new ArrayList<>();
 		for (int j = 0; j < input.size(); j++) {
@@ -105,6 +131,12 @@ public class ActivitySimulator {
 		return rtn;
 	}
 	
+	/**
+	 * Throw an exception if the input list is ragged.
+	 * 
+	 * @param input the set of inputs to check.
+	 * @return false if the inputs are not ragged.
+	 */
 	private static boolean isRaggedInputListException(List<List<Double>> input) {
 		boolean rtn = false;
 		for (int i = 0; i < input.size(); i++) {

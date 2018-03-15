@@ -18,13 +18,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.technologymapping.data;
+package org.cellocad.technologymapping.common.techmap;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cellocad.common.CObject;
 import org.cellocad.common.Utils;
+import org.cellocad.technologymapping.data.Gate;
 
 /**
  * @author: Timothy Jones
@@ -45,8 +46,8 @@ public class TechNode extends CObject{
 	
 	public TechNode(final TechNode other){
 		super(other);
-		this.setActivity(other.getActivity());
-		this.setLogic(other.getLogic());
+		this.setActivity(new ArrayList<>(other.getActivity()));
+		this.setLogic(new ArrayList<>(other.getLogic()));
 		if (other.getGate() != null) {
 			this.setGate(other.getGate());
 		}
@@ -55,6 +56,18 @@ public class TechNode extends CObject{
 	private void init() {
 		logic = new ArrayList<Boolean>();
 		activity = new ArrayList<Double>();
+	}
+
+	public enum TechNodeType {
+	    NONE, SOURCE, SINK
+	}
+
+	public void setType(final TechNodeType nodeType) {
+		this.setType(nodeType.ordinal());
+	}
+	
+	public TechNodeType getTechNodeType() {
+		return TechNodeType.values()[this.getType()];
 	}
 	
 	/**

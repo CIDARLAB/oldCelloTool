@@ -18,20 +18,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.technologymapping.common;
+package org.cellocad.technologymapping.common.simulation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistEdge;
 import org.cellocad.common.netlist.NetlistNode;
-
+import org.cellocad.technologymapping.common.TMUtils;
 import org.cellocad.technologymapping.common.graph.algorithm.UpstreamDFS;
-import org.cellocad.technologymapping.data.TechNode;
+import org.cellocad.technologymapping.common.techmap.TechMap;
 
 /**
  * @author: Timothy Jones
@@ -41,21 +40,18 @@ import org.cellocad.technologymapping.data.TechNode;
  */
 public class LogicSimulator {
 
-	public LogicSimulator(Netlist netlist, Map<String,TechNode> techNodeMap) {
+	public LogicSimulator(TechMap techMap, Netlist netlist) {
+		Utils.isNullRuntimeException(techMap, "techMap");
 		Utils.isNullRuntimeException(netlist, "netlist");
-		Utils.isNullRuntimeException(techNodeMap, "techNodeMap");
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (!techNodeMap.keySet().contains(node.getName())) {
-				throw new RuntimeException("Netlist node '" + node.getName() + "' is not in the TechNode map.");
-			}
-			Utils.isNullRuntimeException(techNodeMap.get(node.getName()), "Gate for node " + node.getName());
+			Utils.isNullRuntimeException(techMap.findTechNodeByName(node.getName()), "TechNode for NetlistNode " + node.getName());
 		}
-		computeBooleanLogic(netlist, techNodeMap);
+		computeBooleanLogic(techMap, netlist);
 	}
 
-	private void computeBooleanLogic(Netlist netlist, Map<String,TechNode> techNodeMap) {
+	private void computeBooleanLogic(TechMap techMap, Netlist netlist) {
 		List<List<Boolean>> inputLogic = getInputLogic(TMUtils.getInputNodes(netlist).size());
 
 		UpstreamDFS<NetlistNode,NetlistEdge,Netlist> dfs = new UpstreamDFS<>(netlist);
@@ -63,18 +59,18 @@ public class LogicSimulator {
 		NetlistNode node = null;
 		while ((node = dfs.getNextVertex()) != null) {
 			if (node.getNodeType().equals("TopInput")) {
-				techNodeMap.get(node.getName()).setLogic(it.next());
+				techMap.findTechNodeByName(node.getName()).setLogic(it.next());
 			} else {
 				List<List<Boolean>> inputs = new ArrayList<>();
 				for (int i = 0; i < node.getNumInEdge(); i++) {
 					NetlistEdge e = node.getInEdgeAtIdx(i);
 					NetlistNode src = e.getSrc();
-					inputs.add(techNodeMap.get(src.getName()).getLogic());
+					inputs.add(techMap.findTechNodeByName(src.getName()).getLogic());
 				}
 				if (node.getNodeType().equals("TopOutput")) {
-					techNodeMap.get(node.getName()).setLogic(getOutputLogic(inputs));
+					techMap.findTechNodeByName(node.getName()).setLogic(getOutputLogic(inputs));
 				} else {
-					techNodeMap.get(node.getName()).setLogic(getGateLogic(inputs,node.getNodeType()));
+					techMap.findTechNodeByName(node.getName()).setLogic(getGateLogic(inputs,node.getNodeType()));
 				}
 			}
 		}

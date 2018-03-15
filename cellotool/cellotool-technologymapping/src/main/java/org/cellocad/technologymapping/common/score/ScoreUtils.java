@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Massachusetts Institute of Technology (MIT)
+ * Copyright (C) 2018 Boston University (BU)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,41 +18,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.technologymapping.runtime.environment;
+package org.cellocad.technologymapping.common.score;
 
-import org.apache.commons.cli.Option;
-import org.cellocad.common.stage.runtime.environment.StageRuntimeEnv;
+import org.cellocad.technologymapping.common.techmap.TechNode;
 
 /**
- * @author: Vincent Mirian
+ * @author: Timothy Jones
  * 
- * @date: Dec 4, 2017
+ * @date: Mar 14, 2018
  *
  */
-public class TMRuntimeEnv extends StageRuntimeEnv{
-	
-	public TMRuntimeEnv(String[] args) {
-		super(args);
+public class ScoreUtils{
+
+	/**
+	 * Return the lowest on by highest off ratio for a TechNode.
+	 * 
+	 * @param node the TechNode to score.
+	 * @return the on off ratio.
+	 */
+	public static Double getOnOffRatio(TechNode node) {
+		Double lowestOn = Double.MAX_VALUE;
+        Double highestOff = Double.MIN_VALUE;
+		
+		for(int i = 0; i < node.getLogic().size(); ++i) {
+			Double a = node.getActivity().get(i);
+			
+			if (node.getLogic().get(i) == true
+				&&
+				lowestOn > a) {
+				lowestOn = a;
+			} else if (node.getLogic().get(i) == false
+					   &&
+					   highestOff < a) {
+				highestOff = a;
+			}
+		}
+		
+		return lowestOn/highestOff;
 	}
 
-	/*
-	 * Options
-	 */
-	protected Option getInputNetlistOption(){
-		Option rtn = new Option( TMArgString.INPUTNETLIST, true, TMArgDescription.INPUTNETLIST_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
-	protected Option getConfigFileOption(){
-		Option rtn = new Option( TMArgString.CONFIGFILE, true, TMArgDescription.CONFIGFILE_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
-	protected Option getOutputNetlistOption(){
-		Option rtn = new Option( TMArgString.OUTPUTNETLIST, true, TMArgDescription.OUTPUTNETLIST_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
 }

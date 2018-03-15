@@ -23,13 +23,9 @@ package org.cellocad.technologymapping.common;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Pair;
 import org.cellocad.common.target.data.TargetData;
-
 import org.cellocad.technologymapping.data.Gate;
 import org.cellocad.technologymapping.data.GateType;
 import org.cellocad.technologymapping.data.HillFunction;
@@ -37,6 +33,8 @@ import org.cellocad.technologymapping.data.LinearFunction;
 import org.cellocad.technologymapping.data.Part;
 import org.cellocad.technologymapping.data.PartType;
 import org.cellocad.technologymapping.data.ResponseFunction;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * @author: Timothy Jones
