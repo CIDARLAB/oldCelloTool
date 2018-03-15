@@ -111,7 +111,7 @@ public class TechMap extends CObject{
 	 * @return the score.
 	 */
 	public Double getScore() {
-		Double worst = Double.MIN_VALUE;
+		Double worst = Double.MAX_VALUE;
 		List<TechNode> nodes = this.getOutputNodes();
 		List<Double> scores = new ArrayList<>();
 		for(TechNode tn : nodes) {
@@ -186,9 +186,14 @@ public class TechMap extends CObject{
 		CObjectCollection<TechNode> nodes = new CObjectCollection<>();
 		for (int i = 0; i < num; i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
-			TechNode tn = new TechNode();
-			tn.setIdx(node.getIdx());
-			tn.setName(node.getName());
+			TechNode tn = new TechNode(node.getName(),node.getType(),node.getIdx());
+			if (node.getNodeType().equals("TopInput")) {
+				tn.setType(TechNodeType.SOURCE);
+			} else if (node.getNodeType().equals("TopOutput")) {
+				tn.setType(TechNodeType.SINK);
+			} else {
+				tn.setType(TechNodeType.NONE);
+			}
 			nodes.add(tn);
 		}
 		return nodes;

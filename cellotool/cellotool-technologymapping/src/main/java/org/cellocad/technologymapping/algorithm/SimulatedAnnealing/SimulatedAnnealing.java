@@ -124,6 +124,8 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		List<TechMap> bestMaps = new ArrayList<>();
 		
 		TechMap map = null;
+
+		List<NetlistNode> logicNodes = TMUtils.getLogicNodes(this.getNetlist());
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
 			logInfo("trajectory " + String.valueOf(k+1) + " of " + this.getNumTrajectories().toString());
 			map = this.getTechMap();
@@ -137,7 +139,6 @@ public class SimulatedAnnealing extends TMAlgorithm{
 				if (j >= this.getNumSteps()) {
                     temperature = 0.0;
                 }
-				List<NetlistNode> logicNodes = TMUtils.getLogicNodes(this.getNetlist());
 				
 				// get a random gate
 				Integer aIdx = rand.nextInt(logicNodes.size());
@@ -182,6 +183,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 			}
 		}
 		this.setTechMap(map);
+		logInfo("top score: " + this.getTechMap().getScore());
 	}
 	
 	@Override

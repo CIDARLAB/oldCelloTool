@@ -43,6 +43,11 @@ public class TechNode extends CObject{
 		super();
 		init();
 	}
+
+	public TechNode(final String name, int type, int idx) {
+		super(name,type,idx);
+		init();
+	}
 	
 	public TechNode(final TechNode other){
 		super(other);
