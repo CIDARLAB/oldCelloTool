@@ -20,6 +20,8 @@
  */
 package org.cellocad.logicsynthesis.test;
 
+import java.io.File;
+
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistUtils;
@@ -79,7 +81,10 @@ public class LogicSynthesisTest{
 		currentStage = targetCfg.getStageByName("LogicSynthesis");
 		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
 		LS.execute();
-		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir") + Utils.getFileSeparator() + verilogFilePrefix + ".json");
+		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
+										 + Utils.getFileSeparator()
+										 + verilogFilePrefix + ".json");
+		Utils.deleteDirectory(new File(tempDir));
 	}
 
 }

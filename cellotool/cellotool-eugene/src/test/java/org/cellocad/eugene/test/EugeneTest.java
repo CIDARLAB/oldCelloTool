@@ -20,6 +20,7 @@
  */
 package org.cellocad.eugene.test;
 
+import java.io.File;
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
@@ -76,7 +77,10 @@ public class EugeneTest{
 		currentStage = targetCfg.getStageByName("Eugene");
 		EURuntimeObject EU = new EURuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		EU.execute();
-		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir") + Utils.getFileSeparator() + "eugene_netlist.json");
+		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
+										 + Utils.getFileSeparator()
+										 + "eugene_netlist.json");
+		Utils.deleteDirectory(new File(tempDir));
 	}
 
 	public Netlist generateTestNetlist() {

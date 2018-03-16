@@ -63,7 +63,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		this.setOutputLibrary(TargetDataReader.getOutputReporters(this.getTargetData()));
 		
 		try {
-			Pair<Boolean,Integer> param = this.getAlgorithmProfile().getIntParameter("paramectories");
+			Pair<Boolean,Integer> param = this.getAlgorithmProfile().getIntParameter("trajectories");
 			if (param.getFirst()) {this.setNumTrajectories(param.getSecond());}
 		} catch (NullPointerException e) {}
 		try {

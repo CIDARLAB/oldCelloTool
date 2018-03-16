@@ -38,6 +38,7 @@ import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
 import org.cellocad.sbolgenerator.data.PartType;
 import org.cellocad.sbolgenerator.runtime.SGRuntimeObject;
 import org.cellocad.sbolgenerator.test.common.TestUtils;
+import java.io.File;
 import org.junit.Test;
 
 /**
@@ -76,7 +77,10 @@ public class SbolGeneratorTest{
 		currentStage = targetCfg.getStageByName("SbolGenerator");
 		SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		SG.execute();
-		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir") + Utils.getFileSeparator() + "sbolgenerator_netlist.json");
+		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
+										 + Utils.getFileSeparator()
+										 + "sbolgenerator_netlist.json");
+		Utils.deleteDirectory(new File(tempDir));
 	}
 
 	public Netlist generateTestNetlist() {

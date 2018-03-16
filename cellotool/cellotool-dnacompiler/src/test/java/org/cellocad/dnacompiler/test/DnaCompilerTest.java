@@ -20,6 +20,7 @@
  */
 package org.cellocad.dnacompiler.test;
 
+import java.io.File;
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistUtils;
@@ -87,7 +88,10 @@ public class DnaCompilerTest{
 		currentStage = targetCfg.getStageByName("SbolGenerator");
 		SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		SG.execute();
-		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir") + Utils.getFileSeparator() + "dnacompiler.json");
+		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
+										 + Utils.getFileSeparator()
+										 + "dnacompiler.json");
+		Utils.deleteDirectory(new File(tempDir));
 	}
 
 }

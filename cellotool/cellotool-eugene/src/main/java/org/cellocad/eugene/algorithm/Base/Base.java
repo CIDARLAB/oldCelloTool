@@ -21,6 +21,7 @@
 package org.cellocad.eugene.algorithm.Base;
 
 import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -106,11 +107,11 @@ public class Base extends EugeneAlgorithm{
 		Collection<String> eugeneGateDeclarations = new ArrayList<>();
 		Set<String> eugeneGateOrderRules = new HashSet<>();
 		Collection<String> eugeneCircuitRules = new ArrayList<>();
-		
+
 		List<String> eugeneForLoops = new ArrayList<>();
 		List<String> eugeneArrays = new ArrayList<>();
 		List<String> eugeneGateNames = new ArrayList<>();
-		
+
 		Set<String> gateNames = new HashSet<>();
 		// List<String> scars = new ArrayList<>();
 
@@ -251,6 +252,15 @@ public class Base extends EugeneAlgorithm{
 		logInfo("running Eugene");
 		try {
 			Eugene eug = new Eugene();
+
+			File cruft = new File(Utils.getWorkingDirectory()
+								  + Utils.getFileSeparator()
+								  + "exports");
+			(new File(cruft.getPath()
+					  + Utils.getFileSeparator()
+					  + "pigeon")).delete();
+			cruft.delete();
+
 			EugeneCollection ec = eug.executeScript(this.getEugeneInputScript());
 			this.setEugenePlasmids((EugeneArray) ec.get("allResults"));
 		} catch ( EugeneException e ) {
@@ -420,7 +430,7 @@ public class Base extends EugeneAlgorithm{
 
 		Set<String> devices = new HashSet<String>();
 		StringTokenizer st = new StringTokenizer(rule, " \t\n\r\f,");
-		
+
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
 			if (!keywords.contains(token) && token.substring(0, 1).matches("[a-z,A-Z]")) {
@@ -456,7 +466,7 @@ public class Base extends EugeneAlgorithm{
 	protected void setEugeneInputFilename(final String eugeneInputFilename) {
 		this.eugeneInputFilename = eugeneInputFilename;
 	}
-	
+
 	/**
 	 * @return the eugenePlasmids
 	 */
@@ -498,7 +508,7 @@ public class Base extends EugeneAlgorithm{
 	protected void setGateRules(final Collection<String> gateRules) {
 		this.gateRules = gateRules;
 	}
-	
+
 	/**
 	 * @return the parts
 	 */

@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.cellocad.common.Pair;
 import org.cellocad.common.Utils;
 import org.cellocad.common.graph.AbstractVertex.VertexType;
 import org.cellocad.common.netlist.NetlistEdge;
@@ -47,6 +48,7 @@ import edu.byu.ece.edif.util.parse.ParseException;
 
 /**
  * @author: Vincent Mirian
+ * @author: Timothy Jones
  * 
  * @date: Nov 21, 2017
  *
@@ -54,15 +56,36 @@ import edu.byu.ece.edif.util.parse.ParseException;
 public class Base extends LSAlgorithm{
 
 	@Override
-	protected void setDefaultParameterValues() {		
+	protected void setDefaultParameterValues() {
+		this.setLibParam("");
+		this.setDir(LSUtils.createTempDirectory().getAbsolutePath());
 	}
 
 	@Override
-	protected void setParameterValues() {		
+	protected void setParameterValues() {
+		try {
+			Pair<Boolean,String> param = this.getAlgorithmProfile().getStringParameter("cell_library");
+			if (param.getFirst()) {this.setLibParam(param.getSecond());}
+		} catch (NullPointerException e) {}
 	}
 
 	@Override
-	protected void validateParameterValues() {		
+	protected void validateParameterValues() {
+		if (this.getLibParam().equals("notnor")) {
+			this.setLibVerilog(LSUtils.getResourceAsFile("libraries/notnor.v",this.getDir()));
+			this.setLibLiberty(LSUtils.getResourceAsFile("libraries/notnor.lib",this.getDir()));
+		} else if (this.getLibParam().substring(0,Math.min(this.getLibParam().length(),5)).equals("file:")) {
+			this.setLibVerilog(new File(this.getLibParam().substring(5,this.getLibParam().length()) + ".v"));
+			if (!this.getLibVerilog().isFile()) {
+				throw new RuntimeException("'" + this.getLibVerilog() + " is not a file!");
+			}
+			this.setLibLiberty(new File(this.getLibParam().substring(5,this.getLibParam().length()) + ".lib"));
+			if (!this.getLibLiberty().isFile()) {
+				throw new RuntimeException("'" + this.getLibLiberty() + " is not a file!");
+			}
+		} else if (!this.getLibParam().equals("")) {
+			logWarn("Unknown cell_library specification. Ignoring.");
+		}
 	}
 
 	@Override
@@ -70,38 +93,22 @@ public class Base extends LSAlgorithm{
 		logInfo("building yosys input script");
 
 		String filename = Utils.getFilename(this.getVerilogFile());
-		this.setYosysScriptFilename(this.getRuntimeEnv().getOptionValue("outputDir") + Utils.getFileSeparator() + filename + "_YosysScript");	
-		this.setYosysEdifFilename(this.getRuntimeEnv().getOptionValue("outputDir") + Utils.getFileSeparator() + filename + ".edif");
+		this.setYosysScriptFilename(this.getRuntimeEnv().getOptionValue("outputDir")
+									+ Utils.getFileSeparator()
+									+ filename
+									+ "_YosysScript");
+		this.setYosysEdifFilename(this.getRuntimeEnv().getOptionValue("outputDir")
+								  + Utils.getFileSeparator()
+								  + filename
+								  + ".edif");
 
-		String cellLibraryFileVerilog = "";
-		String cellLibraryFileLiberty = "";
-		String cellLibraryParameter = this.getAlgorithmProfile().getStringParameter("cell_library").getSecond();
-		if (cellLibraryParameter.equals("notnor")) {
-			cellLibraryFileVerilog += LSUtils.getResourceAsFile("libraries/notnor.v");
-			cellLibraryFileLiberty += LSUtils.getResourceAsFile("libraries/notnor.lib");
-		} else if (cellLibraryParameter.substring(0,Math.min(cellLibraryParameter.length(),5)).equals("file:")) {
-			cellLibraryFileVerilog = cellLibraryParameter.substring(5,cellLibraryParameter.length()) + ".v";
-			if (!(new File(cellLibraryFileVerilog)).isFile()) {
-				throw new RuntimeException("'" + cellLibraryFileVerilog + " is not a file!");
-			}
-			cellLibraryFileLiberty = cellLibraryParameter.substring(5,cellLibraryParameter.length()) + ".lib";
-			if (!(new File(cellLibraryFileLiberty)).isFile()) {
-				throw new RuntimeException("'" + cellLibraryFileLiberty + " is not a file!");
-			}
-		}
-		
 		// exec
 		String exec = "";
-		File yosysTmp = LSUtils.getResourceAsFile("external_tools/Linux/yosys/yosys");
-		File yosysabcTmp = LSUtils.getResourceAsFile("external_tools/Linux/yosys/yosys-abc");
-		
-		File tempDir = LSUtils.createTempDirectory();
-		File yosys = new File(tempDir.toString() + Utils.getFileSeparator() + "yosys");
-		yosysTmp.renameTo(yosys);
+
+		File yosys = LSUtils.getResourceAsFile("external_tools/Linux/yosys/yosys",dir);
 		yosys.setExecutable(true);
 
-		File yosysabc = new File(tempDir.toString() + Utils.getFileSeparator() + "yosys-abc");
-		yosysabcTmp.renameTo(yosysabc);
+		File yosysabc = LSUtils.getResourceAsFile("external_tools/Linux/yosys/yosys-abc",dir);
 		yosysabc.setExecutable(true);
 
 		exec += yosys.toString();
@@ -109,9 +116,9 @@ public class Base extends LSAlgorithm{
 		this.setYosysExec(exec);
 		// create Yosys script
 		String script = "";
-		if (!cellLibraryFileVerilog.isEmpty()) {
+		if (this.getLibVerilog().isFile()) {
 			script += "read_verilog -lib ";
-			script += cellLibraryFileVerilog;
+			script += libVerilog;
 			script += Utils.getNewLine();
 		}
 		script += "read_verilog ";
@@ -124,10 +131,10 @@ public class Base extends LSAlgorithm{
 		script += "techmap; opt";
 		script += Utils.getNewLine();
 		script += "dfflibmap";
-		if (!cellLibraryFileLiberty.isEmpty()) { script += " -liberty " + cellLibraryFileLiberty;}
+		if (this.getLibLiberty().isFile()) { script += " -liberty " + this.getLibLiberty();}
 		script += Utils.getNewLine();
 		script += "abc";
-		if (!cellLibraryFileLiberty.isEmpty()) { script += " -liberty " + cellLibraryFileLiberty;}
+		if (this.getLibLiberty().isFile()) { script += " -liberty " + this.getLibLiberty();}
 		script += Utils.getNewLine();
 		script += "clean";
 		script += Utils.getNewLine();
@@ -150,7 +157,6 @@ public class Base extends LSAlgorithm{
 			e.printStackTrace();
 		}
 	}
-	
 
 	@Override
 	protected void run() {
@@ -165,6 +171,7 @@ public class Base extends LSAlgorithm{
 		// delete
 		Utils.deleteFilename(this.getYosysEdifFilename());
 		Utils.deleteFilename(this.getYosysScriptFilename());
+		Utils.deleteDirectory(new File(this.getDir()));
 	}
 
 	/*
@@ -240,7 +247,7 @@ public class Base extends LSAlgorithm{
 							setEdge(srcNode, dstNode, net);
 						}
 					}
-				}				
+				}
 			}
 			// Other
 			else {
@@ -257,7 +264,7 @@ public class Base extends LSAlgorithm{
 						dstNode.setVertexType(VertexType.NONE);
 						// setEdge
 						setEdge(srcNode, dstNode, net);
-					}			
+					}
 				}
 			}
 		}
@@ -270,7 +277,7 @@ public class Base extends LSAlgorithm{
 		dst.addInEdge(edge);
 		this.getNetlist().addEdge(edge);
 	}
-	
+
 	NetlistNode getNode(String Name, String type, Map<String, NetlistNode> map) {
 		NetlistNode rtn = null;
 		rtn = map.get(Name);
@@ -283,7 +290,7 @@ public class Base extends LSAlgorithm{
 		}
 		return rtn;
 	}
-	
+
 	boolean hasTopInput(EdifNet net) {
 		boolean rtn = false;
 		for (EdifPortRef portRef: net.getInputPortRefs()) {
@@ -291,7 +298,7 @@ public class Base extends LSAlgorithm{
 		}
 		return rtn;
 	}
-	
+
 	boolean hasTopOutput(EdifNet net) {
 		boolean rtn = false;
 		for (EdifPortRef portRef: net.getOutputPortRefs()) {
@@ -299,36 +306,72 @@ public class Base extends LSAlgorithm{
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * Getter and Setter
 	 */
 	protected void setYosysScriptFilename(final String str) {
 		this.yosysScriptFilename = str;
 	}
-	
+
 	protected String getYosysScriptFilename() {
 		return this.yosysScriptFilename;
 	}
-	
+
 	protected void setYosysEdifFilename(final String str) {
 		this.yosysEdifFilename = str;
 	}
-	
+
 	protected String getYosysEdifFilename() {
 		return this.yosysEdifFilename;
 	}
-	
+
 	protected void setYosysExec(final String str) {
 		this.yosysExec = str;
 	}
-	
+
 	protected String getYosysExec() {
 		return this.yosysExec;
+	}
+
+	protected void setDir(final String dir) {
+		this.dir = dir;
+	}
+
+	protected String getDir() {
+		return dir;
+	}
+
+	protected void setLibParam(final String libPrefix) {
+		this.libParam = libPrefix;
+	}
+
+	protected String getLibParam() {
+		return libParam;
+	}
+
+	protected void setLibVerilog(final File libVerilog) {
+		this.libVerilog = libVerilog;
+	}
+
+	protected File getLibVerilog() {
+		return libVerilog;
+	}
+
+	protected void setLibLiberty(final File libLiberty) {
+		this.libLiberty = libLiberty;
+	}
+
+	protected File getLibLiberty() {
+		return libLiberty;
 	}
 
 	private String yosysScriptFilename;
 	private String yosysEdifFilename;
 	private String yosysExec;
+	private String dir;
+	private String libParam;
+	private File libVerilog;
+	private File libLiberty;
 
 }

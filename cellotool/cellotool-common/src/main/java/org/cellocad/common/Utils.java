@@ -47,12 +47,22 @@ public class Utils {
 		}
 		return rtn;
 	}
-	
+
 	static public boolean deleteFilename(final String name){
 		boolean rtn = false;
 		File file = new File(name);
 		rtn = file.delete();
 		return rtn;
+	}
+
+	static public boolean deleteDirectory(File dir) {
+		File[] files = dir.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				deleteDirectory(file);
+			}
+		}
+		return dir.delete();
 	}
 
 	public static boolean isMac() {
@@ -62,7 +72,7 @@ public class Utils {
 	public static boolean isUnix() {
 		return (Utils.isUnix(Utils.getOS()));
 	}
-	
+
 	private static String getOS() {
 		return System.getProperty("os.name");
 	}
@@ -81,11 +91,11 @@ public class Utils {
 			rtn = Runtime.getRuntime().exec(cmd);
 			rtn.waitFor();
 		}catch(InterruptedException | IOException e){
-	        e.printStackTrace();
+			e.printStackTrace();
 		}
 		return rtn;
 	}
-	
+
 	static public boolean executeDot2PDFShellFilename(final String filename){
 		final String script = "dot2pdf.sh";
 		boolean rtn = false;
@@ -100,7 +110,7 @@ public class Utils {
 					String cmdLocation = null;
 					boolean contains = false;
 					while ((!contains) && ((cmdLocation = stdInput.readLine()) != null)) {
-					    contains = cmdLocation.contains(script);
+						contains = cmdLocation.contains(script);
 					}
 					if (contains) {
 						proc = executeAndWaitForCommand("bash " + cmdLocation + " " + filename);
@@ -109,17 +119,17 @@ public class Utils {
 					e.printStackTrace();
 				}
 			}
-		}	
-	    return rtn;
-	}
-	
-	static public String getTimeString(){
-		String rtn;
-        Date date = new Date();
-        rtn = String.valueOf(date.getTime());
+		}
 		return rtn;
 	}
-	
+
+	static public String getTimeString(){
+		String rtn;
+		Date date = new Date();
+		rtn = String.valueOf(date.getTime());
+		return rtn;
+	}
+
 	static public String getWorkingDirectory() {
 		String rtn = System.getProperty("user.dir").toString();
 		return rtn;
@@ -129,7 +139,7 @@ public class Utils {
 		String rtn = File.separator;
 		return rtn;
 	}
-	
+
 	static public String getNewLine() {
 		String rtn = System.getProperty("line.separator").toString();
 		return rtn;
@@ -143,7 +153,7 @@ public class Utils {
 		if (!str.isEmpty()) {
 			rtn = numTab + str.replace(Utils.getNewLine(), replace);
 		}
-		return rtn;		
+		return rtn;
 	}
 
 	static public String getTabCharacter() {
@@ -155,8 +165,8 @@ public class Utils {
 		String rtn = "";
 		String tab = Utils.getTabCharacter();
 		for (int i = 0; i < num; i++) {
-			rtn = rtn + tab;	
-		}		
+			rtn = rtn + tab;
+		}
 		return rtn;
 	}
 
@@ -196,6 +206,5 @@ public class Utils {
 	static public void exit(int exit) {
 		System.exit(exit);
 	}
-	
 
 }

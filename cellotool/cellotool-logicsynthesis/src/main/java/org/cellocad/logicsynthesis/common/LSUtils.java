@@ -20,10 +20,12 @@
  */
 package org.cellocad.logicsynthesis.common;
 
+import org.cellocad.common.Utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 
 /**
  * @author: Timothy Jones
@@ -40,16 +42,22 @@ public class LSUtils {
 	}
 
 	public static File getResourceAsFile(String resource) {
+		File dir = createTempDirectory();
+		return getResourceAsFile(resource,dir.getAbsolutePath());
+	}
+
+	public static File getResourceAsFile(String resource, String path) {
 		try {
 			InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resource);
 			if (in == null) {
 				return null;
 			}
 
-			File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".tmp");
-			tempFile.deleteOnExit();
+			File file = new File(path
+								 + Utils.getFileSeparator()
+								 + Paths.get(resource).getFileName().toString());
 
-			try (FileOutputStream out = new FileOutputStream(tempFile)) {
+			try (FileOutputStream out = new FileOutputStream(file)) {
 				//copy stream
 				byte[] buffer = new byte[1024];
 				int bytesRead;
@@ -57,7 +65,7 @@ public class LSUtils {
 					out.write(buffer, 0, bytesRead);
 				}
 			}
-			return tempFile;
+			return file;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -76,5 +84,5 @@ public class LSUtils {
 		}
 		return file;
 	}
-	
+
 }

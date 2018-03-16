@@ -20,6 +20,7 @@
  */
 package org.cellocad.technologymapping.test;
 
+import java.io.File;
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
@@ -76,7 +77,10 @@ public class TechnologyMappingTest{
 		currentStage = targetCfg.getStageByName("TechnologyMapping");
 		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		TM.execute();
-		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir") + Utils.getFileSeparator() + "technologymapping_netlist.json");
+		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
+										 + Utils.getFileSeparator()
+										 + "technologymapping_netlist.json");
+		Utils.deleteDirectory(new File(tempDir));
 	}
 
 	public Netlist generateTestNetlist() {
