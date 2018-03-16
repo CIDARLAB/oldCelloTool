@@ -20,6 +20,7 @@
  */
 package org.cellocad.technologymapping.common.score;
 
+import org.cellocad.common.Utils;
 import org.cellocad.technologymapping.common.techmap.TechNode;
 
 /**
@@ -37,6 +38,10 @@ public class ScoreUtils{
 	 * @return the on off ratio.
 	 */
 	public static Double getOnOffRatio(TechNode node) {
+		Utils.isNullRuntimeException(node,"TechNode");
+		Utils.isNullRuntimeException(node.getLogic(),"TechNode logic");
+		Utils.isNullRuntimeException(node.getActivity(),"TechNode activity");
+
 		Double lowestOn = Double.MAX_VALUE;
         Double highestOff = Double.MIN_VALUE;
 		

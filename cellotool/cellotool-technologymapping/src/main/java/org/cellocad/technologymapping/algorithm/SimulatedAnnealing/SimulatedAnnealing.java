@@ -49,7 +49,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 	@Override
 	protected void setDefaultParameterValues() {
 		this.setNumTrajectories(50);
-		this.setNumSteps(50);
+		this.setNumSteps(500);
 		this.setNumT0Steps(100);
 		this.setMaxTemp(100.0);
 		this.setMinTemp(0.001);
@@ -128,7 +128,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		List<NetlistNode> logicNodes = TMUtils.getLogicNodes(this.getNetlist());
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
 			logInfo("trajectory " + String.valueOf(k+1) + " of " + this.getNumTrajectories().toString());
-			map = this.getTechMap();
+			map = new TechMap(this.getTechMap());
 			TMUtils.doRandomAssignment(map,this.getNetlist(),this.getGateLibrary());
 			new ActivitySimulator(map,this.getNetlist());
 			for (int j = 0; j < (this.getNumSteps() + this.getNumT0Steps()); j++) {
@@ -145,6 +145,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
                 Gate aGate = tempMap.findTechNodeByName(logicNodes.get(aIdx).getName()).getGate();
 				// get a second gate, either used or unused
                 Gate bGate = TMUtils.getSwapOrSubGate(tempMap,this.getGateLibrary(),aGate);
+
                 // 1. if second gate is used, swap
                 if (tempMap.hasGate(bGate)) {
 					Integer bIdx = 0; //need to know the second gate index
