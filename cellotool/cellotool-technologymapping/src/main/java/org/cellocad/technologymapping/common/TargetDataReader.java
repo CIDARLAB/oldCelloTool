@@ -20,7 +20,9 @@
  */
 package org.cellocad.technologymapping.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.cellocad.common.CObjectCollection;
@@ -33,6 +35,7 @@ import org.cellocad.technologymapping.data.LinearFunction;
 import org.cellocad.technologymapping.data.Part;
 import org.cellocad.technologymapping.data.PartType;
 import org.cellocad.technologymapping.data.ResponseFunction;
+import org.cellocad.technologymapping.data.Toxicity;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -43,6 +46,31 @@ import org.json.simple.JSONObject;
  *
  */
 public class TargetDataReader {
+
+	public static final CObjectCollection<Toxicity> getGateToxicities(TargetData td) {
+		CObjectCollection<Toxicity> rtn = new CObjectCollection<>();
+		Integer num = td.getNumJSONObject("gate_toxicity");
+		for (int i = 0; i < num; i++) {
+			JSONObject json = td.getJSONObjectAtIdx("gate_toxicity",i);
+
+			JSONArray inputJson = (JSONArray)json.get("input");
+			List<Double> input = new ArrayList<>();
+			for (Object obj : inputJson) {
+				input.add((Double)obj);
+			}
+
+			JSONArray growthJson = (JSONArray)json.get("growth");
+			List<Double> growth = new ArrayList<>();
+			for (Object obj : growthJson) {
+				growth.add((Double)obj);
+			}
+
+			Toxicity t = new Toxicity(input,growth);
+			t.setName((String)json.get("gate_name"));
+			rtn.add(t);
+		}
+		return rtn;
+	}
 
 	public static final Double getUnitConversion(TargetData td) {
 		Integer num = td.getNumJSONObject("genetic_locations");
@@ -130,7 +158,7 @@ public class TargetDataReader {
 		}
 		return gates;
 	}
-	
+
 	public static final Map<String,ResponseFunction<?>> getGateResponseFunctions(TargetData td) {
 		Map<String,ResponseFunction<?>> map = new HashMap<>();
 		Integer num = td.getNumJSONObject("response_functions");
@@ -139,6 +167,7 @@ public class TargetDataReader {
 			// could have an equation parser, or 'equation_type' field in target data 
 			if (((String)json.get("equation")).equals("ymin+(ymax-ymin)/(1.0+(x/K)^n)")) {
 				ResponseFunction<HillFunction> rf = new ResponseFunction<>();
+				rf.setName((String)json.get("gate_name"));
 				HillFunction hf = new HillFunction();
 				JSONObject variables = (JSONObject) ((JSONArray) json.get("variables")).get(0);
 				rf.setOnThreshold((Double)variables.get("on_threshold"));
@@ -183,26 +212,40 @@ public class TargetDataReader {
 
 	public static final CObjectCollection<Gate> getGates(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
-		Integer num = td.getNumJSONObject("gates");
+
 		Map<String,CObjectCollection<Part>> gateParts = getGateParts(td);
 		Map<String,ResponseFunction<?>> responseFunctions = getGateResponseFunctions(td);
+		CObjectCollection<Toxicity> toxicities = getGateToxicities(td);
+
+		Integer num = td.getNumJSONObject("gates");
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("gates",i);
 			Gate g = new Gate();
+
 			String name = (String)json.get("gate_name");
-			if (name != null) {g.setName(name);}
+			g.setName(name);
+
 			String type = (String)json.get("gate_type");
-			if (type != null) {g.setType(GateType.valueOf(type.toUpperCase()).ordinal());}
+			if (type != null) {
+				g.setType(GateType.valueOf(type.toUpperCase()).ordinal());
+			}
+
 			String group = (String)json.get("group_name");
-			if (group != null) {g.setGroup(group);}
+			g.setGroup(group);
+
 			CObjectCollection<Part> parts = gateParts.get(name);
 			if (parts != null) {
 				g.setParts(gateParts.get(name));
 			}
+
 			ResponseFunction<?> rf = responseFunctions.get(name);
 			if (rf != null) {
 				g.setResponseFunction(responseFunctions.get(name));
 			}
+
+			Toxicity t = toxicities.findCObjectByName(name);
+			g.setToxicity(t);
+
 			gates.add(g);
 		}
 		return gates;

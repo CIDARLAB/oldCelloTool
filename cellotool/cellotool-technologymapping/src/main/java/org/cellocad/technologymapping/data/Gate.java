@@ -35,6 +35,7 @@ public class Gate extends CObject{
 	private CObjectCollection<Part> parts;
 	private ResponseFunction<?> responseFunction;
 	private String group;
+	private Toxicity toxicity;
 
 	public Gate() {
 		super();
@@ -45,7 +46,7 @@ public class Gate extends CObject{
 		parts = new CObjectCollection<Part>();
 		responseFunction = null;
 	}
-	
+
 	/**
 	 * @return the parts
 	 */
@@ -59,7 +60,7 @@ public class Gate extends CObject{
 	public void setParts(CObjectCollection<Part> parts) {
 		this.parts = parts;
 	}
-	
+
 	/**
 	 * @return the responseFunction
 	 */
@@ -86,6 +87,20 @@ public class Gate extends CObject{
 	 */
 	public void setGroup(String group) {
 		this.group = group;
+	}
+
+	/**
+	 * @return the toxicity
+	 */
+	public Toxicity getToxicity() {
+		return toxicity;
+	}
+
+	/**
+	 * @param toxicity the toxicity to set
+	 */
+	public void setToxicity(Toxicity toxicity) {
+		this.toxicity = toxicity;
 	}
 
 	/*
@@ -143,9 +158,22 @@ public class Gate extends CObject{
 		indentStr = Utils.addIndent(2, indentStr);
 		rtn = rtn + indentStr;
 		rtn = rtn + Utils.getNewLine();
+		// toxicity
+		rtn = rtn + Utils.getTabCharacter();
+		rtn = rtn + "toxicity = ";
+		indentStr = Utils.getNewLine();
+		indentStr = indentStr + this.getToxicity().toString();
+		indentStr = indentStr + ",";
+		indentStr = Utils.addIndent(2, indentStr);
+		rtn = rtn + indentStr;
+		rtn = rtn + Utils.getNewLine();
 		// parts
 		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + "parts = [";
+		rtn = rtn + "parts = ";
+		rtn = rtn + Utils.getNewLine();
+		rtn = rtn + Utils.getTabCharacter();
+		rtn = rtn + Utils.getTabCharacter();
+		rtn = rtn + "[";
 		indentStr = "";
 		if (this.getParts().size() > 0) {
 			for (Part p : this.getParts()) {
