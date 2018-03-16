@@ -36,6 +36,7 @@ public class Gate extends CObject{
 	private ResponseFunction<?> responseFunction;
 	private String group;
 	private Toxicity toxicity;
+	private Cytometry cytometry;
 
 	public Gate() {
 		super();
@@ -103,6 +104,20 @@ public class Gate extends CObject{
 		this.toxicity = toxicity;
 	}
 
+	/**
+	 * @return the cytometry
+	 */
+	public Cytometry getCytometry() {
+		return cytometry;
+	}
+
+	/**
+	 * @param cytometry the cytometry to set
+	 */
+	public void setCytometry(Cytometry cytometry) {
+		this.cytometry = cytometry;
+	}
+
 	/*
 	 * HashCode
 	 */
@@ -112,6 +127,9 @@ public class Gate extends CObject{
 		int result = super.hashCode();
 		result = prime * result + ((parts == null) ? 0 : parts.hashCode());
 		result = prime * result + ((responseFunction == null) ? 0 : responseFunction.hashCode());
+		result = prime * result + ((group == null) ? 0 : group.hashCode());
+		result = prime * result + ((toxicity == null) ? 0 : toxicity.hashCode());
+		result = prime * result + ((cytometry == null) ? 0 : cytometry.hashCode());
 		return result;
 	}
 

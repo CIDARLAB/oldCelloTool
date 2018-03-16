@@ -28,9 +28,11 @@ import java.util.Map;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Pair;
 import org.cellocad.common.target.data.TargetData;
+import org.cellocad.technologymapping.data.Cytometry;
 import org.cellocad.technologymapping.data.Gate;
 import org.cellocad.technologymapping.data.GateType;
 import org.cellocad.technologymapping.data.HillFunction;
+import org.cellocad.technologymapping.data.Histogram;
 import org.cellocad.technologymapping.data.LinearFunction;
 import org.cellocad.technologymapping.data.Part;
 import org.cellocad.technologymapping.data.PartType;
@@ -47,7 +49,45 @@ import org.json.simple.JSONObject;
  */
 public class TargetDataReader {
 
-	public static final CObjectCollection<Toxicity> getGateToxicities(TargetData td) {
+
+	public static final CObjectCollection<Cytometry> getGateCytometryData(TargetData td) {
+		CObjectCollection<Cytometry> rtn = new CObjectCollection<>();
+		Integer num = td.getNumJSONObject("gate_cytometry");
+		for (int i = 0; i < num; i++) {
+			Map<Double,Histogram> map = new HashMap<>();
+
+			JSONObject json = td.getJSONObjectAtIdx("gate_cytometry",i);
+
+			JSONArray data = (JSONArray)json.get("cytometry_data");
+
+			for (Object obj : data) {
+				JSONObject o = (JSONObject)obj;
+				Double input = (Double)o.get("input");
+
+				List<Double> bins = new ArrayList<>();
+				JSONArray binsArr = (JSONArray)o.get("output_bins");
+				for (Object b : binsArr) {
+					bins.add((Double)b);
+				}
+
+				List<Double> counts = new ArrayList<>();
+				JSONArray countsArr = (JSONArray)o.get("output_counts");
+				for (Object b : countsArr) {
+					counts.add((Double)b);
+				}
+
+				Histogram h = new Histogram(bins,counts);
+				map.put(input,h);
+			}
+
+			Cytometry c = new Cytometry(map);
+			c.setName((String)json.get("gate_name"));
+			rtn.add(c);
+		}
+		return rtn;
+	}
+
+	public static final CObjectCollection<Toxicity> getGateToxicityData(TargetData td) {
 		CObjectCollection<Toxicity> rtn = new CObjectCollection<>();
 		Integer num = td.getNumJSONObject("gate_toxicity");
 		for (int i = 0; i < num; i++) {
@@ -215,7 +255,8 @@ public class TargetDataReader {
 
 		Map<String,CObjectCollection<Part>> gateParts = getGateParts(td);
 		Map<String,ResponseFunction<?>> responseFunctions = getGateResponseFunctions(td);
-		CObjectCollection<Toxicity> toxicities = getGateToxicities(td);
+		CObjectCollection<Toxicity> toxicities = getGateToxicityData(td);
+		CObjectCollection<Cytometry> cytometries = getGateCytometryData(td);
 
 		Integer num = td.getNumJSONObject("gates");
 		for (int i = 0; i < num; i++) {
@@ -245,6 +286,9 @@ public class TargetDataReader {
 
 			Toxicity t = toxicities.findCObjectByName(name);
 			g.setToxicity(t);
+
+			Cytometry c = cytometries.findCObjectByName(name);
+			g.setCytometry(c);
 
 			gates.add(g);
 		}

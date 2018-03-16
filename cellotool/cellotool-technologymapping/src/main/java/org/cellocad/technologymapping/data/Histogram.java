@@ -30,10 +30,10 @@ import org.cellocad.technologymapping.common.PairTable;
  * @date: Mar 15, 2018
  *
  */
-public class Toxicity extends PairTable<Double,Double>{
+public class Histogram extends PairTable<Double,Double>{
 
-	public Toxicity(final List<Double> input, final List<Double> growth) {
-		super(input,growth);
+	public Histogram(final List<Double> bins, final List<Double> counts) {
+		super(bins,counts);
 	}
-
+	
 }
