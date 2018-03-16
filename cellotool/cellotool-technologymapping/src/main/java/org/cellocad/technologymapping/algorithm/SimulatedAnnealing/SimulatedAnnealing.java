@@ -29,7 +29,7 @@ import org.cellocad.common.Pair;
 import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.technologymapping.algorithm.TMAlgorithm;
 import org.cellocad.technologymapping.common.TMUtils;
-import org.cellocad.technologymapping.common.UCFReader;
+import org.cellocad.technologymapping.common.TargetDataReader;
 import org.cellocad.technologymapping.common.simulation.ActivitySimulator;
 import org.cellocad.technologymapping.common.simulation.LogicSimulator;
 import org.cellocad.technologymapping.common.techmap.TechMap;
@@ -57,10 +57,10 @@ public class SimulatedAnnealing extends TMAlgorithm{
 
 	@Override
 	protected void setParameterValues() {
-		this.setPartLibrary(UCFReader.getParts(this.getTargetData()));
-		this.setGateLibrary(UCFReader.getGates(this.getTargetData()));
-		this.setInputLibrary(UCFReader.getInputSensors(this.getTargetData()));
-		this.setOutputLibrary(UCFReader.getOutputReporters(this.getTargetData()));
+		this.setPartLibrary(TargetDataReader.getParts(this.getTargetData()));
+		this.setGateLibrary(TargetDataReader.getGates(this.getTargetData()));
+		this.setInputLibrary(TargetDataReader.getInputSensors(this.getTargetData()));
+		this.setOutputLibrary(TargetDataReader.getOutputReporters(this.getTargetData()));
 		
 		try {
 			Pair<Boolean,Integer> param = this.getAlgorithmProfile().getIntParameter("paramectories");
@@ -109,7 +109,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		new LogicSimulator(techMap,this.getNetlist());
 		TMUtils.assignInputSensors(this.getTechMap(),this.getNetlist(),this.getInputLibrary());
 		TMUtils.assignOutputReporters(this.getTechMap(),this.getNetlist(),this.getOutputLibrary());
-		TMUtils.assignInputActivities(this.getTechMap(),this.getNetlist(),UCFReader.getInputPromoterActivities(this.getTargetData()));
+		TMUtils.assignInputActivities(this.getTechMap(),this.getNetlist(),TargetDataReader.getInputPromoterActivities(this.getTargetData()));
 	}
 
 	@Override

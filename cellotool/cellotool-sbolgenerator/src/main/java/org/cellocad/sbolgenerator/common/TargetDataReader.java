@@ -40,7 +40,7 @@ import org.json.simple.JSONObject;
  * @date: Feb 27, 2018
  *
  */
-public class UCFReader {
+public class TargetDataReader {
 
 	public static final Collection<String> getPartRules(TargetData td) {
 		return null;

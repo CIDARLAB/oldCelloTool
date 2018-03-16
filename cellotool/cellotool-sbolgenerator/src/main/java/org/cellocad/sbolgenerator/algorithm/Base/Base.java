@@ -36,7 +36,7 @@ import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.sbolgenerator.algorithm.SGAlgorithm;
-import org.cellocad.sbolgenerator.common.UCFReader;
+import org.cellocad.sbolgenerator.common.TargetDataReader;
 import org.cellocad.sbolgenerator.data.Gate;
 import org.cellocad.sbolgenerator.data.Part;
 import org.cellocad.sbolgenerator.data.PartType;
@@ -96,8 +96,8 @@ public class Base extends SGAlgorithm{
 			throw new RuntimeException("Malformed repository url.");
 		}
 
-		this.setPartLibrary(UCFReader.getParts(this.getTargetData()));
-		this.setGateLibrary(UCFReader.getGates(this.getTargetData()));
+		this.setPartLibrary(TargetDataReader.getParts(this.getTargetData()));
+		this.setGateLibrary(TargetDataReader.getGates(this.getTargetData()));
 	}
 
 	@Override

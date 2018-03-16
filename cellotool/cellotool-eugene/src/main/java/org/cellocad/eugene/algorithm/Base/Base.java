@@ -39,7 +39,7 @@ import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.eugene.algorithm.EugeneAlgorithm;
-import org.cellocad.eugene.common.UCFReader;
+import org.cellocad.eugene.common.TargetDataReader;
 import org.cellocad.eugene.data.Direction;
 import org.cellocad.eugene.data.Gate;
 import org.cellocad.eugene.data.Part;
@@ -71,10 +71,10 @@ public class Base extends EugeneAlgorithm{
 
 	@Override
 	protected void setParameterValues() {
-		this.setPartRules(UCFReader.getPartRules(this.getTargetData()));
-		this.setGateRules(UCFReader.getGateRules(this.getTargetData()));
-		this.setPartLibrary(UCFReader.getParts(this.getTargetData()));
-		this.setGateLibrary(UCFReader.getGates(this.getTargetData()));
+		this.setPartRules(TargetDataReader.getPartRules(this.getTargetData()));
+		this.setGateRules(TargetDataReader.getGateRules(this.getTargetData()));
+		this.setPartLibrary(TargetDataReader.getParts(this.getTargetData()));
+		this.setGateLibrary(TargetDataReader.getGates(this.getTargetData()));
 	}
 
 	@Override

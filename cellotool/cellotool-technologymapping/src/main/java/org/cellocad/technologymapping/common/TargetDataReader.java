@@ -42,7 +42,7 @@ import org.json.simple.JSONObject;
  * @date: Mar 6, 2018
  *
  */
-public class UCFReader {
+public class TargetDataReader {
 
 	public static final Double getUnitConversion(TargetData td) {
 		Integer num = td.getNumJSONObject("genetic_locations");
