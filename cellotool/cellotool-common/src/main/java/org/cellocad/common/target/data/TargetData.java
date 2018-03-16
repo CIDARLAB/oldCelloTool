@@ -20,9 +20,6 @@
  */
 package org.cellocad.common.target.data;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +27,8 @@ import java.util.Map;
 
 import org.cellocad.common.CObject;
 import org.cellocad.common.profile.ProfileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian

@@ -22,7 +22,6 @@ package org.cellocad.common.stage.runtime.environment;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-
 import org.cellocad.common.runtime.environment.RuntimeEnv;
 
 /**

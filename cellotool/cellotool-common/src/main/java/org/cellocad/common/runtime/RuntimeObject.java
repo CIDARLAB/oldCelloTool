@@ -22,7 +22,6 @@ package org.cellocad.common.runtime;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.cellocad.common.CObject;
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;

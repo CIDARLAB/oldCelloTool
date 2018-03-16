@@ -20,9 +20,9 @@
  */
 package org.cellocad.common.stage;
 
-import org.json.simple.JSONObject;
 import org.cellocad.common.profile.AlgorithmProfile;
 import org.cellocad.common.profile.ProfileObject;
+import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian

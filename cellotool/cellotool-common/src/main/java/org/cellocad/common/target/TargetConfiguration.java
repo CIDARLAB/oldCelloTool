@@ -20,12 +20,11 @@
  */
 package org.cellocad.common.target;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.profile.ProfileObject;
 import org.cellocad.common.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian

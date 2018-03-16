@@ -20,15 +20,12 @@
  */
 package org.cellocad.common.profile;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
 import org.cellocad.common.capacity.LowerBoundType;
 import org.cellocad.common.capacity.UpperBoundType;
-import org.cellocad.common.profile.ProfileObject;
-import org.cellocad.common.profile.ProfileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian

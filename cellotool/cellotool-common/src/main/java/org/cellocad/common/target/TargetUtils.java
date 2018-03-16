@@ -26,12 +26,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.cellocad.common.Utils;
+import org.cellocad.common.runtime.environment.RuntimeEnv;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import org.cellocad.common.Utils;
-import org.cellocad.common.runtime.environment.RuntimeEnv;
 /**
  * @author: Vincent Mirian
  * 

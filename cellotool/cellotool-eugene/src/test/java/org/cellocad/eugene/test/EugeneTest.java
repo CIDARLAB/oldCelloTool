@@ -21,6 +21,7 @@
 package org.cellocad.eugene.test;
 
 import java.io.File;
+
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;

@@ -23,12 +23,11 @@ package org.cellocad.common.netlist;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.json.simple.JSONObject;
-
 import org.cellocad.common.Utils;
 import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.graph.graph.EdgeTemplate;
 import org.cellocad.common.profile.ProfileUtils;
+import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian

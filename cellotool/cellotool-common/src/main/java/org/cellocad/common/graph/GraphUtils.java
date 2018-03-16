@@ -31,7 +31,6 @@ import java.io.Writer;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
-
 import org.cellocad.common.Utils;
 import org.cellocad.common.graph.graph.Edge;
 import org.cellocad.common.graph.graph.Graph;

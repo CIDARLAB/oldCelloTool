@@ -21,6 +21,7 @@
 package org.cellocad.dnacompiler.test;
 
 import java.io.File;
+
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistUtils;

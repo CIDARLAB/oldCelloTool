@@ -23,12 +23,11 @@ package org.cellocad.common.profile;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Pair;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 
 /**

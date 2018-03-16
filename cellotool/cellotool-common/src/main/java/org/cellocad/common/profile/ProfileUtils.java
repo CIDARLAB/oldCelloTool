@@ -20,9 +20,8 @@
  */
 package org.cellocad.common.profile;
 
-import org.json.simple.JSONObject;
-
 import org.cellocad.common.Utils;
+import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian

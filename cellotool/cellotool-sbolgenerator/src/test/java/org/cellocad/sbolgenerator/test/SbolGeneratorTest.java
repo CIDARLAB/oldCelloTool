@@ -20,6 +20,8 @@
  */
 package org.cellocad.sbolgenerator.test;
 
+import java.io.File;
+
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
@@ -38,7 +40,6 @@ import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
 import org.cellocad.sbolgenerator.data.PartType;
 import org.cellocad.sbolgenerator.runtime.SGRuntimeObject;
 import org.cellocad.sbolgenerator.test.common.TestUtils;
-import java.io.File;
 import org.junit.Test;
 
 /**

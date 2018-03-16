@@ -23,14 +23,13 @@ package org.cellocad.common.netlist;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.graph.graph.VertexTemplate;
 import org.cellocad.common.profile.ProfileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
