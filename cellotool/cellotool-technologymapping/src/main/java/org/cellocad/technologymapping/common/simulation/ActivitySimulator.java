@@ -52,18 +52,18 @@ public class ActivitySimulator {
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
-			Utils.isNullRuntimeException(techMap.findTechNodeByName(node.getName()), "TechNode for node " + node.getName());
+			Utils.isNullRuntimeException(techMap.findTechNodeByName(node.getName()), "TechNode for NetlistNode " + node.getName());
 		}
 		computeActivity(techMap,netlist);
 	}
 
 	/**
-	 * Create a new ActivitySimulator and assign activities.
+	 * Compute and assign promoter activities.
 	 * 
 	 * @param techMap the TechMap on which to assign activities.
 	 * @param netlist the netlist corresponding to the TechMap.
 	 */
-	private void computeActivity(TechMap techMap, Netlist netlist) {
+	private static void computeActivity(TechMap techMap, Netlist netlist) {
 		UpstreamDFS<NetlistNode,NetlistEdge,Netlist> dfs = new UpstreamDFS<>(netlist);
 		NetlistNode node = null;
 		while ((node = dfs.getNextVertex()) != null) {

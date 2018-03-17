@@ -38,6 +38,7 @@ public class TechNode extends CObject{
 	private Gate gate;
 	private List<Boolean> logic;
 	private List<Double> activity;
+	private List<Double> toxicity;
 
 	public TechNode() {
 		super();
@@ -51,6 +52,7 @@ public class TechNode extends CObject{
 	
 	public TechNode(final TechNode other){
 		super(other);
+		this.setToxicity(new ArrayList<>(other.getToxicity()));
 		this.setActivity(new ArrayList<>(other.getActivity()));
 		this.setLogic(new ArrayList<>(other.getLogic()));
 		if (other.getGate() != null) {
@@ -61,6 +63,7 @@ public class TechNode extends CObject{
 	private void init() {
 		logic = new ArrayList<Boolean>();
 		activity = new ArrayList<Double>();
+		toxicity = new ArrayList<Double>();
 	}
 
 	public enum TechNodeType {
@@ -117,6 +120,20 @@ public class TechNode extends CObject{
 		this.activity = activity;
 	}
 
+	/**
+	 * @return the toxicity
+	 */
+	public List<Double> getToxicity() {
+		return toxicity;
+	}
+
+	/**
+	 * @param toxicity the toxicity to set
+	 */
+	public void setToxicity(List<Double> toxicity) {
+		this.toxicity = toxicity;
+	}
+
 	/*
 	 * HashCode
 	 */
@@ -127,6 +144,7 @@ public class TechNode extends CObject{
 		result = prime * result + ((gate == null) ? 0 : gate.hashCode());
 		result = prime * result + ((logic == null) ? 0 : logic.hashCode());
 		result = prime * result + ((activity == null) ? 0 : activity.hashCode());
+		result = prime * result + ((toxicity == null) ? 0 : toxicity.hashCode());
 		return result;
 	}
 
@@ -150,11 +168,6 @@ public class TechNode extends CObject{
 				return false;
 		} else if (!gate.equals(other.gate))
 			return false;
-		if (logic == null) {
-			if (other.logic != null)
-				return false;
-		} else if (!logic.equals(other.logic))
-			return false;
 		return true;
 	}
 
@@ -168,6 +181,8 @@ public class TechNode extends CObject{
 		rtn = rtn + this.getEntryToString("logic", this.getLogic().toString());
 		// activity
 		rtn = rtn + this.getEntryToString("activity", this.getActivity().toString());
+		// toxicity
+		rtn = rtn + this.getEntryToString("toxicity", this.getToxicity().toString());
 		// gate
 		if (this.getGate() != null) {
 			indentStr = this.getGate().toString();

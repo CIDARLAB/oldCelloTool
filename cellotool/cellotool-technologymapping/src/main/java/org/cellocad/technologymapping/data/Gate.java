@@ -165,59 +165,61 @@ public class Gate extends CObject{
 	public String toString() {
 		String rtn = "";
 		String indentStr = "";
-		rtn = rtn + "[ ";
-		rtn = rtn + Utils.getNewLine();
+		rtn += "[ ";
+		rtn += Utils.getNewLine();
 		// reponse function
-		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + "responseFunction = ";
-		indentStr = indentStr + Utils.getNewLine();
-		indentStr = indentStr + this.getResponseFunction().toString();
-		indentStr = indentStr + ",";
+		rtn += Utils.getTabCharacter();
+		rtn += "responseFunction = ";
+		indentStr += Utils.getNewLine();
+		indentStr += this.getResponseFunction().toString();
+		indentStr += ",";
 		indentStr = Utils.addIndent(2, indentStr);
-		rtn = rtn + indentStr;
-		rtn = rtn + Utils.getNewLine();
+		rtn += indentStr;
+		rtn += Utils.getNewLine();
 		// toxicity
-		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + "toxicity = ";
-		indentStr = Utils.getNewLine();
-		indentStr = indentStr + this.getToxicity().toString();
-		indentStr = indentStr + ",";
-		indentStr = Utils.addIndent(2, indentStr);
-		rtn = rtn + indentStr;
-		rtn = rtn + Utils.getNewLine();
+		if (toxicity != null) {
+			rtn += Utils.getTabCharacter();
+			rtn += "toxicity = ";
+			indentStr = Utils.getNewLine();
+			indentStr += this.getToxicity().toString();
+			indentStr += ",";
+			indentStr = Utils.addIndent(2, indentStr);
+			rtn += indentStr;
+			rtn += Utils.getNewLine();
+		}
 		// parts
-		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + "parts = ";
-		rtn = rtn + Utils.getNewLine();
-		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + "[";
+		rtn += Utils.getTabCharacter();
+		rtn += "parts = ";
+		rtn += Utils.getNewLine();
+		rtn += Utils.getTabCharacter();
+		rtn += Utils.getTabCharacter();
+		rtn += "[";
 		indentStr = "";
 		if (this.getParts().size() > 0) {
 			for (Part p : this.getParts()) {
-				indentStr = indentStr + Utils.getNewLine();
-				indentStr = indentStr + p.toString();
-				indentStr = indentStr + ",";
+				indentStr += Utils.getNewLine();
+				indentStr += p.toString();
+				indentStr += ",";
 			}
 			indentStr = Utils.addIndent(3, indentStr);
-			rtn = rtn + indentStr;
-			rtn = rtn + Utils.getNewLine();
-			rtn = rtn + Utils.getTabCharacter();
-			rtn = rtn + Utils.getTabCharacter();
+			rtn += indentStr;
+			rtn += Utils.getNewLine();
+			rtn += Utils.getTabCharacter();
+			rtn += Utils.getTabCharacter();
 		}
-		rtn = rtn + "]";
-		rtn = rtn + Utils.getNewLine();
+		rtn += "]";
+		rtn += Utils.getNewLine();
 		// toString
-		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + "toString() = ";
-		rtn = rtn + Utils.getNewLine();
+		rtn += Utils.getTabCharacter();
+		rtn += "toString() = ";
+		rtn += Utils.getNewLine();
 		indentStr = super.toString();
 		indentStr = Utils.addIndent(1, indentStr);
-		rtn = rtn + indentStr;
-		rtn = rtn + ",";
-		rtn = rtn + Utils.getNewLine();
+		rtn += indentStr;
+		rtn += ",";
+		rtn += Utils.getNewLine();
 		// end
-		rtn = rtn + "]";
+		rtn += "]";
 		return rtn;
 	}
 

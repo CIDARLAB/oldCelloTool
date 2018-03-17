@@ -51,7 +51,7 @@ public class LogicSimulator {
 		computeBooleanLogic(techMap, netlist);
 	}
 
-	private void computeBooleanLogic(TechMap techMap, Netlist netlist) {
+	private static void computeBooleanLogic(TechMap techMap, Netlist netlist) {
 		List<List<Boolean>> inputLogic = getInputLogic(TMUtils.getInputNodes(netlist).size());
 
 		UpstreamDFS<NetlistNode,NetlistEdge,Netlist> dfs = new UpstreamDFS<>(netlist);

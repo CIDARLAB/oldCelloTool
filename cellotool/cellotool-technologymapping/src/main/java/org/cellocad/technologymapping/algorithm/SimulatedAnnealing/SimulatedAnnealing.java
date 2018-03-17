@@ -32,7 +32,9 @@ import org.cellocad.technologymapping.common.TMUtils;
 import org.cellocad.technologymapping.common.TargetDataReader;
 import org.cellocad.technologymapping.common.simulation.ActivitySimulator;
 import org.cellocad.technologymapping.common.simulation.LogicSimulator;
+import org.cellocad.technologymapping.common.simulation.ToxicitySimulator;
 import org.cellocad.technologymapping.common.techmap.TechMap;
+import org.cellocad.technologymapping.common.techmap.TechNode;
 import org.cellocad.technologymapping.data.Gate;
 import org.cellocad.technologymapping.data.Part;
 
@@ -42,8 +44,7 @@ import org.cellocad.technologymapping.data.Part;
  * @date: Mar 12, 2018
  *
  */
-// TODO: make a container for the netlist and tech node map, e.g. TechMap or Assignment?
-// TODO: compute toxicity, check roadblocking
+// TODO: check toxicity, roadblocking in assignment
 public class SimulatedAnnealing extends TMAlgorithm{
 
 	@Override
@@ -61,7 +62,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		this.setGateLibrary(TargetDataReader.getGates(this.getTargetData()));
 		this.setInputLibrary(TargetDataReader.getInputSensors(this.getTargetData()));
 		this.setOutputLibrary(TargetDataReader.getOutputReporters(this.getTargetData()));
-		
+
 		try {
 			Pair<Boolean,Integer> param = this.getAlgorithmProfile().getIntParameter("trajectories");
 			if (param.getFirst()) {this.setNumTrajectories(param.getSecond());}
@@ -106,10 +107,12 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		}
 		this.setTechMap(new TechMap(this.getNetlist()));
 
-		new LogicSimulator(techMap,this.getNetlist());
+		new LogicSimulator(this.getTechMap(),this.getNetlist());
 		TMUtils.assignInputSensors(this.getTechMap(),this.getNetlist(),this.getInputLibrary());
 		TMUtils.assignOutputReporters(this.getTechMap(),this.getNetlist(),this.getOutputLibrary());
-		TMUtils.assignInputActivities(this.getTechMap(),this.getNetlist(),TargetDataReader.getInputPromoterActivities(this.getTargetData()));
+
+		TMUtils.initInputActivities(this.getTechMap(),this.getNetlist(),TargetDataReader.getInputPromoterActivities(this.getTargetData()));
+		TMUtils.initOutputToxicity(this.getTechMap(),this.getNetlist());
 	}
 
 	@Override
@@ -122,7 +125,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		Double logInc = (logMaxTemp - logMinTemp) / this.getNumSteps();
 
 		List<TechMap> bestMaps = new ArrayList<>();
-		
+
 		TechMap map = null;
 
 		List<NetlistNode> logicNodes = TMUtils.getLogicNodes(this.getNetlist());
@@ -131,48 +134,50 @@ public class SimulatedAnnealing extends TMAlgorithm{
 			map = new TechMap(this.getTechMap());
 			TMUtils.doRandomAssignment(map,this.getNetlist(),this.getGateLibrary());
 			new ActivitySimulator(map,this.getNetlist());
+			new ToxicitySimulator(map,this.getNetlist());
 			for (int j = 0; j < (this.getNumSteps() + this.getNumT0Steps()); j++) {
 				TechMap tempMap = new TechMap(map);
-				
+
 				Double logTemp = logMaxTemp - j * logInc;
-                Double temperature = Math.pow(10, logTemp);
+				Double temperature = Math.pow(10, logTemp);
 				if (j >= this.getNumSteps()) {
-                    temperature = 0.0;
-                }
-				
+					temperature = 0.0;
+				}
+
 				// get a random gate
 				Integer aIdx = rand.nextInt(logicNodes.size());
-                Gate aGate = tempMap.findTechNodeByName(logicNodes.get(aIdx).getName()).getGate();
+				Gate aGate = tempMap.findTechNodeByName(logicNodes.get(aIdx).getName()).getGate();
 				// get a second gate, either used or unused
-                Gate bGate = TMUtils.getSwapOrSubGate(tempMap,this.getGateLibrary(),aGate);
+				Gate bGate = TMUtils.getSwapOrSubGate(tempMap,this.getGateLibrary(),aGate);
 
-                // 1. if second gate is used, swap
-                if (tempMap.hasGate(bGate)) {
+				// 1. if second gate is used, swap
+				if (tempMap.hasGate(bGate)) {
 					Integer bIdx = 0; //need to know the second gate index
 					for(int i = 0; i < logicNodes.size(); i++) {
-                        if (tempMap.findTechNodeByName(logicNodes.get(i).getName())
+						if (tempMap.findTechNodeByName(logicNodes.get(i).getName())
 							.getGate().getName().
 							equals(bGate.getName())) {
-                            bIdx = i;
+							bIdx = i;
 							break;
-                        }
-                    }
+						}
+					}
 					tempMap.findTechNodeByName(logicNodes.get(aIdx).getName()).setGate(bGate);
 					tempMap.findTechNodeByName(logicNodes.get(bIdx).getName()).setGate(aGate);
 				}
 				// 2. if second gate is unused, substitute
-                else {
+				else {
 					tempMap.findTechNodeByName(logicNodes.get(aIdx).getName()).setGate(bGate);
 				}
 				new ActivitySimulator(tempMap,this.getNetlist());
+				new ToxicitySimulator(tempMap,this.getNetlist());
 
 				Double probability = Math.exp( (tempMap.getScore()
 												-
 												map.getScore())
 											   / temperature ); // e^b
-                Double ep = Math.random();
+				Double ep = Math.random();
 
-                if (ep < probability) {
+				if (ep < probability) {
 					map = tempMap;
 				}
 			}
@@ -185,8 +190,28 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		}
 		this.setTechMap(map);
 		logInfo("top score: " + this.getTechMap().getScore());
+
+		for (NetlistNode node : TMUtils.getLogicNodes(this.getNetlist())) {
+			TechNode tn = this.getTechMap().findTechNodeByName(node.getName());
+			String msg = "";
+			msg += "NetlistNode ";
+			msg += node.getName();
+			msg += " (" + node.getNodeType() + ")";
+			msg += " was assigned gate ";
+			msg += tn.getGate().getName();
+			logInfo(msg);
+			msg  = "  logic output: ";
+			msg += tn.getLogic();
+			logInfo(msg);
+			msg  = "  promoter activity: ";
+			msg += tn.getActivity();
+			logInfo(msg);
+			msg  = "  toxicity: ";
+			msg += tn.getToxicity();
+			logInfo(msg);
+		}
 	}
-	
+
 	@Override
 	protected void postprocessing() {
 		logInfo("updating netlist");
@@ -194,7 +219,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 	}
 
 	/* Getter & Setter */
-	
+
 	/**
 	 * @return the parts
 	 */
@@ -319,9 +344,9 @@ public class SimulatedAnnealing extends TMAlgorithm{
 
 	private Integer numTrajectories;
 	private Integer numSteps;
-	private Integer numT0Steps;	
+	private Integer numT0Steps;
 
 	private Double maxTemp;
 	private Double minTemp;
-	
+
 }

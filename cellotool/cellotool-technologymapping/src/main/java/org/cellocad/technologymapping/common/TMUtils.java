@@ -184,12 +184,12 @@ public class TMUtils{
 	 * Set activities to all input nodes based on their boolean logic values.
 	 * 
 	 * @param techMap the TechMap on which to assign input activities.
-	 * @param netlist the Netlist corresponding to the techMap.
+	 * @param netlist the Netlist corresponding to the TechMap.
 	 * @param inputActivityReference the map from input name to reference low-high activity pair.
 	 */
-	public static void assignInputActivities(TechMap techMap,
-											 Netlist netlist,
-											 Map<String,Pair<Double,Double>> inputActivityReference) {
+	public static void initInputActivities(TechMap techMap,
+										   Netlist netlist,
+										   Map<String,Pair<Double,Double>> inputActivityReference) {
 		List<NetlistNode> nodes = TMUtils.getInputNodes(netlist);
 		for (NetlistNode node : nodes) {
 			Pair<Double,Double> inputRef = inputActivityReference.get(node.getGate());
@@ -197,6 +197,56 @@ public class TMUtils{
 			TechNode tn = techMap.findTechNodeByName(node.getName());
 			tn.setActivity(getInputActivity(tn.getLogic(),inputRef));
 		}
+	}
+
+	/**
+	 * Initialize toxicity at the output nodes.
+	 * 
+	 * @param techMap the TechMap on which to assign output toxicity.
+	 * @param netlist the Netlist corresponding to the TechMap.
+	 */
+	public static void initOutputToxicity(TechMap techMap, Netlist netlist) {
+		List<NetlistNode> nodes = TMUtils.getOutputNodes(netlist);
+		for (NetlistNode node : nodes) {
+			TechNode tn = techMap.findTechNodeByName(node.getName());
+			if (tn != null) {
+				List<Boolean> logic = tn.getLogic();
+				if (logic != null) {
+					List<Double> toxicity = Collections.nCopies(logic.size(),1.0);
+					tn.setToxicity(toxicity);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Find the minimum growth (highest toxicity) for a TechNode
+	 * 
+	 * @param techNode the TechNode to search.
+	 */
+	public static Double minGrowth(TechNode techNode) {
+		List<Double> toxicity = techNode.getToxicity();
+		Double rtn = null;
+		if (toxicity != null)
+			rtn = Collections.min(techNode.getToxicity());
+		return rtn;
+	}
+
+	/**
+	 * Find the minimum growth (highest toxicity) for a TechNode
+	 * 
+	 * @param techNode the TechNode to search.
+	 */
+	public static Double minGrowth(TechMap techMap, Netlist netlist) {
+		Double rtn = null;
+
+		List<NetlistNode> nodes = TMUtils.getOutputNodes(netlist);
+		for (NetlistNode node : nodes) {
+			TechNode tn = techMap.findTechNodeByName(node.getName());
+			if (tn != null)
+				rtn = minGrowth(tn);
+		}
+		return rtn;
 	}
 
 	/**

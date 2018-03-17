@@ -72,7 +72,83 @@ public abstract class PairTable<L extends Number, R extends Number> extends CObj
 		return new Pair<L,R>(this.getData().getFirst().get(i),
 							 this.getData().getSecond().get(i));
 	}
+
+	/**
+	 * Get the minimum of all first-values in the Pairs.
+	 *
+	 * @return the minimum.
+	 */
+	public int argMinFirst() {
+		L min = this.getRow(0).getFirst();
+		int rtn = 0;
+		for (int i = 0; i < this.size(); i++) {
+			L first = this.getRow(i).getFirst();
+			if (first.doubleValue() < min.doubleValue()) {
+				min = first;
+				rtn = i;
+			}
+		}
+		return rtn;
+	}
+
+	/**
+	 * Get the maximum of all first-values in the Pairs.
+	 *
+	 * @return the maximum.
+	 */
+	public int argMaxFirst() {
+		L max = this.getRow(0).getFirst();
+		int rtn = 0;
+		for (int i = 0; i < this.size(); i++) {
+			L first = this.getRow(i).getFirst();
+			if (first.doubleValue() > max.doubleValue()) {
+				max = first;
+				rtn = i;
+			}
+		}
+		return rtn;
+	}
 	
+	/**
+	 * Get the minimum first-value in the table greater than the specified value.
+	 *
+	 * @return the minimum.
+	 */
+	public int argSupremumFirst(L x) {
+		int rtn = -1;
+		Double sup = Double.MAX_VALUE;
+		for (int i = 0; i < this.size(); i++) {
+			L first = this.getRow(i).getFirst();
+			if ((first.doubleValue() >= x.doubleValue())
+				&&
+				(first.doubleValue() < sup)) {
+				sup = first.doubleValue();
+				rtn = i;
+			}
+		}
+		return rtn;
+	}
+
+	/**
+	 * Get the maximum first-value in the table less than the specified value.
+	 *
+	 * @return the minimum.
+	 */
+	public int argInfimumFirst(L x) {
+		int rtn = -1;
+		Double inf = Double.MIN_VALUE;
+		for (int i = 0; i < this.size(); i++) {
+			L first = this.getRow(i).getFirst();
+			if ((first.doubleValue() <= x.doubleValue())
+				&&
+				(first.doubleValue() > inf)) {
+				inf = first.doubleValue();
+				rtn = i;
+			}
+		}
+		return rtn;
+	}
+
 	/**
 	 * @return the data
 	 */
