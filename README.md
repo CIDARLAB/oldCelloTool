@@ -11,3 +11,6 @@ java -cp "./target/*" org.cellocad.dnacompiler.runtime.Main -verilogFile test/dn
 							    -configFile config.json \
 							    -outputDir /path/to/output/dir
 ```
+
+## dependencies
+You must have >=readline-7.0 installed for the yosys binaries to run.
