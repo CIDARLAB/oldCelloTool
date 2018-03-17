@@ -39,6 +39,7 @@ import org.cellocad.technologymapping.data.Gate;
  * @date: Mar 14, 2018
  *
  */
+// inherit from graph template to retain the netlist connectivity?
 public class TechMap extends CObject{
 
 	public TechMap() {
@@ -118,10 +119,10 @@ public class TechMap extends CObject{
 			Double score = ScoreUtils.getOnOffRatio(tn);
 			scores.add(score);
 			if(score < worst) {
-                worst = score;
-            }
-        }
-		return worst;	
+				worst = score;
+			}
+		}
+		return worst;
 	}
 
 	/**
@@ -159,7 +160,7 @@ public class TechMap extends CObject{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Get the output nodes.
 	 * 
@@ -240,7 +241,7 @@ public class TechMap extends CObject{
 		}
 		return nodes;
 	}
-	
+
 	/**
 	 * @return the nodes
 	 */
@@ -254,7 +255,7 @@ public class TechMap extends CObject{
 	private void setNodes(final CObjectCollection<TechNode> nodes) {
 		this.nodes = nodes;
 	}
-	
+
 	private CObjectCollection<TechNode> nodes;
 
 	

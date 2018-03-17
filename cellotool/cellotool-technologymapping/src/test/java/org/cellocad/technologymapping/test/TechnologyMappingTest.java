@@ -22,8 +22,6 @@ package org.cellocad.technologymapping.test;
 
 import java.io.File;
 
-import org.cellocad.common.CObject;
-import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
 import org.cellocad.common.graph.AbstractVertex.VertexType;
 import org.cellocad.common.netlist.Netlist;
@@ -37,7 +35,6 @@ import org.cellocad.common.target.data.TargetData;
 import org.cellocad.common.target.data.TargetDataUtils;
 import org.cellocad.common.target.runtime.environment.TargetArgString;
 import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
-import org.cellocad.technologymapping.data.PartType;
 import org.cellocad.technologymapping.runtime.TMRuntimeObject;
 import org.cellocad.technologymapping.test.common.TestUtils;
 import org.junit.Test;
@@ -132,21 +129,6 @@ public class TechnologyMappingTest{
 		B.setName("B");
 		C.setName("C");
 		out.setName("out");
-
-		in1.setGate("pTac");
-		in2.setGate("pTet");
-		out.setGate("YFP");
-
-		CObject pTac = new CObject("pTac",PartType.PROMOTER.ordinal(),0);
-		CObject pTet = new CObject("pTet",PartType.PROMOTER.ordinal(),1);
-
-		CObjectCollection<CObject> parts = null;
-		parts = new CObjectCollection<CObject>();
-		parts.add(pTac);
-		in1.setParts(parts);
-		parts = new CObjectCollection<CObject>();
-		parts.add(pTet);
-		in2.setParts(parts);
 
 		in1.setVertexType(VertexType.SOURCE);
 		in2.setVertexType(VertexType.SOURCE);

@@ -30,11 +30,13 @@ import org.cellocad.common.Utils;
  * @date: Mar 6, 2018
  *
  */
+// include regulable promoter member?
 public class Gate extends CObject{
 
 	private CObjectCollection<Part> parts;
 	private ResponseFunction<?> responseFunction;
 	private String group;
+	private String promoter;
 	private Toxicity toxicity;
 	private Cytometry cytometry;
 
@@ -91,6 +93,20 @@ public class Gate extends CObject{
 	}
 
 	/**
+	 * @return the promoter
+	 */
+	public String getPromoter() {
+		return promoter;
+	}
+
+	/**
+	 * @param promoter the promoter to set
+	 */
+	public void setPromoter(String promoter) {
+		this.promoter = promoter;
+	}
+
+	/**
 	 * @return the toxicity
 	 */
 	public Toxicity getToxicity() {
@@ -128,6 +144,7 @@ public class Gate extends CObject{
 		result = prime * result + ((parts == null) ? 0 : parts.hashCode());
 		result = prime * result + ((responseFunction == null) ? 0 : responseFunction.hashCode());
 		result = prime * result + ((group == null) ? 0 : group.hashCode());
+		result = prime * result + ((promoter == null) ? 0 : promoter.hashCode());
 		result = prime * result + ((toxicity == null) ? 0 : toxicity.hashCode());
 		result = prime * result + ((cytometry == null) ? 0 : cytometry.hashCode());
 		return result;
@@ -153,6 +170,16 @@ public class Gate extends CObject{
 				return false;
 		} else if (!parts.equals(other.parts))
 			return false;
+		if (group == null) {
+			if (other.group != null)
+				return false;
+		} else if (!group.equals(other.group))
+			return false;
+		if (promoter == null) {
+			if (other.promoter != null)
+				return false;
+		} else if (!promoter.equals(other.promoter))
+			return false;
 		if (responseFunction == null) {
 			if (other.responseFunction != null)
 				return false;
@@ -167,6 +194,10 @@ public class Gate extends CObject{
 		String indentStr = "";
 		rtn += "[ ";
 		rtn += Utils.getNewLine();
+		// group
+		rtn += this.getEntryToString("group", this.getGroup().toString());
+		// group
+		rtn += this.getEntryToString("promoter", this.getPromoter().toString());
 		// reponse function
 		rtn += Utils.getTabCharacter();
 		rtn += "responseFunction = ";

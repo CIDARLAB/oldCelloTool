@@ -42,11 +42,11 @@ import org.json.simple.JSONObject;
 public class TargetDataReader {
 
 	public static final Collection<String> getPartRules(TargetData td) {
-        Collection<String> partRules = new HashSet<String>();
+		Collection<String> partRules = new HashSet<String>();
 		Integer num = td.getNumJSONObject("eugene_rules");
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("eugene_rules",i);
-            JSONArray jsonPartRules = (JSONArray) json.get("eugene_part_rules");
+			JSONArray jsonPartRules = (JSONArray) json.get("eugene_part_rules");
 			for (Object obj : jsonPartRules) {
 				partRules.add((String)obj);
 			}
@@ -55,11 +55,11 @@ public class TargetDataReader {
 	}
 
 	public static final Collection<String> getGateRules(TargetData td) {
-        Collection<String> gateRules = new HashSet<String>();
+		Collection<String> gateRules = new HashSet<String>();
 		Integer num = td.getNumJSONObject("eugene_rules");
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("eugene_rules",i);
-            JSONArray jsonGateRules = (JSONArray) json.get("eugene_gate_rules");
+			JSONArray jsonGateRules = (JSONArray) json.get("eugene_gate_rules");
 			for (Object obj : jsonGateRules) {
 				gateRules.add((String)obj);
 			}

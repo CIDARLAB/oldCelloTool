@@ -21,6 +21,7 @@
 package org.cellocad.technologymapping.algorithm.SimulatedAnnealing;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -44,25 +45,30 @@ import org.cellocad.technologymapping.data.Part;
  * @date: Mar 12, 2018
  *
  */
-// TODO: check toxicity, roadblocking in assignment
+// TODO: make techmap inherit from graph template, don't pass netlist around
 public class SimulatedAnnealing extends TMAlgorithm{
 
 	@Override
 	protected void setDefaultParameterValues() {
+		this.setPartLibrary(TargetDataReader.getParts(this.getTargetData()));
+		this.setGateLibrary(TargetDataReader.getGates(this.getTargetData()));
+		this.setInputLibrary(TargetDataReader.getInputSensors(this.getTargetData()));
+		this.setOutputLibrary(TargetDataReader.getOutputReporters(this.getTargetData()));
+		this.setLogicRoadblocks(TargetDataReader.getLogicRoadblocks(this.getTargetData()));
+		this.setInputRoadblocks(TargetDataReader.getInputRoadblocks(this.getTargetData()));
+
 		this.setNumTrajectories(50);
 		this.setNumSteps(500);
 		this.setNumT0Steps(100);
 		this.setMaxTemp(100.0);
 		this.setMinTemp(0.001);
+		this.setCheckToxicity(true);
+		this.setToxicityThreshold(0.75);
+		this.setCheckRoadblocks(true);
 	}
 
 	@Override
 	protected void setParameterValues() {
-		this.setPartLibrary(TargetDataReader.getParts(this.getTargetData()));
-		this.setGateLibrary(TargetDataReader.getGates(this.getTargetData()));
-		this.setInputLibrary(TargetDataReader.getInputSensors(this.getTargetData()));
-		this.setOutputLibrary(TargetDataReader.getOutputReporters(this.getTargetData()));
-
 		try {
 			Pair<Boolean,Integer> param = this.getAlgorithmProfile().getIntParameter("trajectories");
 			if (param.getFirst()) {this.setNumTrajectories(param.getSecond());}
@@ -83,6 +89,18 @@ public class SimulatedAnnealing extends TMAlgorithm{
 			Pair<Boolean,Double> param = this.getAlgorithmProfile().getDoubleParameter("mintemp");
 			if (param.getFirst()) {this.setMinTemp(param.getSecond());}
 		} catch (NullPointerException e) {}
+		try {
+			Pair<Boolean,Boolean> param = this.getAlgorithmProfile().getBooleanParameter("check_toxicity");
+			if (param.getFirst()) {this.setCheckToxicity(param.getSecond());}
+		} catch (NullPointerException e) {}
+		try {
+			Pair<Boolean,Double> param = this.getAlgorithmProfile().getDoubleParameter("toxicity_threshold");
+			if (param.getFirst()) {this.setToxicityThreshold(param.getSecond());}
+		} catch (NullPointerException e) {}
+		try {
+			Pair<Boolean,Boolean> param = this.getAlgorithmProfile().getBooleanParameter("check_roadblock");
+			if (param.getFirst()) {this.setCheckToxicity(param.getSecond());}
+		} catch (NullPointerException e) {}
 	}
 
 	@Override
@@ -96,21 +114,31 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		if (this.getNumSteps() < 0) {
 			throw new RuntimeException("Invalid number of t0 steps.");
 		}
+		if (this.getMinTemp() <= 0) {
+			throw new RuntimeException("Invalid minimum temperature.");
+		}
 	}
 
 	@Override
 	protected void preprocessing() {
+		// initialize NetlistNode indices
 		int num = this.getNetlist().getNumVertex();
 		for (int i = 0; i < num; i++) {
 			NetlistNode node = this.getNetlist().getVertexAtIdx(i);
 			node.setIdx(i);
 		}
+
+		// build initial TechMap
 		this.setTechMap(new TechMap(this.getNetlist()));
 
+		// assign logic
 		new LogicSimulator(this.getTechMap(),this.getNetlist());
+
+		// assign input and output components
 		TMUtils.assignInputSensors(this.getTechMap(),this.getNetlist(),this.getInputLibrary());
 		TMUtils.assignOutputReporters(this.getTechMap(),this.getNetlist(),this.getOutputLibrary());
 
+		// initialize promoter activity and toxicity
 		TMUtils.initInputActivities(this.getTechMap(),this.getNetlist(),TargetDataReader.getInputPromoterActivities(this.getTargetData()));
 		TMUtils.initOutputToxicity(this.getTechMap(),this.getNetlist());
 	}
@@ -131,10 +159,13 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		List<NetlistNode> logicNodes = TMUtils.getLogicNodes(this.getNetlist());
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
 			logInfo("trajectory " + String.valueOf(k+1) + " of " + this.getNumTrajectories().toString());
+
 			map = new TechMap(this.getTechMap());
 			TMUtils.doRandomAssignment(map,this.getNetlist(),this.getGateLibrary());
+
 			new ActivitySimulator(map,this.getNetlist());
 			new ToxicitySimulator(map,this.getNetlist());
+
 			for (int j = 0; j < (this.getNumSteps() + this.getNumT0Steps()); j++) {
 				TechMap tempMap = new TechMap(map);
 
@@ -163,14 +194,55 @@ public class SimulatedAnnealing extends TMAlgorithm{
 					}
 					tempMap.findTechNodeByName(logicNodes.get(aIdx).getName()).setGate(bGate);
 					tempMap.findTechNodeByName(logicNodes.get(bIdx).getName()).setGate(aGate);
+
 				}
 				// 2. if second gate is unused, substitute
 				else {
 					tempMap.findTechNodeByName(logicNodes.get(aIdx).getName()).setGate(bGate);
 				}
+
 				new ActivitySimulator(tempMap,this.getNetlist());
 				new ToxicitySimulator(tempMap,this.getNetlist());
 
+				// roadblock check
+				Integer tempRb = TMUtils.getNumRoadblocks(tempMap,
+														  this.getNetlist(),
+														  this.getLogicRoadblocks(),
+														  this.getInputRoadblocks());
+				Integer rb = TMUtils.getNumRoadblocks(map,
+													  this.getNetlist(),
+													  this.getLogicRoadblocks(),
+													  this.getInputRoadblocks());
+				if (this.getCheckRoadblocks()) {
+					if(tempRb > rb) {
+						continue;
+					}
+					else if(tempRb < rb) {
+						map = tempMap;
+						continue; // accept, but don't proceed to evaluate based on score
+					}
+				}
+
+				// toxicity check
+				Double growth = TMUtils.minGrowth(map,this.getNetlist());
+				Double tempGrowth = TMUtils.minGrowth(map,this.getNetlist());
+
+				if (this.getCheckToxicity()) {
+					if (growth < this.getToxicityThreshold()) {
+						if (tempGrowth > growth) { // accept
+							map = tempMap;
+							continue;
+						} else { // reject
+							continue;
+						}
+					} else {
+						if (tempGrowth < this.getToxicityThreshold()) {
+							continue; // reject
+						}
+					}
+				}
+
+				// simulated annealing accept or reject
 				Double probability = Math.exp( (tempMap.getScore()
 												-
 												map.getScore())
@@ -178,20 +250,37 @@ public class SimulatedAnnealing extends TMAlgorithm{
 				Double ep = Math.random();
 
 				if (ep < probability) {
-					map = tempMap;
+					Integer finalBlocks = TMUtils.getNumRoadblocks(tempMap,
+																   this.getNetlist(),
+																   this.getLogicRoadblocks(),
+																   this.getInputRoadblocks());
+					if ((!this.getCheckRoadblocks() || finalBlocks == 0)
+						&&
+						(!this.getCheckToxicity() || TMUtils.minGrowth(tempMap,this.getNetlist()) > this.getToxicityThreshold()))
+						{
+							map = tempMap;
+						}
 				}
 			}
 			bestMaps.add(map);
 		}
+
+		// pick highest scoring assignment from all trajectories
 		for (TechMap m : bestMaps) {
 			if (m.getScore() > map.getScore()) {
 				map = m;
 			}
 		}
+
 		this.setTechMap(map);
+	}
+
+	@Override
+	protected void postprocessing() {
 		logInfo("top score: " + this.getTechMap().getScore());
 
-		for (NetlistNode node : TMUtils.getLogicNodes(this.getNetlist())) {
+		for (int i = 0; i < this.getNetlist().getNumVertex(); i++) {
+			NetlistNode node = this.getNetlist().getVertexAtIdx(i);
 			TechNode tn = this.getTechMap().findTechNodeByName(node.getName());
 			String msg = "";
 			msg += "NetlistNode ";
@@ -210,10 +299,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 			msg += tn.getToxicity();
 			logInfo(msg);
 		}
-	}
 
-	@Override
-	protected void postprocessing() {
 		logInfo("updating netlist");
 		TMUtils.updateNetlist(this.getNetlist(),this.getTechMap());
 	}
@@ -336,17 +422,96 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		this.numT0Steps = numT0Steps;
 	}
 
+	/**
+	 * @return whether to perform toxicity checks during assignment
+	 */
+	protected Boolean getCheckToxicity() {
+		return checkToxicity;
+	}
+
+	/**
+	 * @param checkToxicity whether to perform toxicity checks during assignment
+	 */
+	protected void setCheckToxicity(final Boolean checkToxicity) {
+		this.checkToxicity = checkToxicity;
+	}
+
+	/**
+	 * @return the toxicity (growth) threshold, below which a gate assignment should not be considered
+	 */
+	protected Double getToxicityThreshold() {
+		return toxicityThreshold;
+	}
+
+	/**
+	 * @param toxicityThreshold the toxicity threshold
+	 */
+	protected void setToxicityThreshold(final Double toxicityThreshold) {
+		this.toxicityThreshold = toxicityThreshold;
+	}
+
+	/**
+	 * @return the checkRoadblocks
+	 */
+	protected Boolean getCheckRoadblocks() {
+		return checkRoadblocks;
+	}
+
+	/**
+	 * @param checkRoadblocks the checkRoadblocks to set
+	 */
+	protected void setCheckRoadblocks(final Boolean checkRoadblocks) {
+		this.checkRoadblocks = checkRoadblocks;
+	}
+
+	/**
+	 * @return the inputRoadblocks
+	 */
+	public Collection<String> getInputRoadblocks() {
+		return inputRoadblocks;
+	}
+
+	/**
+	 * @param inputRoadblocks the inputRoadblocks to set
+	 */
+	public void setInputRoadblocks(Collection<String> inputRoadblocks) {
+		this.inputRoadblocks = inputRoadblocks;
+	}
+
+	/**
+	 * @return the logicRoadblocks
+	 */
+	public Collection<String> getLogicRoadblocks() {
+		return logicRoadblocks;
+	}
+
+	/**
+	 * @param logicRoadblocks the logicRoadblocks to set
+	 */
+	public void setLogicRoadblocks(Collection<String> logicRoadblocks) {
+		this.logicRoadblocks = logicRoadblocks;
+	}
+
 	private CObjectCollection<Part> partLibrary;
 	private CObjectCollection<Gate> gateLibrary;
 	private CObjectCollection<Gate> inputLibrary;
 	private CObjectCollection<Gate> outputLibrary;
 	private TechMap techMap;
 
+	// annealing algorithm
 	private Integer numTrajectories;
 	private Integer numSteps;
 	private Integer numT0Steps;
-
 	private Double maxTemp;
 	private Double minTemp;
+
+	// toxicity
+	private Boolean checkToxicity;
+	private Double toxicityThreshold;
+
+	// roadblocks
+	private Boolean checkRoadblocks;
+	private Collection<String> inputRoadblocks;
+	private Collection<String> logicRoadblocks;
 
 }

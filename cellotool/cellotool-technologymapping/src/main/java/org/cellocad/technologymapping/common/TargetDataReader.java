@@ -21,9 +21,12 @@
 package org.cellocad.technologymapping.common;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Pair;
@@ -49,6 +52,129 @@ import org.json.simple.JSONObject;
  */
 public class TargetDataReader {
 
+	public static final Collection<String> getRoadblockRules(TargetData td) {
+		Collection<String> rtn = new HashSet<String>();
+		Integer num = td.getNumJSONObject("eugene_rules");
+		for (int i = 0; i < num; i++) {
+			JSONObject json = td.getJSONObjectAtIdx("eugene_rules",i);
+			JSONArray jsonPartRules = (JSONArray) json.get("eugene_part_rules");
+			for (Object obj : jsonPartRules) {
+				rtn.add((String)obj);
+			}
+		}
+		return rtn;
+	}
+
+	public static final Collection<String> getInputRoadblocks(TargetData td) {
+		Collection<String> rtn = new HashSet<String>();
+
+		Collection<String> rules = getRoadblockRules(td);
+		CObjectCollection<Gate> inputSensors = getInputSensors(td);
+		Collection<String> inputs = new HashSet<>();
+		for (Gate g : inputSensors) {
+			inputs.add(g.getName());
+		}
+
+		for (String rule : rules) {
+			if(rule.toLowerCase().contains("startswith")) {
+				List<String> deviceNames = getDeviceNamesFromRule(rule);
+				String name = deviceNames.get(0);
+				if (inputs.contains(name)) {
+					rtn.add(name);
+				}
+			}
+		}
+
+		return rtn;
+	}
+
+	public static final Collection<String> getLogicRoadblocks(TargetData td) {
+		Collection<String> rtn = new HashSet<String>();
+
+		Collection<String> rules = getRoadblockRules(td);
+		CObjectCollection<Gate> inputSensors = getInputSensors(td);
+		Collection<String> inputs = new HashSet<>();
+		for (Gate g : inputSensors) {
+			inputs.add(g.getName());
+		}
+
+		for (String rule : rules) {
+			if(rule.toLowerCase().contains("startswith")) {
+				List<String> deviceNames = getDeviceNamesFromRule(rule);
+				String name = deviceNames.get(0);
+				if (!inputs.contains(name)) {
+					rtn.add(name);
+				}
+			}
+		}
+
+		return rtn;
+	}
+
+	private static List<String> getDeviceNamesFromRule(String rule) {
+
+		Collection<String> keywords = new ArrayList<>();
+
+		// counting
+		keywords.add("CONTAINS");
+		keywords.add("NOTCONTAINS");
+		keywords.add("EXACTLY");
+		keywords.add("NOTEXACTLY");
+		keywords.add("MORETHAN");
+		keywords.add("NOTMORETHAN");
+		keywords.add("SAME_COUNT");
+		keywords.add("WITH");
+		keywords.add("NOTWITH");
+		keywords.add("THEN");
+
+		// positioning
+		keywords.add("STARTSWITH");
+		keywords.add("ENDSWITH");
+		keywords.add("AFTER");
+		keywords.add("ALL_AFTER");
+		keywords.add("SOME_AFTER");
+		keywords.add("BEFORE");
+		keywords.add("ALL_BEFORE");
+		keywords.add("SOME_BEFORE");
+		keywords.add("NEXTTO");
+		keywords.add("ALL_NEXTTO");
+		keywords.add("SOME_NEXTTO");
+
+		// pairing
+		keywords.add("EQUALS");
+		keywords.add("NOTEQUALS");
+
+		// orientation
+		keywords.add("ALL_FORWARD");
+		keywords.add("ALL_REVERSE");
+		keywords.add("FORWARD");
+		keywords.add("REVERSE");
+		keywords.add("SAME_ORIENTATION");
+		keywords.add("ALL_SAME_ORIENTATION");
+		keywords.add("ALTERNATE_ORIENTATION");
+
+		// interaction
+		keywords.add("REPRESSES");
+		keywords.add("INDUCES");
+		keywords.add("DRIVES");
+
+		// logic
+		keywords.add("NOT");
+		keywords.add("AND");
+		keywords.add("OR");
+
+		List<String> devices = new ArrayList<String>();
+		StringTokenizer st = new StringTokenizer(rule, " \t\n\r\f,");
+
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken();
+			if (!keywords.contains(token) && token.substring(0, 1).matches("[a-z,A-Z]")) {
+				devices.add(token);
+			}
+		}
+
+		return devices;
+	}
 
 	public static final CObjectCollection<Cytometry> getGateCytometryData(TargetData td) {
 		CObjectCollection<Cytometry> rtn = new CObjectCollection<>();
@@ -233,9 +359,9 @@ public class TargetDataReader {
 		return map;
 	}
 
-	public static final Map< String, CObjectCollection<Part> > getGateParts(TargetData td) {
+	public static final Map< String, Pair<String,CObjectCollection<Part>> > getGateParts(TargetData td) {
 		CObjectCollection<Part> parts = getParts(td);
-		Map< String, CObjectCollection<Part> > gatePartsMap = new HashMap<>();
+		Map< String, Pair<String,CObjectCollection<Part>> > gatePartsMap = new HashMap<>();
 		Integer num = td.getNumJSONObject("gate_parts");
 		for (int i = 0; i < num; i++) {
 			CObjectCollection<Part> gateParts = new CObjectCollection<>();
@@ -245,7 +371,9 @@ public class TargetDataReader {
 				gateParts.add(parts.findCObjectByName(obj.toString()));
 			}
 			gateParts.add(parts.findCObjectByName(json.get("promoter").toString()));
-			gatePartsMap.put(json.get("gate_name").toString(),gateParts);
+			gatePartsMap.put(json.get("gate_name").toString(),
+							 new Pair<String,CObjectCollection<Part>>(json.get("promoter").toString(),gateParts));
+
 		}
 		return gatePartsMap;
 	}
@@ -253,7 +381,7 @@ public class TargetDataReader {
 	public static final CObjectCollection<Gate> getGates(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
 
-		Map<String,CObjectCollection<Part>> gateParts = getGateParts(td);
+		Map<String,Pair<String,CObjectCollection<Part>>> gateParts = getGateParts(td);
 		Map<String,ResponseFunction<?>> responseFunctions = getGateResponseFunctions(td);
 		CObjectCollection<Toxicity> toxicities = getGateToxicityData(td);
 		CObjectCollection<Cytometry> cytometries = getGateCytometryData(td);
@@ -274,9 +402,12 @@ public class TargetDataReader {
 			String group = (String)json.get("group_name");
 			g.setGroup(group);
 
-			CObjectCollection<Part> parts = gateParts.get(name);
+			String promoter = gateParts.get(name).getFirst();
+			g.setPromoter(promoter);
+
+			CObjectCollection<Part> parts = gateParts.get(name).getSecond();
 			if (parts != null) {
-				g.setParts(gateParts.get(name));
+				g.setParts(gateParts.get(name).getSecond());
 			}
 
 			ResponseFunction<?> rf = responseFunctions.get(name);

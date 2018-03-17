@@ -36,6 +36,7 @@ import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Pair;
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
+import org.cellocad.common.netlist.NetlistEdge;
 import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.technologymapping.common.techmap.TechMap;
 import org.cellocad.technologymapping.common.techmap.TechNode;
@@ -106,7 +107,7 @@ public class TMUtils{
 		}
 		return rtn;
 	}
-	
+
 	/**
 	 * Get the set of groups present in a gate library.
 	 * 
@@ -179,7 +180,7 @@ public class TMUtils{
 		}
 		return activity;
 	}
-	
+
 	/**
 	 * Set activities to all input nodes based on their boolean logic values.
 	 * 
@@ -220,7 +221,7 @@ public class TMUtils{
 	}
 
 	/**
-	 * Find the minimum growth (highest toxicity) for a TechNode
+	 * Find the minimum growth (highest toxicity) for a TechNode.
 	 * 
 	 * @param techNode the TechNode to search.
 	 */
@@ -233,7 +234,7 @@ public class TMUtils{
 	}
 
 	/**
-	 * Find the minimum growth (highest toxicity) for a TechNode
+	 * Find the minimum growth (highest toxicity) for a TechNode.
 	 * 
 	 * @param techNode the TechNode to search.
 	 */
@@ -246,6 +247,61 @@ public class TMUtils{
 			if (tn != null)
 				rtn = minGrowth(tn);
 		}
+		return rtn;
+	}
+
+	/**
+	 * Get the total number of roadblocks for the assignment.
+	 * 
+	 * @return the number of roadblocks.
+	 */
+	public static Integer getNumRoadblocks(TechMap techMap,
+										   Netlist netlist,
+										   Collection<String> logicRoadblocks,
+										   Collection<String> inputRoadblocks) {
+		int rtn = 0;
+		int num = netlist.getNumVertex();
+		for (int i = 0; i < num; i++) {
+			NetlistNode node = netlist.getVertexAtIdx(i);
+			TechNode tn = techMap.findTechNodeByName(node.getName());
+			if (getNumRoadblocks(tn,node,techMap,logicRoadblocks,inputRoadblocks) > 0) {
+				rtn++;
+			}
+		}
+		return rtn;
+	}
+
+	/**
+	 * Get the number of roadblocks for a particular TechNode.
+	 * 
+	 * @return the number of roadblocks.
+	 */
+	private static Integer getNumRoadblocks(TechNode techNode,
+											NetlistNode node,
+											TechMap techMap,
+											Collection<String> logicRoadblocks,
+											Collection<String> inputRoadblocks) {
+		int rtn = 0;
+		Integer numInputRoadblocks = 0;
+		Integer numLogicRoadblocks = 0;
+		for (int i = 0; i < node.getNumInEdge(); i++) {
+			NetlistEdge e = node.getInEdgeAtIdx(i);
+			NetlistNode src = e.getSrc();
+			TechNode tn = techMap.findTechNodeByName(src.getName());
+
+			if (inputRoadblocks.contains(tn.getGate().getName())) {
+				numInputRoadblocks++;
+			}
+			if (logicRoadblocks.contains(tn.getGate().getPromoter())) {
+					numLogicRoadblocks++;
+			}
+		}
+		int total = numInputRoadblocks + numLogicRoadblocks;
+
+		if(numLogicRoadblocks > 0 && total > 1) {
+			rtn++;
+		}
+
 		return rtn;
 	}
 
@@ -266,7 +322,7 @@ public class TMUtils{
 		// }
 		Collections.shuffle(gateLibrary);
 		Iterator<Gate> it = gateLibrary.iterator();
-		
+
 		int num = netlist.getNumVertex();
 		for (int j = 0; j < num; j++) {
 			NetlistNode node = netlist.getVertexAtIdx(j);
@@ -350,7 +406,7 @@ public class TMUtils{
 		}
 		node.setParts(parts);
 	}
-	
+
 	/**
 	 * Update a netlist to reflect a gate assignment in a TechNode map.
 	 * 
@@ -380,18 +436,18 @@ public class TMUtils{
 		List<Gate> options = new ArrayList<>();
 		for(Gate g : gateLibrary) {
 			if(g.getName().equals(gate.getName())) {
-                continue;
-            }
+				continue;
+			}
 			if(g.getGroup().equals(gate.getGroup())) {
-                options.add(g);
-            }
+				options.add(g);
+			}
 			if (!techMap.hasGatesOfGroup(g.getGroup())
 				||
 				techMap.hasGate(g)) {
-                options.add(g);
-            }
+				options.add(g);
+			}
 		}
 		return options.get(new Random().nextInt(options.size()));
 	}
-		
+
 }
