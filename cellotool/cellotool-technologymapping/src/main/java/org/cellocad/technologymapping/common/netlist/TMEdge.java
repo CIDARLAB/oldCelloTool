@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Massachusetts Institute of Technology (MIT)
+ * Copyright (C) 2018 Boston University (BU)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,24 +18,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.common.graph.graph;
+package org.cellocad.technologymapping.common.netlist;
 
-import org.cellocad.common.graph.AbstractGraph;
+import org.cellocad.common.graph.graph.EdgeTemplate;
+import org.cellocad.common.netlist.NetlistEdge;
 
 /**
- * @author: Vincent Mirian
+ * @author: Timothy Jones
  * 
- * @date: Nov 2, 2017
+ * @date: Mar 17, 2018
  *
  */
-public abstract class GraphTemplate<V extends VertexTemplate<E>, E extends EdgeTemplate<V>> extends AbstractGraph<V,E>{
+public class TMEdge extends EdgeTemplate<TMNode>{
 
-	public GraphTemplate(){
-		super();
+	private void setDefault() {
 	}
 
-	public GraphTemplate(final GraphTemplate<V,E> other){
+	public TMEdge(){
+		super();
+		this.setDefault();
+	}
+
+	public TMEdge(final TMNode Src, final TMNode Dst) {
+		super(Src);
+		this.setDefault();
+		this.setDst(Dst);
+	}
+
+	public TMEdge(final TMEdge other) {
 		super(other);
+		this.setSrc(other.getSrc());
+		this.setDst(other.getDst());
+	}
+
+	public TMEdge(final NetlistEdge edge) {
+		this();
+		this.setName(edge.getName());
+		this.setType(edge.getType());
+		this.setIdx(edge.getIdx());
 	}
 
 }

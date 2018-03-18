@@ -51,7 +51,8 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 
 	public NetlistNode(final NetlistNode other){
 		super(other);
-		this.setDefault();
+		this.setNodeType(other.getNodeType());
+		this.setGate(other.getGate());
 	}
 	
 	public NetlistNode(final JSONObject JObj){

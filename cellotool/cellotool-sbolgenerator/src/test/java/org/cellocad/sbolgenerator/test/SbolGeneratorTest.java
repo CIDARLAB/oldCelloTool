@@ -53,9 +53,9 @@ public class SbolGeneratorTest{
 	@Test
 	public void test() {
 		String resourcesFilepath = TestUtils.getResourcesFilepath()	+ Utils.getFileSeparator();
-		
+
 		String tempDir = TestUtils.createTempDirectory().toString();
-		
+
 		String[] args = new String[] {"-verilogFile","foo.v",
 									  "-targetDataDir",resourcesFilepath,
 									  "-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",

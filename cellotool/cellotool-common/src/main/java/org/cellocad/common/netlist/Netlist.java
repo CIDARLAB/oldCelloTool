@@ -41,7 +41,7 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 	public Netlist () {
 		super();
 	}
-	
+
 	public Netlist (final JSONObject JObj) {
 		this();
 		this.parse(JObj);
@@ -58,22 +58,22 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 	}
 
 	private void parseNetlistNodes(final JSONObject JObj){
-    	JSONArray jsonArr;
-    	jsonArr = (JSONArray) JObj.get("nodes");
+		JSONArray jsonArr;
+		jsonArr = (JSONArray) JObj.get("nodes");
 		if (jsonArr == null) {
 			throw new RuntimeException("'nodes' missing in Netlist!");
 		}
-    	for (int i = 0; i < jsonArr.size(); i++)
-    	{
-    	    JSONObject jsonObj = (JSONObject) jsonArr.get(i);
-    	    NetlistNode node = new NetlistNode(jsonObj);
-    	    this.addVertex(node);
-    	}
+		for (int i = 0; i < jsonArr.size(); i++)
+		{
+			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			NetlistNode node = new NetlistNode(jsonObj);
+			this.addVertex(node);
+		}
 	}
 
 	private NetlistNode getNetlistNode(final JSONObject JObj, final String str){
 		NetlistNode rtn = null;
-    	String name = null;
+		String name = null;
 		name = ProfileUtils.getString(JObj, str);
 		if (name == null) {
 			throw new RuntimeException("No name for" + str + "edges in Netlist!");
@@ -86,47 +86,47 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 	}
 
 	private void parseNetlistEdges(final JSONObject JObj){
-    	JSONArray jsonArr;
-    	NetlistNode node = null;
-    	jsonArr = (JSONArray) JObj.get("edges");
+		JSONArray jsonArr;
+		NetlistNode node = null;
+		jsonArr = (JSONArray) JObj.get("edges");
 		if (jsonArr == null) {
 			throw new RuntimeException("'edges' missing in Netlist!");
 		}
-    	for (int i = 0; i < jsonArr.size(); i++)
-    	{
-    	    JSONObject jsonObj = (JSONObject) jsonArr.get(i);
-    	    NetlistEdge edge = new NetlistEdge(jsonObj);
-    	    this.addEdge(edge);
-    	    node = getNetlistNode(jsonObj, "src");
-    		node.addOutEdge(edge);
-    		edge.setSrc(node);
-    	    node = getNetlistNode(jsonObj, "dst");
-    		node.addInEdge(edge);
-    		edge.setDst(node);
-    	}
+		for (int i = 0; i < jsonArr.size(); i++)
+		{
+			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			NetlistEdge edge = new NetlistEdge(jsonObj);
+			this.addEdge(edge);
+			node = getNetlistNode(jsonObj, "src");
+			node.addOutEdge(edge);
+			edge.setSrc(node);
+			node = getNetlistNode(jsonObj, "dst");
+			node.addInEdge(edge);
+			edge.setDst(node);
+		}
 	}
 
 	private void parse(final JSONObject JObj){
-    	this.parseName(JObj);
-    	this.parseNetlistNodes(JObj);
-    	this.parseNetlistEdges(JObj);
+		this.parseName(JObj);
+		this.parseNetlistNodes(JObj);
+		this.parseNetlistEdges(JObj);
 	}
 
 	/*
 	 * WriteJSON
 	 */
-	protected String getJSONHeader(){	
+	protected String getJSONHeader(){
 		String rtn = "";
 		// name
 		rtn += JSONUtils.getEntryToString("name", this.getName());
 		return rtn;
 	}
-	
-	protected String getJSONFooter(){	
+
+	protected String getJSONFooter(){
 		String rtn = "";
 		return rtn;
 	}
-	
+
 	public void writeJSON(int indent, Writer os) throws IOException {
 		String str = null;
 		//header
@@ -166,17 +166,17 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 		str = JSONUtils.addIndent(indent, str);
 		os.write(str);
 	}
-	
+
 	@Override
 	public NetlistNode createV(final NetlistNode other) {
 		NetlistNode rtn = new NetlistNode(other);
 		return rtn;
 	}
-	
+
 	@Override
 	public NetlistEdge createE(final NetlistEdge other) {
 		NetlistEdge rtn = new NetlistEdge(other);
 		return rtn;
 	}
-	
+
 }

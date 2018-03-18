@@ -24,12 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cellocad.common.Utils;
-import org.cellocad.common.netlist.Netlist;
-import org.cellocad.common.netlist.NetlistEdge;
-import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.technologymapping.common.graph.algorithm.UpstreamDFS;
-import org.cellocad.technologymapping.common.techmap.TechMap;
-import org.cellocad.technologymapping.common.techmap.TechNode;
+import org.cellocad.technologymapping.common.netlist.TMEdge;
+import org.cellocad.technologymapping.common.netlist.TMNetlist;
+import org.cellocad.technologymapping.common.netlist.TMNode;
 import org.cellocad.technologymapping.data.Gate;
 
 /**
@@ -38,52 +36,58 @@ import org.cellocad.technologymapping.data.Gate;
  * @date: Mar 9, 2018
  *
  */
-public class ActivitySimulator {
+public class ActivitySimulator extends Simulator{
 
 	/**
-	 * Create a new ActivitySimulator and assign activities.
-	 * 
-	 * @param techMap the TechMap on which to assign activities.
-	 * @param netlist the netlist corresponding to the TechMap.
+	 * Create a new ActivitySimulator.
 	 */
-	public ActivitySimulator(TechMap techMap, final Netlist netlist) {
-		Utils.isNullRuntimeException(netlist, "netlist");
-		Utils.isNullRuntimeException(techMap, "techMap");
-		int num = netlist.getNumVertex();
-		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			Utils.isNullRuntimeException(techMap.findTechNodeByName(node.getName()), "TechNode for NetlistNode " + node.getName());
-		}
-		computeActivity(techMap,netlist);
+	public ActivitySimulator() {
+		super();
+	}
+
+	/**
+	 * Create a new ActivitySimulator.
+	 * 
+	 * @param netlist the TMNetlist on which to operate.
+	 */
+	public ActivitySimulator(TMNetlist netlist) {
+		super();
+		Utils.isNullRuntimeException(netlist, "TMNetlist");
+		this.setTMNetlist(netlist);
+	}
+
+	public void run() {
+		computeActivity(this.getTMNetlist());
 	}
 
 	/**
 	 * Compute and assign promoter activities.
 	 * 
-	 * @param techMap the TechMap on which to assign activities.
-	 * @param netlist the netlist corresponding to the TechMap.
+	 * @param netlist the TMNetlist on which to assign activities.
 	 */
-	private static void computeActivity(TechMap techMap, Netlist netlist) {
-		UpstreamDFS<NetlistNode,NetlistEdge,Netlist> dfs = new UpstreamDFS<>(netlist);
-		NetlistNode node = null;
+	private static void computeActivity(TMNetlist netlist) {
+		UpstreamDFS<TMNode,TMEdge,TMNetlist> dfs = new UpstreamDFS<>(netlist);
+		TMNode node = null;
+
 		while ((node = dfs.getNextVertex()) != null) {
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			Gate g = tn.getGate();
-			Utils.isNullRuntimeException(tn.getLogic(), "gate logic");
+			Gate g = node.getGate();
 			String type = node.getNodeType();
 			if (!type.equals("TopInput")) {
 				List<List<Double>> inputs = new ArrayList<>();
 				for (int i = 0; i < node.getNumInEdge(); i++) {
-					NetlistEdge e = node.getInEdgeAtIdx(i);
-					NetlistNode src = e.getSrc();
-					inputs.add(techMap.findTechNodeByName(src.getName()).getActivity());
+					TMEdge e = node.getInEdgeAtIdx(i);
+					TMNode src = e.getSrc();
+					Utils.isNullRuntimeException(src.getActivity(), "Input activity");
+					inputs.add(src.getActivity());
 				}
 
+				List<Double> activity = null;
 				if (node.getNodeType().equals("TopOutput")) {
-					tn.setActivity(getOutputActivity(inputs,g));
+					activity = getOutputActivity(inputs,g);
 				} else {
-					tn.setActivity(getGateActivity(inputs,g));
+					activity = getGateActivity(inputs,g);
 				}
+				node.setActivity(activity);
 			}
 		}
 	}
@@ -130,7 +134,7 @@ public class ActivitySimulator {
 		}
 		return rtn;
 	}
-	
+
 	/**
 	 * Throw an exception if the input list is ragged.
 	 * 
@@ -148,5 +152,21 @@ public class ActivitySimulator {
 		}
 		return rtn;
 	}
+
+	/**
+	 * @return the netlist
+	 */
+	public TMNetlist getTMNetlist() {
+		return tmNetlist;
+	}
+
+	/**
+	 * @param netlist the netlist to set
+	 */
+	public void setTMNetlist(TMNetlist netlist) {
+		this.tmNetlist = netlist;
+	}
+
+	private TMNetlist tmNetlist;
 
 }

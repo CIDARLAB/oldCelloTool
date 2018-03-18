@@ -20,8 +20,11 @@
  */
 package org.cellocad.technologymapping.common.score;
 
+import java.util.List;
+
 import org.cellocad.common.Utils;
-import org.cellocad.technologymapping.common.techmap.TechNode;
+import org.cellocad.technologymapping.common.netlist.TMNetlist;
+import org.cellocad.technologymapping.common.netlist.TMNode;
 
 /**
  * @author: Timothy Jones
@@ -32,33 +35,59 @@ import org.cellocad.technologymapping.common.techmap.TechNode;
 public class ScoreUtils{
 
 	/**
-	 * Return the lowest on by highest off ratio for a TechNode.
+	 * Evaluate the score for a given assignment.
+	 * 
+	 * @param netlist the TMNetlist to score.
+	 * @return the score.
+	 */
+	public static Double getScore(TMNetlist netlist) {
+		Double worst = Double.MAX_VALUE;
+		for (int i = 0; i < netlist.getNumVertex(); i++) {
+			TMNode v = netlist.getVertexAtIdx(i);
+			if (v.getNodeType().equals("TopOutput")) {
+				Double score = ScoreUtils.getOnOffRatio(v);
+				if(score < worst) {
+					worst = score;
+				}
+			}
+		}
+		return worst;
+	}
+
+	/**
+	 * Return the lowest on by highest off ratio for a TMNode.
 	 * 
 	 * @param node the TechNode to score.
 	 * @return the on off ratio.
 	 */
-	public static Double getOnOffRatio(TechNode node) {
-		Utils.isNullRuntimeException(node,"TechNode");
-		Utils.isNullRuntimeException(node.getLogic(),"TechNode logic");
-		Utils.isNullRuntimeException(node.getActivity(),"TechNode activity");
+	public static Double getOnOffRatio(TMNode node) {
+		Utils.isNullRuntimeException(node,"TMNode");
+
+		List<Boolean> logic = node.getLogic();
+		List<Double> activity = node.getActivity();
+		Utils.isNullRuntimeException(logic,"TMNode logic");
+		Utils.isNullRuntimeException(activity,"TMNode activity");
+
+		assert( logic.size() == activity.size() );
 
 		Double lowestOn = Double.MAX_VALUE;
-        Double highestOff = Double.MIN_VALUE;
-		
-		for(int i = 0; i < node.getLogic().size(); ++i) {
-			Double a = node.getActivity().get(i);
-			
-			if (node.getLogic().get(i) == true
+		Double highestOff = Double.MIN_VALUE;
+
+		for(int i = 0; i < logic.size(); ++i) {
+			Boolean l = logic.get(i);
+			Double a = activity.get(i);
+
+			if (l == true
 				&&
 				lowestOn > a) {
 				lowestOn = a;
-			} else if (node.getLogic().get(i) == false
+			} else if (l == false
 					   &&
 					   highestOff < a) {
 				highestOff = a;
 			}
 		}
-		
+
 		return lowestOn/highestOff;
 	}
 

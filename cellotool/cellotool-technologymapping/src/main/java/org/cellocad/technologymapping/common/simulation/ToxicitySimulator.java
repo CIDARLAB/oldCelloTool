@@ -24,12 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cellocad.common.Utils;
-import org.cellocad.common.netlist.Netlist;
-import org.cellocad.common.netlist.NetlistEdge;
-import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.technologymapping.common.TMUtils;
-import org.cellocad.technologymapping.common.techmap.TechMap;
-import org.cellocad.technologymapping.common.techmap.TechNode;
+import org.cellocad.technologymapping.common.netlist.TMEdge;
+import org.cellocad.technologymapping.common.netlist.TMNetlist;
+import org.cellocad.technologymapping.common.netlist.TMNode;
 import org.cellocad.technologymapping.data.Toxicity;
 
 /**
@@ -53,64 +51,64 @@ import org.cellocad.technologymapping.data.Toxicity;
  *
  */
 // TODO: replace Lists with a matrix library?
-public class ToxicitySimulator {
+public class ToxicitySimulator extends Simulator{
 
 	private static Double MAX_TOXICITY = 1.00;
 	private static Double MIN_TOXICITY = 0.01;
 
 	/**
-	 * Create a new ToxicitySimulator and assign activities.
-	 * 
-	 * @param techMap the TechMap on which to assign activities.
-	 * @param netlist the netlist corresponding to the TechMap.
+	 * Create a new ToxicitySimulator.
 	 */
-	public ToxicitySimulator(TechMap techMap, final Netlist netlist) {
-		Utils.isNullRuntimeException(netlist, "netlist");
-		Utils.isNullRuntimeException(techMap, "techMap");
-		int num = netlist.getNumVertex();
-		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			Utils.isNullRuntimeException(techMap.findTechNodeByName(node.getName()),
-										 "TechNode for NetlistNode " + node.getName());
-		}
-
-		assignToxicity(techMap,netlist);
+	public ToxicitySimulator() {
+		super();
 	}
 
 	/**
-	 * Assign toxicities for a TechMap.
+	 * Create a new ToxicitySimulator.
+	 * 
+	 * @param netlist the TMetlist corresponding to the TechMap.
+	 */
+	public ToxicitySimulator(TMNetlist netlist) {
+		super();
+		Utils.isNullRuntimeException(netlist, "TMNetlist");
+		this.setTMNetlist(netlist);
+	}
+
+	public void run() {
+		assignToxicity(this.getTMNetlist());
+	}
+
+	/**
+	 * Assign toxicities for a TMNetlist.
 	 * 
 	 * @param techMap the TechMap on which to assign toxicities.
 	 * @param netlist the netlist corresponding to the TechMap.
 	 */
-	private static void assignToxicity(TechMap techMap, Netlist netlist) {
-		List<Double> outputToxicity = computeToxicity(techMap,netlist);
+	private static void assignToxicity(TMNetlist netlist) {
+		List<Double> toxicity = computeToxicity(netlist);
 
-		List<NetlistNode> outNodes = TMUtils.getOutputNodes(netlist);
-		for (NetlistNode node : outNodes) {
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			tn.setToxicity(outputToxicity);
+		List<TMNode> nodes = TMUtils.getOutputNodes(netlist);
+		for (TMNode node : nodes) {
+			node.setToxicity(toxicity);
 		}
 	}
 
 	/**
-	 * Compute toxicities for a TechMap.
+	 * Compute toxicities for a TMNetlist.
 	 * 
-	 * @param techMap the TechMap on which to assign toxicities.
-	 * @param netlist the netlist corresponding to the TechMap.
+	 * @param netlist the TMNetlist for which to compute toxicities.
 	 */
-	private static List<Double> computeToxicity(TechMap techMap, Netlist netlist) {
+	private static List<Double> computeToxicity(TMNetlist netlist) {
 		List<Double> rtn = new ArrayList<Double>();
 
 		// TechNode out = techMap.findTechNodeByName(TMUtils.getOutputNodes(netlist).get(0).getName());
-		List<NetlistNode> nodes = TMUtils.getLogicNodes(netlist);
+		List<TMNode> nodes = TMUtils.getLogicNodes(netlist);
 
 		List<List<Double>> nodeToxicities = new ArrayList<>();
-		for (NetlistNode node : nodes) {
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			List<Double> toxicity = computeNodeToxicity(tn,node,techMap);
-			tn.setToxicity(toxicity);
-			nodeToxicities.add(tn.getToxicity());
+		for (TMNode node : nodes) {
+			List<Double> toxicity = computeNodeToxicity(node);
+			node.setToxicity(toxicity);
+			nodeToxicities.add(node.getToxicity());
 		}
 		isRaggedListException(nodeToxicities);
 		for (int i = 0; i < nodeToxicities.get(0).size(); i++) {
@@ -141,21 +139,22 @@ public class ToxicitySimulator {
 	}
 
 	/**
-	 * Compute and assign toxicity for an individual TechNode.
+	 * Compute and assign toxicity for an individual TMNode.
 	 * 
-	 * @param techNode the TechNode to which to assign toxicity.
+	 * @param techNode the TMNode to which to assign toxicity.
 	 */
-	private static List<Double> computeNodeToxicity(final TechNode techNode, final NetlistNode node, final TechMap techMap) {
+	private static List<Double> computeNodeToxicity(final TMNode node) {
 		List<Double> rtn = new ArrayList<>();
-		List<Double> inputActivity = collectInputActivities(node,techMap);
-		if (techNode.getGate().getToxicity() == null) {
+		List<Double> inputActivity = collectInputActivities(node);
+		if (node.getGate().getToxicity() == null) {
 			for (int i = 0; i < inputActivity.size(); ++i) {
 				rtn.add(1.0);
 			}
 		} else {
-			Toxicity t = techNode.getGate().getToxicity();
+			Toxicity t = node.getGate().getToxicity();
 			int minIdx = t.argMinFirst();
 			int maxIdx = t.argMaxFirst();
+
 			for (int i = 0; i < inputActivity.size(); ++i) {
 				Double a = inputActivity.get(i);
 				Double score = 1.0;
@@ -192,20 +191,20 @@ public class ToxicitySimulator {
 	}
 
 	/**
-	 * Compute and assign toxicity for an individual TechNode.
+	 * Collect the input activities for a TMNode.
 	 * 
-	 * @param techNode the TechNode to which to assign toxicity.
+	 * @param node the TMNode from which to collect.
 	 */
-	private static List<Double> collectInputActivities(NetlistNode node, TechMap techMap) {
+	private static List<Double> collectInputActivities(final TMNode node) {
 		List<Double> rtn = new ArrayList<>();
 
 		List<List<Double>> activities = new ArrayList<>();
-		int num = node.getNumInEdge();
-		for (int i = 0; i < num; i++) {
-			NetlistEdge e = node.getInEdgeAtIdx(i);
-			NetlistNode src = e.getSrc();
-			activities.add(techMap.findTechNodeByName(src.getName()).getActivity());
+		for (int i = 0; i < node.getNumInEdge(); i++) {
+			TMEdge e = node.getInEdgeAtIdx(i);
+			TMNode src = e.getSrc();
+			activities.add(src.getActivity());
 		}
+
 		isRaggedListException(activities);
 
 		for (int i = 0; i < activities.get(0).size(); i++) {
@@ -246,5 +245,21 @@ public class ToxicitySimulator {
 		}
 		return rtn;
 	}
+
+	/**
+	 * @return the netlist
+	 */
+	public TMNetlist getTMNetlist() {
+		return tmNetlist;
+	}
+
+	/**
+	 * @param netlist the netlist to set
+	 */
+	public void setTMNetlist(TMNetlist netlist) {
+		this.tmNetlist = netlist;
+	}
+
+	private TMNetlist tmNetlist;
 
 }

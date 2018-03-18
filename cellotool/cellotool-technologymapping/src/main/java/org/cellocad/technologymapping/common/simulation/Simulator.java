@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Massachusetts Institute of Technology (MIT)
+ * Copyright (C) 2018 Boston University (BU)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,24 +18,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.common.graph.graph;
+package org.cellocad.technologymapping.common.simulation;
 
-import org.cellocad.common.graph.AbstractGraph;
+import org.cellocad.common.CObject;
 
 /**
- * @author: Vincent Mirian
+ * @author: Timothy Jones
  * 
- * @date: Nov 2, 2017
+ * @date: Mar 17, 2018
  *
  */
-public abstract class GraphTemplate<V extends VertexTemplate<E>, E extends EdgeTemplate<V>> extends AbstractGraph<V,E>{
+public abstract class Simulator extends CObject{
 
-	public GraphTemplate(){
-		super();
-	}
-
-	public GraphTemplate(final GraphTemplate<V,E> other){
-		super(other);
-	}
+	public abstract void run();
 
 }

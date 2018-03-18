@@ -31,28 +31,28 @@ public class CObject {
 	public CObject(){
 		this.setName("");
 	}
-	
+
 	public CObject(final String name, int type, int idx) {
 		this.setName(name);
-        this.setType(type);
-        this.setIdx(idx);
-    }
-	
+		this.setType(type);
+		this.setIdx(idx);
+	}
+
 	public CObject(final CObject other){
 		this(other.getName(), other.getType(), other.getIdx());
 	}
-	
+
 	@Override
 	public CObject clone(){
 		CObject rtn;
 		rtn = new CObject(this);
 		return rtn;
 	}
-	
+
 	public void setName(final String name){
 		this.name = name;
 	}
-		
+
 	public String getName(){
 		return this.name;
 	}
@@ -60,7 +60,7 @@ public class CObject {
 	public void setType(int type){
 		this.type = type;
 	}
-		
+
 	public int getType(){
 		return this.type;
 	}
@@ -68,7 +68,7 @@ public class CObject {
 	public void setIdx(int idx){
 		this.idx = idx;
 	}
-		
+
 	public int getIdx(){
 		return this.idx;
 	}
@@ -79,7 +79,7 @@ public class CObject {
 	public boolean isValid(){
 		return true;
 	}
-	
+
 	/*
 	 * HashCode
 	 */
@@ -116,7 +116,7 @@ public class CObject {
 			return false;
 		return true;
 	}
-	
+
 	/*
 	 * toString
 	 */
@@ -130,19 +130,19 @@ public class CObject {
 		rtn = rtn + Utils.getNewLine();
 		return rtn;
 	}
-	
+
 	protected String getEntryToString(String name, int value) {
 		String rtn = "";
 		rtn = rtn + this.getEntryToString(name, Integer.toString(value));
 		return rtn;
 	}
-	
+
 	protected String getEntryToString(String name, boolean value) {
 		String rtn = "";
 		rtn = rtn + this.getEntryToString(name, Boolean.toString(value));
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";
@@ -174,5 +174,5 @@ public class CObject {
 	private String name;
 	private int type;
 	private int idx;
-	
+
 }

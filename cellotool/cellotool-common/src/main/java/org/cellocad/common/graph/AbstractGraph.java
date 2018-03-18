@@ -39,33 +39,33 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 
 	private void init(){
 		this.vertices = new CObjectCollection<V>();
-		this.edges = new CObjectCollection<E>();		
+		this.edges = new CObjectCollection<E>();
 	}
-	
+
 	public AbstractGraph(){
 		init();
 	}
-	
+
 	protected void addVertexToSrc(final V v, final E e) {
 		e.setSrc(v);
 	}
-	
+
 	protected void addVertexToDst(final V v, final E e){
 		e.addDst(v);
 	}
-	
+
 	protected void addEdgeToInEdge(final V v, final E e) {
 		v.addInEdge(e);
 	}
-	
+
 	protected void addEdgeToOutEdge(final V v, final E e){
 		v.addOutEdge(e);
 	}
 
 	public abstract V createV(final V other);
-	
+
 	public abstract E createE(final E other);
-	
+
 	/*@SuppressWarnings("unchecked")
 	private E createE(E other) {
 		E rtn = null;
@@ -79,7 +79,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		}
 		return rtn;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private V createV(V other) {
 		V rtn = null;
@@ -93,7 +93,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		}
 		return rtn;
 	}*/
-	
+
 	public AbstractGraph(final AbstractGraph<V, E> other){
 		super(other);
 		init();
@@ -125,8 +125,8 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 				E e = v.getOutEdgeAtIdx(j);
 				E edge = mapEdgeOtherThis.get(e);
 				assert (edge != null);
-				//vertex.addOutEdge(edge);		
-				addEdgeToOutEdge(vertex, edge);		
+				//vertex.addOutEdge(edge);
+				addEdgeToOutEdge(vertex, edge);
 			}
 			// set inEdge for Vertex
 			for (int j = 0; j < v.getNumInEdge(); j ++){
@@ -135,7 +135,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 				assert (edge != null);
 				//vertex.addInEdge(edge);
 				addEdgeToInEdge(vertex, edge);
-			}			
+			}
 		}
 		// for each Edge:
 		for (int i = 0; i < other.getNumEdge(); i++){
@@ -157,12 +157,12 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 					V vertex = mapVertexOtherThis.get(v);
 					assert (vertex != null);
 					//edge.setDst(vertex);
-					addVertexToDst(vertex, edge);					
+					addVertexToDst(vertex, edge);
 				}
 			}
 		}
 	}
-	
+
 	/*
 	 * Vertices
 	 */
@@ -171,7 +171,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 			vertices.add(vertex);
 		}
 	}
-	
+
 	public void removeVertex(final V vertex){
 		if (vertex != null){
 			vertices.remove(vertex);
@@ -184,7 +184,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 				(index >= 0) &&
 				(index < this.getNumVertex())
 			){
-			rtn = vertices.get(index);	
+			rtn = vertices.get(index);
 		}
 		return rtn;
 	}
@@ -194,7 +194,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		rtn = vertices.findCObjectByName(name);
 		return rtn;
 	}
-	
+
 	public int getNumVertex(){
 		int rtn = vertices.size();
 		return rtn;
@@ -208,20 +208,20 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 			edges.add(edge);
 		}
 	}
-	
+
 	public void removeEdge(final E edge){
 		if (edge != null){
 			edges.remove(edge);
 		}
 	}
-	
+
 	public E getEdgeAtIdx(int index){
 		E rtn = null;
 		if (
 				(index >= 0) &&
 				(index < this.getNumEdge())
 			){
-			rtn = edges.get(index);	
+			rtn = edges.get(index);
 		} 
 		return rtn;
 	}
@@ -231,7 +231,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		rtn = edges.findCObjectByName(name);
 		return rtn;
 	}
-	
+
 	public int getNumEdge(){
 		int rtn = edges.size();
 		return rtn;
@@ -280,11 +280,11 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 			rtn = rtn && vertices.contains(v);
 			for (int j = 0; j < e.getNumDst(); j++) {
 				v = e.getDstAtIdx(j);
-				rtn = rtn && vertices.contains(v);	
+				rtn = rtn && vertices.contains(v);
 			}
 		}
 		return rtn;
-	}	
+	}
 
 	/*
 	 * dot file
@@ -303,7 +303,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		rtn += System.lineSeparator();
 		return rtn;
 	}
-	
+
 	public void printDot(final Writer os) throws IOException{
 		os.write(this.getDotHeader());
 		for (int i = 0; i < vertices.size(); i++){
@@ -312,7 +312,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		for (int i = 0; i < edges.size(); i++){
 			this.getEdgeAtIdx(i).printDot(os);
 		}
-		os.write(this.getDotFooter());		
+		os.write(this.getDotFooter());
 	}
 
 	/*
@@ -381,7 +381,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		}
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";
@@ -411,7 +411,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		rtn = rtn + this.getEdgesToString();
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "}";
-		rtn = rtn + Utils.getNewLine();		
+		rtn = rtn + Utils.getNewLine();
 		// toString
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "toString() = ";

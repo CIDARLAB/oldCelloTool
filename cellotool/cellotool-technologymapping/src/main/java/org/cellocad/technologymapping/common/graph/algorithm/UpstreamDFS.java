@@ -41,15 +41,15 @@ public class UpstreamDFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>,
 	private void init() {
 		DFS = new Stack<V>();
 	}
-	
+
 	private void reset() {
 		this.getDFS().clear();
 	}
-	
+
 	private void doDFS() {
 		G g = this.getGraph();
 		Stack<V> stack = new Stack<V>();
-		// initialize VertexDiscovery		
+		// initialize VertexDiscovery
 		// get Source Vertex
 		for (int i = 0; i < g.getNumVertex(); i++) {
 			V v = g.getVertexAtIdx(i);
@@ -81,20 +81,20 @@ public class UpstreamDFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>,
 			v.setVertexDiscovery(VertexDiscovery.VISITED);
 		}
 	}
-	
+
 	private Stack<V> getDFS() {
 		return this.DFS;
 	}
-	
+
 	public UpstreamDFS() {
 		init();
 	}
-	
+
 	public UpstreamDFS(final G g) {
 		init();
 		this.setGraph(g);
 	}
-	
+
 	public void setGraph(final G g) {
 		reset();
 		this.graph = g;
@@ -104,7 +104,7 @@ public class UpstreamDFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>,
 	public G getGraph() {
 		return this.graph;
 	}
-	
+
 	public V getNextVertex() {
 		V rtn = null;
 		if (!this.getDFS().isEmpty())

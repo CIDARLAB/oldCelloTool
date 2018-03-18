@@ -25,12 +25,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.cellocad.common.Utils;
-import org.cellocad.common.netlist.Netlist;
-import org.cellocad.common.netlist.NetlistEdge;
-import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.technologymapping.common.TMUtils;
 import org.cellocad.technologymapping.common.graph.algorithm.UpstreamDFS;
-import org.cellocad.technologymapping.common.techmap.TechMap;
+import org.cellocad.technologymapping.common.netlist.TMEdge;
+import org.cellocad.technologymapping.common.netlist.TMNetlist;
+import org.cellocad.technologymapping.common.netlist.TMNode;
 
 /**
  * @author: Timothy Jones
@@ -38,40 +37,55 @@ import org.cellocad.technologymapping.common.techmap.TechMap;
  * @date: Mar 7, 2018
  *
  */
-public class LogicSimulator {
+public class LogicSimulator extends Simulator{
 
-	public LogicSimulator(TechMap techMap, Netlist netlist) {
-		Utils.isNullRuntimeException(techMap, "techMap");
-		Utils.isNullRuntimeException(netlist, "netlist");
-		int num = netlist.getNumVertex();
-		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			Utils.isNullRuntimeException(techMap.findTechNodeByName(node.getName()), "TechNode for NetlistNode " + node.getName());
-		}
-		computeBooleanLogic(techMap, netlist);
+	/**
+	 * Create a new LogicSimulator.
+	 */
+	public LogicSimulator() {
+		super();
 	}
 
-	private static void computeBooleanLogic(TechMap techMap, Netlist netlist) {
+	/**
+	 * Create a new LogicSimulator.
+	 * 
+	 * @param netlist the TMNetlist on which to operate.
+	 */
+	public LogicSimulator(TMNetlist netlist) {
+		super();
+		Utils.isNullRuntimeException(netlist, "TMNetlist");
+		this.setTMNetlist(netlist);
+	}
+
+	public void run() {
+		computeBooleanLogic(this.getTMNetlist());
+	}
+
+	private static void computeBooleanLogic(TMNetlist netlist) {
 		List<List<Boolean>> inputLogic = getInputLogic(TMUtils.getInputNodes(netlist).size());
 
-		UpstreamDFS<NetlistNode,NetlistEdge,Netlist> dfs = new UpstreamDFS<>(netlist);
+		UpstreamDFS<TMNode,TMEdge,TMNetlist> dfs = new UpstreamDFS<>(netlist);
 		Iterator<List<Boolean>> it = inputLogic.iterator();
-		NetlistNode node = null;
+		TMNode node = null;
 		while ((node = dfs.getNextVertex()) != null) {
 			if (node.getNodeType().equals("TopInput")) {
-				techMap.findTechNodeByName(node.getName()).setLogic(it.next());
+				node.setLogic(it.next());
 			} else {
 				List<List<Boolean>> inputs = new ArrayList<>();
 				for (int i = 0; i < node.getNumInEdge(); i++) {
-					NetlistEdge e = node.getInEdgeAtIdx(i);
-					NetlistNode src = e.getSrc();
-					inputs.add(techMap.findTechNodeByName(src.getName()).getLogic());
+					TMEdge e = node.getInEdgeAtIdx(i);
+					TMNode src = e.getSrc();
+					inputs.add(src.getLogic());
 				}
+
+				List<Boolean> logic = null;
+
 				if (node.getNodeType().equals("TopOutput")) {
-					techMap.findTechNodeByName(node.getName()).setLogic(getOutputLogic(inputs));
+					logic = getOutputLogic(inputs);
 				} else {
-					techMap.findTechNodeByName(node.getName()).setLogic(getGateLogic(inputs,node.getNodeType()));
+					logic = getGateLogic(inputs,node.getNodeType());
 				}
+				node.setLogic(logic);
 			}
 		}
 	}
@@ -138,7 +152,7 @@ public class LogicSimulator {
 		}
 		return rtn;
 	}
-	
+
 	private static List<Boolean> computeLogicalOr(List<List<Boolean>> input) {
 		isRaggedInputListException(input);
 		List<Boolean> rtn = new ArrayList<>();
@@ -175,7 +189,7 @@ public class LogicSimulator {
 	private static List<List<Boolean>> getInputLogic(int num) {
 		List<List<Boolean>> rtn = new ArrayList<>();
 		for (int i = 0; i < num; i++) {
-		    List<Boolean> logic = new ArrayList<>();
+			List<Boolean> logic = new ArrayList<>();
 			for (int k = 0; k < Math.pow(2,num-1-i); k++) {
 				for (int j = 0; j < Math.pow(2,i); j++) {
 					logic.add(false);
@@ -210,5 +224,20 @@ public class LogicSimulator {
 		return rtn;
 	}
 
-}
+	/**
+	 * @return the netlist
+	 */
+	public TMNetlist getTMNetlist() {
+		return tmNetlist;
+	}
 
+	/**
+	 * @param netlist the netlist to set
+	 */
+	public void setTMNetlist(TMNetlist netlist) {
+		this.tmNetlist = netlist;
+	}
+
+	private TMNetlist tmNetlist;
+
+}

@@ -36,10 +36,10 @@ import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Pair;
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
-import org.cellocad.common.netlist.NetlistEdge;
 import org.cellocad.common.netlist.NetlistNode;
-import org.cellocad.technologymapping.common.techmap.TechMap;
-import org.cellocad.technologymapping.common.techmap.TechNode;
+import org.cellocad.technologymapping.common.netlist.TMEdge;
+import org.cellocad.technologymapping.common.netlist.TMNetlist;
+import org.cellocad.technologymapping.common.netlist.TMNode;
 import org.cellocad.technologymapping.data.Gate;
 import org.cellocad.technologymapping.data.GateType;
 import org.cellocad.technologymapping.data.Part;
@@ -52,17 +52,29 @@ import org.cellocad.technologymapping.data.Part;
  */
 public class TMUtils{
 
+	public static boolean isRaggedListException(List<List<?>> input) {
+		boolean rtn = false;
+		for (int i = 0; i < input.size(); i++) {
+			for (int j = i+1; j < input.size(); j++) {
+				if (input.get(i).size() != input.get(j).size()) {
+					throw new RuntimeException("Vectors must be of equal length.");
+				}
+			}
+		}
+		return rtn;
+	}
+
 	/**
 	 * Get all the input nodes in the netlist.
 	 * 
 	 * @param netlist the netlist from which to collect input nodes.
 	 * @return the input nodes in the netlist.
 	 */
-	public static List<NetlistNode> getInputNodes(Netlist netlist) {
-		List<NetlistNode> rtn = new CObjectCollection<>();
+	public static List<TMNode> getInputNodes(TMNetlist netlist) {
+		List<TMNode> rtn = new ArrayList<>();
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
+			TMNode node = netlist.getVertexAtIdx(i);
 			if (node.getNodeType().equals("TopInput")) {
 				rtn.add(node);
 			}
@@ -76,11 +88,11 @@ public class TMUtils{
 	 * @param netlist the netlist from which to collect output nodes.
 	 * @return the output nodes in the netlist.
 	 */
-	public static List<NetlistNode> getOutputNodes(Netlist netlist) {
-		List<NetlistNode> rtn = new CObjectCollection<>();
+	public static List<TMNode> getOutputNodes(TMNetlist netlist) {
+		List<TMNode> rtn = new ArrayList<>();
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
+			TMNode node = netlist.getVertexAtIdx(i);
 			if (node.getNodeType().equals("TopOutput")) {
 				rtn.add(node);
 			}
@@ -94,12 +106,12 @@ public class TMUtils{
 	 * @param netlist the netlist from which to collect logic nodes.
 	 * @return the logic nodes in the netlist.
 	 */
-	public static List<NetlistNode> getLogicNodes(Netlist netlist) {
-		List<NetlistNode> rtn = new CObjectCollection<>();
+	public static List<TMNode> getLogicNodes(TMNetlist netlist) {
+		List<TMNode> rtn = new ArrayList<>();
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (!node.getNodeType().equals("TopOutput")
+			TMNode node = netlist.getVertexAtIdx(i);
+				if (!node.getNodeType().equals("TopOutput")
 				&&
 				!node.getNodeType().equals("TopInput")) {
 				rtn.add(node);
@@ -188,64 +200,57 @@ public class TMUtils{
 	 * @param netlist the Netlist corresponding to the TechMap.
 	 * @param inputActivityReference the map from input name to reference low-high activity pair.
 	 */
-	public static void initInputActivities(TechMap techMap,
-										   Netlist netlist,
+	public static void initInputActivities(TMNetlist netlist,
 										   Map<String,Pair<Double,Double>> inputActivityReference) {
-		List<NetlistNode> nodes = TMUtils.getInputNodes(netlist);
-		for (NetlistNode node : nodes) {
-			Pair<Double,Double> inputRef = inputActivityReference.get(node.getGate());
-			Utils.isNullRuntimeException(inputRef, "Input activity reference for " + node.getGate());
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			tn.setActivity(getInputActivity(tn.getLogic(),inputRef));
+		List<TMNode> nodes = TMUtils.getInputNodes(netlist);
+		for (TMNode node : nodes) {
+			Pair<Double,Double> inputRef = inputActivityReference.get(node.getGate().getName());
+			Utils.isNullRuntimeException(inputRef, "Input activity reference for " + node.getGate().getName());
+			List<Boolean> logic = node.getLogic();
+			node.setActivity(getInputActivity(logic,inputRef));
 		}
 	}
 
 	/**
 	 * Initialize toxicity at the output nodes.
 	 * 
-	 * @param techMap the TechMap on which to assign output toxicity.
-	 * @param netlist the Netlist corresponding to the TechMap.
+	 * @param netlist the TMNetlist on which to assign output toxicity.
 	 */
-	public static void initOutputToxicity(TechMap techMap, Netlist netlist) {
-		List<NetlistNode> nodes = TMUtils.getOutputNodes(netlist);
-		for (NetlistNode node : nodes) {
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			if (tn != null) {
-				List<Boolean> logic = tn.getLogic();
-				if (logic != null) {
-					List<Double> toxicity = Collections.nCopies(logic.size(),1.0);
-					tn.setToxicity(toxicity);
-				}
-			}
+	public static void initOutputToxicity(TMNetlist netlist) {
+		List<TMNode> nodes = TMUtils.getOutputNodes(netlist);
+		for (TMNode node : nodes) {
+			List<Boolean> logic = node.getLogic();
+			List<Double> toxicity = Collections.nCopies(logic.size(),1.0);
+			node.setToxicity(toxicity);
 		}
 	}
 
 	/**
-	 * Find the minimum growth (highest toxicity) for a TechNode.
+	 * Find the minimum growth (highest toxicity) for a TMNode.
 	 * 
 	 * @param techNode the TechNode to search.
 	 */
-	public static Double minGrowth(TechNode techNode) {
-		List<Double> toxicity = techNode.getToxicity();
+	public static Double minGrowth(TMNode node) {
 		Double rtn = null;
+		List<Double> toxicity = node.getToxicity();
 		if (toxicity != null)
-			rtn = Collections.min(techNode.getToxicity());
+			rtn = Collections.min(toxicity);
 		return rtn;
 	}
 
 	/**
-	 * Find the minimum growth (highest toxicity) for a TechNode.
+	 * Find the minimum growth (highest toxicity) for a TMNetlist.
 	 * 
-	 * @param techNode the TechNode to search.
+	 * @param netlist the TMNetlist to search.
 	 */
-	public static Double minGrowth(TechMap techMap, Netlist netlist) {
-		Double rtn = null;
+	public static Double minGrowth(TMNetlist netlist) {
+		Double rtn = 1.0;
 
-		List<NetlistNode> nodes = TMUtils.getOutputNodes(netlist);
-		for (NetlistNode node : nodes) {
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			if (tn != null)
-				rtn = minGrowth(tn);
+		List<TMNode> nodes = TMUtils.getOutputNodes(netlist);
+		for (TMNode node : nodes) {
+			Double growth = minGrowth(node);
+			if (growth < rtn)
+				rtn = growth;
 		}
 		return rtn;
 	}
@@ -255,16 +260,14 @@ public class TMUtils{
 	 * 
 	 * @return the number of roadblocks.
 	 */
-	public static Integer getNumRoadblocks(TechMap techMap,
-										   Netlist netlist,
+	public static Integer getNumRoadblocks(TMNetlist netlist,
 										   Collection<String> logicRoadblocks,
 										   Collection<String> inputRoadblocks) {
 		int rtn = 0;
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			if (getNumRoadblocks(tn,node,techMap,logicRoadblocks,inputRoadblocks) > 0) {
+			TMNode node = netlist.getVertexAtIdx(i);
+			if (getNumRoadblocks(node,logicRoadblocks,inputRoadblocks) > 0) {
 				rtn++;
 			}
 		}
@@ -272,27 +275,24 @@ public class TMUtils{
 	}
 
 	/**
-	 * Get the number of roadblocks for a particular TechNode.
+	 * Get the number of roadblocks for a particular TMNode.
 	 * 
 	 * @return the number of roadblocks.
 	 */
-	private static Integer getNumRoadblocks(TechNode techNode,
-											NetlistNode node,
-											TechMap techMap,
+	private static Integer getNumRoadblocks(TMNode node,
 											Collection<String> logicRoadblocks,
 											Collection<String> inputRoadblocks) {
 		int rtn = 0;
 		Integer numInputRoadblocks = 0;
 		Integer numLogicRoadblocks = 0;
 		for (int i = 0; i < node.getNumInEdge(); i++) {
-			NetlistEdge e = node.getInEdgeAtIdx(i);
-			NetlistNode src = e.getSrc();
-			TechNode tn = techMap.findTechNodeByName(src.getName());
+			TMEdge e = node.getInEdgeAtIdx(i);
+			TMNode src = e.getSrc();
 
-			if (inputRoadblocks.contains(tn.getGate().getName())) {
+			if (inputRoadblocks.contains(src.getGate().getName())) {
 				numInputRoadblocks++;
 			}
-			if (logicRoadblocks.contains(tn.getGate().getPromoter())) {
+			if (logicRoadblocks.contains(src.getGate().getPromoter())) {
 					numLogicRoadblocks++;
 			}
 		}
@@ -312,7 +312,7 @@ public class TMUtils{
 	 * @param netlist the netlist corresponding to the TechMap.
 	 * @param gateLibrary the gate library from which to make assignments.
 	 */
-	public static void doRandomAssignment(TechMap techMap, final Netlist netlist, List<Gate> gateLibrary) {
+	public static void doRandomAssignment(TMNetlist netlist, List<Gate> gateLibrary) {
 		// Set<String> groups = TMUtils.getGateGroups(gateLibrary);
 
 		// Map<String,List<Gate>> gatesByType = TMUtils.getGatesByType(gateLibrary);
@@ -325,102 +325,81 @@ public class TMUtils{
 
 		int num = netlist.getNumVertex();
 		for (int j = 0; j < num; j++) {
-			NetlistNode node = netlist.getVertexAtIdx(j);
+			TMNode node = netlist.getVertexAtIdx(j);
 			String type = node.getNodeType();
 			if (!type.equals("TopInput") && !type.equals("TopOutput")) {
 				// if (!gatesByType.keySet().contains(type)) {
 				// 	throw new RuntimeException("No gates of type " + type
 				// 							   + " (node '" + node.getName() + "') exist in the library.");
 				// }
-				while (techMap.findTechNodeByName(node.getName()).getGate() == null
+				while (node.getGate() == null
 					   ||
-					   techMap.findTechNodeByName(node.getName()).getGate() == new Gate()) {
+					   node.getGate() == new Gate()) {
 					if (!it.hasNext()) {
 						throw new RuntimeException("Not enough gates in the library to cover the netlist.");
 					}
 					Gate g = it.next();
-					if (!techMap.hasGatesOfGroup(g.getGroup())) {
-						techMap.findTechNodeByName(node.getName()).setGate(g);
+					if (!netlist.hasGatesOfGroup(g.getGroup())) {
+						node.setGate(g);
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Assign input sensors from a library to a netlist.
 	 * 
-	 * @param techMap the TechMap on which to assign input sensors.
-	 * @param netlist the netlist on which to assign input sensors.
+	 * @param netlist the TMNetlist on which to assign input sensors.
 	 * @param inputLibrary the input library from which to make assignments.
 	 */
-	public static void assignInputSensors(TechMap techMap, Netlist netlist, List<Gate> inputLibrary) {
-		List<NetlistNode> nodes = TMUtils.getInputNodes(netlist);
+	public static void assignInputSensors(TMNetlist netlist, List<Gate> inputLibrary) {
+		List<TMNode> nodes = TMUtils.getInputNodes(netlist);
 		Iterator<Gate> it = inputLibrary.iterator();
-		for (NetlistNode node : nodes) {
+		for (TMNode node : nodes) {
 			if (!it.hasNext()) {
 				throw new RuntimeException("Not input sensors in the library to cover the netlist inputs.");
 			}
 			Gate g = it.next();
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			Utils.isNullRuntimeException(tn,"TechNode for gate NetlistNode '" + node.getName());
-			tn.setGate(g);
-			setNodeGate(node,tn);
+			node.setGate(g);
 		}
 	}
 
 	/**
 	 * Assign output reporters from a library to a netlist.
 	 * 
-	 * @param techMap the TechMap on which to assign output reporters.
-	 * @param netlist the Netlist on which to assign output reporters.
+	 * @param netlist the TMNetlist on which to assign output reporters.
 	 * @param outputLibrary the output library from which to make assignments.
 	 */
-	public static void assignOutputReporters(TechMap techMap, Netlist netlist, List<Gate> outputLibrary) {
-		List<NetlistNode> nodes = TMUtils.getOutputNodes(netlist);
+	public static void assignOutputReporters(TMNetlist netlist, List<Gate> outputLibrary) {
+		List<TMNode> nodes = TMUtils.getOutputNodes(netlist);
 		Iterator<Gate> it = outputLibrary.iterator();
-		for (NetlistNode node : nodes) {
+		for (TMNode node : nodes) {
 			if (!it.hasNext()) {
 				throw new RuntimeException("Not output reporters in the library to cover the netlist outputs.");
 			}
 			Gate g = it.next();
-			TechNode tn = techMap.findTechNodeByName(node.getName());
-			Utils.isNullRuntimeException(tn,"TechNode for gate NetlistNode '" + node.getName());
-			tn.setGate(g);
-			setNodeGate(node,tn);
+			node.setGate(g);
 		}
 	}
-
-	/**
-	 * Assign gate and parts to a NetlistNode and corresponding TechNode.
-	 * 
-	 * @param node the NetlistNode to which to assign the gate.
-	 * @param the techNode to which to assign the gate. 
-	 * @param gate the gate to assign.
-	 */
-	public static void setNodeGate(NetlistNode node, TechNode techNode) {
-		node.setGate(techNode.getGate().getName());
-		CObjectCollection<CObject> parts = new CObjectCollection<>();
-		for (Part p : techNode.getGate().getParts()) {
-			parts.add((CObject) p);
-		}
-		node.setParts(parts);
-	}
-
+	
 	/**
 	 * Update a netlist to reflect a gate assignment in a TechNode map.
 	 * 
 	 * @param netlist the netlist to update.
 	 * @param techMap the TechMap from which to copy the assignment.
 	 */
-	public static void updateNetlist(Netlist netlist, final TechMap techMap) {
-		int num = netlist.getNumVertex();
-		for (int i = 0; i < num; i++) {
+	public static void updateNetlist(Netlist netlist, final TMNetlist tmNetlist) {
+		for (int i = 0; i < netlist.getNumVertex(); i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
-			String name = node.getName();
-			TechNode tn = techMap.findTechNodeByName(name);
-			if (tn != null) {
-				setNodeGate(node,tn);
+			TMNode n = tmNetlist.getVertexByName(node.getName());
+			if (n != null) {
+				node.setGate(n.getGate().getName());
+				CObjectCollection<CObject> parts = new CObjectCollection<>();
+				for (Part p : n.getGate().getParts()) {
+					parts.add((CObject) p);
+				}
+				node.setParts(parts);
 			}
 		}
 	}
@@ -428,11 +407,11 @@ public class TMUtils{
 	/**
 	 * Get a candidate gate for assignment.
 	 * 
-	 * @param techMap the TechMap to use when checking for gate validity.
+	 * @param gate the Gate to be swapped or subsituted.
+	 * @param netlist the TMNetlist to use when checking for gate validity.
 	 * @param gateLibrary the gate library from which to pull candidates.
-	 * @param gate the gate to be swapped or subsituted
 	 */
-	public static Gate getSwapOrSubGate(TechMap techMap, Collection<Gate> gateLibrary, Gate gate) {
+	public static Gate getAssignableGate(Gate gate, TMNetlist netlist, Collection<Gate> gateLibrary) {
 		List<Gate> options = new ArrayList<>();
 		for(Gate g : gateLibrary) {
 			if(g.getName().equals(gate.getName())) {
@@ -441,9 +420,9 @@ public class TMUtils{
 			if(g.getGroup().equals(gate.getGroup())) {
 				options.add(g);
 			}
-			if (!techMap.hasGatesOfGroup(g.getGroup())
+			if (!netlist.hasGatesOfGroup(g.getGroup())
 				||
-				techMap.hasGate(g)) {
+				netlist.hasGate(g)) {
 				options.add(g);
 			}
 		}
