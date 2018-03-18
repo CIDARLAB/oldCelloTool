@@ -13,4 +13,4 @@ java -cp "./target/*" org.cellocad.dnacompiler.runtime.Main -verilogFile test/dn
 ```
 
 ## dependencies
-You must have >=readline-7.0 installed for the yosys binaries to run.
+You must have >=readline-7.0 installed for the bundled yosys binaries to run.
