@@ -33,7 +33,7 @@ import org.cellocad.common.target.data.TargetData;
  * @date: Dec 6, 2017
  *
  */
-public abstract class EugeneAlgorithm extends Algorithm{
+public abstract class EUAlgorithm extends Algorithm{
 
 	public void execute(
 			final Netlist netlist,

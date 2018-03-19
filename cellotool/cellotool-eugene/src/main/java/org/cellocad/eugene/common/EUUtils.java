@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Boston University (BU)
+ * Copyright (C) 2017 Massachusetts Institute of Technology (MIT)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,23 +18,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.eugene.runtime.environment;
+package org.cellocad.eugene.common;
 
-import org.cellocad.common.stage.runtime.environment.StageArgDescription;
 
 /**
- * @author: Timothy Jones
+ * @author: Vincent Mirian
  * 
- * @date: Dec 6, 2017
+ * @date: Dec 8, 2017
  *
  */
-public class EugeneArgDescription extends StageArgDescription{
+public class EUUtils {
 
-    /*
-     * Placement
-     */
-    final static public String CONFIGFILE_DESCRIPTION = "config file for Placement";
-    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Placement";
-    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Placement";
-	final static public String SCARSFLAG_DESCRIPTION = "if set, scars will be used in the plasmid";
+	static public String getFilepath(){
+		String rtn = "";
+		rtn = EUUtils.class.getClassLoader().getResource(".").getPath();
+		return rtn;
+	}
+	
+	static public String getResourcesFilepath(){
+		String rtn = "";
+		rtn += EUUtils.getFilepath();
+		return rtn;
+	}
+	
 }

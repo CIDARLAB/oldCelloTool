@@ -20,8 +20,7 @@
  */
 package org.cellocad.eugene.runtime.environment;
 
-import org.apache.commons.cli.Option;
-import org.cellocad.common.stage.runtime.environment.StageRuntimeEnv;
+import org.cellocad.common.stage.runtime.environment.StageArgDescription;
 
 /**
  * @author: Timothy Jones
@@ -29,36 +28,12 @@ import org.cellocad.common.stage.runtime.environment.StageRuntimeEnv;
  * @date: Dec 6, 2017
  *
  */
-public class EugeneRuntimeEnv extends StageRuntimeEnv{
+public class EUArgDescription extends StageArgDescription{
 
-	public EugeneRuntimeEnv(String[] args) {
-		super(args);
-	}
-
-	/*
-	 * Options
-	 */
-	protected Option getInputNetlistOption(){
-		Option rtn = new Option( EugeneArgString.INPUTNETLIST, true, EugeneArgDescription.INPUTNETLIST_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
-	protected Option getConfigFileOption(){
-		Option rtn = new Option( EugeneArgString.CONFIGFILE, true, EugeneArgDescription.CONFIGFILE_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-	
-	protected Option getOutputNetlistOption(){
-		Option rtn = new Option( EugeneArgString.OUTPUTNETLIST, true, EugeneArgDescription.OUTPUTNETLIST_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
-
-	protected Option getScarsOption(){
-		Option rtn = new Option( EugeneArgString.SCARSFLAG, false, EugeneArgDescription.SCARSFLAG_DESCRIPTION);
-		this.makeRequired(rtn);
-		return rtn;
-	}
+    /*
+     * Placement
+     */
+    final static public String CONFIGFILE_DESCRIPTION = "config file for Eugene (EU)";
+    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Eugene (EU)";
+    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Eugene (EU)";
 }

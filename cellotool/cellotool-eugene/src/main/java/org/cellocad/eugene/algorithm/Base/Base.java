@@ -39,7 +39,7 @@ import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistNode;
-import org.cellocad.eugene.algorithm.EugeneAlgorithm;
+import org.cellocad.eugene.algorithm.EUAlgorithm;
 import org.cellocad.eugene.common.TargetDataReader;
 import org.cellocad.eugene.data.Direction;
 import org.cellocad.eugene.data.Gate;
@@ -59,7 +59,7 @@ import org.cidarlab.eugene.util.DeviceUtils;
  * @date: Dec 6, 2017
  *
  */
-public class Base extends EugeneAlgorithm{
+public class Base extends EUAlgorithm{
 	// TODO: generate circuit and output plasmids separately
 	// TODO: support partitions
 	// TODO: netlist nodes should be transcriptional units (promoter...terminator), not cds...promoter "gates"

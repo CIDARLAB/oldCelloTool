@@ -26,8 +26,8 @@ import org.cellocad.common.runtime.RuntimeObject;
 import org.cellocad.common.runtime.environment.RuntimeEnv;
 import org.cellocad.common.stage.StageConfiguration;
 import org.cellocad.common.target.data.TargetData;
-import org.cellocad.eugene.algorithm.EugeneAlgorithm;
-import org.cellocad.eugene.algorithm.EugeneAlgorithmFactory;
+import org.cellocad.eugene.algorithm.EUAlgorithm;
+import org.cellocad.eugene.algorithm.EUAlgorithmFactory;
 
 /**
  * @author: Timothy Jones
@@ -45,16 +45,16 @@ public class EURuntimeObject extends RuntimeObject{
 			) {
 		super(stageConfiguration, targetData, netlist, runEnv);
 	}
-	
+
 	@Override
 	protected void run() {
 		// AlgorithmProfile
 		AlgorithmProfile AProfile = this.getStageConfiguration().getAlgorithmProfile();
 		// run Algorithm
-		EugeneAlgorithmFactory eAF = new EugeneAlgorithmFactory();
-		EugeneAlgorithm algo = eAF.getAlgorithm(AProfile);
+		EUAlgorithmFactory eAF = new EUAlgorithmFactory();
+		EUAlgorithm algo = eAF.getAlgorithm(AProfile);
 		if (algo == null){
-	    	throw new RuntimeException("Algorithm not found!");
+			throw new RuntimeException("Algorithm not found!");
 		}
 		algo.execute(this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
 	}

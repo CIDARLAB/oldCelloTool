@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017 Massachusetts Institute of Technology (MIT)
+ * Copyright (C) 2017 Boston University (BU)
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,27 +18,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.eugene.common;
+package org.cellocad.eugene.algorithm;
 
+import org.cellocad.common.algorithm.AlgorithmFactory;
+import org.cellocad.eugene.algorithm.Base.Base;
 
 /**
  * @author: Vincent Mirian
  * 
- * @date: Dec 8, 2017
+ * @date: Nov 21, 2017
  *
  */
-public class EugeneUtils {
+public class EUAlgorithmFactory extends AlgorithmFactory<EUAlgorithm>{
 
-	static public String getFilepath(){
-		String rtn = "";
-		rtn = EugeneUtils.class.getClassLoader().getResource(".").getPath();
+
+	@Override
+	protected EUAlgorithm getAlgorithm(final String name) {
+		EUAlgorithm rtn = null;
+		if(name.equalsIgnoreCase("Base")){
+			rtn = new Base();
+		}
 		return rtn;
 	}
-	
-	static public String getResourcesFilepath(){
-		String rtn = "";
-		rtn += EugeneUtils.getFilepath();
-		return rtn;
-	}
-	
+
 }

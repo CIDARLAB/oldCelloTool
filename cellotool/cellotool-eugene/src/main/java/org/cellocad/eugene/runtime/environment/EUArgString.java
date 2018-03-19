@@ -18,27 +18,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.cellocad.eugene.algorithm;
+package org.cellocad.eugene.runtime.environment;
 
-import org.cellocad.common.algorithm.AlgorithmFactory;
-import org.cellocad.eugene.algorithm.Base.Base;
+import org.cellocad.common.stage.runtime.environment.StageArgString;
 
 /**
- * @author: Vincent Mirian
+ * @author: Timothy Jones
  * 
- * @date: Nov 21, 2017
+ * @date: Dec 6, 2017
  *
  */
-public class EugeneAlgorithmFactory extends AlgorithmFactory<EugeneAlgorithm>{
-
-
-	@Override
-	protected EugeneAlgorithm getAlgorithm(final String name) {
-		EugeneAlgorithm rtn = null;
-		if(name.equalsIgnoreCase("Base")){
-			rtn = new Base();
-		}
-		return rtn;
-	}
+public class EUArgString extends StageArgString{
 
 }

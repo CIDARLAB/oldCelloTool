@@ -20,7 +20,8 @@
  */
 package org.cellocad.eugene.runtime.environment;
 
-import org.cellocad.common.stage.runtime.environment.StageArgString;
+import org.apache.commons.cli.Option;
+import org.cellocad.common.stage.runtime.environment.StageRuntimeEnv;
 
 /**
  * @author: Timothy Jones
@@ -28,8 +29,30 @@ import org.cellocad.common.stage.runtime.environment.StageArgString;
  * @date: Dec 6, 2017
  *
  */
-public class EugeneArgString extends StageArgString{
+public class EURuntimeEnv extends StageRuntimeEnv{
 
-    final static public String SCARSFLAG = "scars";
+	public EURuntimeEnv(String[] args) {
+		super(args);
+	}
 
+	/*
+	 * Options
+	 */
+	protected Option getInputNetlistOption(){
+		Option rtn = new Option( EUArgString.INPUTNETLIST, true, EUArgDescription.INPUTNETLIST_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
+	protected Option getConfigFileOption(){
+		Option rtn = new Option( EUArgString.CONFIGFILE, true, EUArgDescription.CONFIGFILE_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
+	
+	protected Option getOutputNetlistOption(){
+		Option rtn = new Option( EUArgString.OUTPUTNETLIST, true, EUArgDescription.OUTPUTNETLIST_DESCRIPTION);
+		this.makeRequired(rtn);
+		return rtn;
+	}
 }

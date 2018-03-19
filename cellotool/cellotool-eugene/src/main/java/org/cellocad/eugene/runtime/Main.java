@@ -27,8 +27,8 @@ import org.cellocad.common.stage.StageConfiguration;
 import org.cellocad.common.stage.StageUtils;
 import org.cellocad.common.target.data.TargetData;
 import org.cellocad.common.target.data.TargetDataUtils;
-import org.cellocad.eugene.runtime.environment.EugeneArgString;
-import org.cellocad.eugene.runtime.environment.EugeneRuntimeEnv;
+import org.cellocad.eugene.runtime.environment.EUArgString;
+import org.cellocad.eugene.runtime.environment.EURuntimeEnv;
 
 /**
  * @author: Timothy Jones
@@ -42,20 +42,20 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RuntimeEnv runEnv = new EugeneRuntimeEnv(args);
+		RuntimeEnv runEnv = new EURuntimeEnv(args);
 		runEnv.setName("Eugene");
 		// Read Netlist
 		Netlist netlist = new Netlist();
 		// get StageConfiguration
-		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, EugeneArgString.CONFIGFILE);
+		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, EUArgString.CONFIGFILE);
 		// get TargetData
-		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, EugeneArgString.TARGETDATAFILE, EugeneArgString.TARGETDATADIR);
+		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, EUArgString.TARGETDATAFILE, EUArgString.TARGETDATADIR);
 		// Execute
 		EURuntimeObject eugene = new EURuntimeObject(sc, td, netlist, runEnv);
 		eugene.setName("Eugene");
 		eugene.execute();
 		// Write Netlist
-		String outputFilename = runEnv.getOptionValue(EugeneArgString.OUTPUTNETLIST);
+		String outputFilename = runEnv.getOptionValue(EUArgString.OUTPUTNETLIST);
 		NetlistUtils.writeJSONForNetlist(netlist, outputFilename);
 	}
 	
