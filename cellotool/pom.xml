@@ -41,6 +41,7 @@
     <module>cellotool-technologymapping</module>
     <module>cellotool-eugene</module>
     <module>cellotool-sbolgenerator</module>
+    <module>cellotool-stagegenerator</module>
   </modules>
   <!-- <build> -->
   <!--   <plugins> -->
