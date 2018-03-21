@@ -9,13 +9,6 @@
     <version>0.1.1-SNAPSHOT</version>
   </parent> 
   <artifactId>cellotool-stagegenerator</artifactId>
-  <repositories>
-    <repository>
-      <id>project.local</id>
-      <name>project</name>
-      <url>file:${project.basedir}/lib</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.cellocad</groupId>
@@ -23,9 +16,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>edu.byu.ece</groupId>
-      <artifactId>byuediftools</artifactId>
-      <version>0.5.2</version>
+      <groupId>com.squareup</groupId>
+      <artifactId>javapoet</artifactId>
+      <version>1.10.0</version>
     </dependency>
   </dependencies>
   <build>
