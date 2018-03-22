@@ -72,14 +72,18 @@ public class AlgorithmFactoryBuilder extends Builder{
 	public JavaFile build() {
 		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + "AlgorithmFactory");
 		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
-		Class<?> c = null;
+		Class<?> algorithmClass = null;
+		Class<?> algorithmFactoryClass = null;
 		try {
-			c = Class.forName("org.cellocad.common.algorithm.AlgorithmFactory");
+			algorithmClass = Class.forName("org.cellocad.common.algorithm.Algorithm");
+			algorithmFactoryClass = Class.forName("org.cellocad.common.algorithm.AlgorithmFactory");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		Method m[] = c.getDeclaredMethods();
-		ClassName stageAlgorithm = ClassName.get(this.getPackageName() + "." + this.getStageName() + ".algorithm", this.getAbbrev() + "Algorithm");
+		Method m[] = algorithmClass.getDeclaredMethods();
+		ClassName stageAlgorithm = ClassName.get(this.getPackageName() + "."
+												 + this.getStageName() + ".algorithm",
+												 this.getAbbrev() + algorithmFactoryClass.getSimpleName());
 		for (int i = 0; i < m.length; i++) {
 			if (java.lang.reflect.Modifier.isAbstract(m[i].getModifiers())
 				&& m[i].getName().equals("getAlgorithm")) {
@@ -101,8 +105,10 @@ public class AlgorithmFactoryBuilder extends Builder{
 				builder.addMethod(method);
 			}
 		}
-		TypeSpec factory = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "." + this.getStageName() + ".algorithm",factory).build();
+		TypeSpec ts = builder.build();
+		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
+											 + this.getStageName() + ".algorithm",
+											 ts).build();
 
 		return javaFile;
 	}

@@ -42,11 +42,7 @@ public class MainBuilder extends Builder{
 	}
 
 	public JavaFile build() {
-		// class def
-		TypeSpec.Builder builder = TypeSpec.classBuilder("Main");
-		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
-
-		// get classes
+		// get relevant classes
 		Class<?> runtimeEnvClass = null;
 		Class<?> netlistClass = null;
 		Class<?> stageConfigurationClass = null;
@@ -79,6 +75,10 @@ public class MainBuilder extends Builder{
 														  + this.getStageName() + ".runtime.environment.",
 														  this.getAbbrev() + runtimeObjectClass.getSimpleName());
 
+		// class def
+		TypeSpec.Builder builder = TypeSpec.classBuilder("Main");
+		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
+
 		String runEnvVar = "runEnv";
 		String stageConfigurationVar = "sc";
 		String targetDataVar = "td";
@@ -89,7 +89,7 @@ public class MainBuilder extends Builder{
 			.addModifiers(Modifier.PUBLIC,Modifier.STATIC)
 			.returns(void.class)
 			.addParameter(String[].class,"args")
-			.addStatement(BuilderUtils.classInstantiationByNew(runtimeEnvClass.getSimpleName(),
+			.addStatement(BuilderUtils.instantiateByNew(runtimeEnvClass.getSimpleName(),
 															   runEnvVar,
 															   stageRuntimeEnvClass.simpleName(),
 															   "args"))
@@ -97,7 +97,7 @@ public class MainBuilder extends Builder{
 												  "\"" + this.getStageName() + "\""))
 			.addComment("Read "
 						+ netlistClass.getSimpleName())
-			.addStatement(BuilderUtils.classInstantiationByCall(netlistClass.getSimpleName(),
+			.addStatement(BuilderUtils.instantiateByCall(netlistClass.getSimpleName(),
 																netlistVar,
 																netlistUtilsClass.getSimpleName()
 																+ ".get"
@@ -107,7 +107,7 @@ public class MainBuilder extends Builder{
 																+ ".INPUTNETLIST"))
 			.addComment("get "
 						+ stageConfigurationClass.getSimpleName())
-			.addStatement(BuilderUtils.classInstantiationByCall(stageConfigurationClass.getSimpleName(),
+			.addStatement(BuilderUtils.instantiateByCall(stageConfigurationClass.getSimpleName(),
 																stageConfigurationVar,
 																stageUtilsClass.getSimpleName()
 																+ ".get"
@@ -116,7 +116,7 @@ public class MainBuilder extends Builder{
 																stageArgStringClass.simpleName()
 																+ ".CONFIGFILE)"))
 			.addComment("get " + targetDataClass.getSimpleName())
-			.addStatement(BuilderUtils.classInstantiationByCall(targetDataClass.getSimpleName(),
+			.addStatement(BuilderUtils.instantiateByCall(targetDataClass.getSimpleName(),
 																targetDataVar,
 																targetDataUtilsClass.getSimpleName()
 																+ ".getTarget"
@@ -127,7 +127,7 @@ public class MainBuilder extends Builder{
 																stageArgStringClass.simpleName()
 																+ ".TARGETDATADIR"))
 			.addComment("Execute")
-			.addStatement(BuilderUtils.classInstantiationByNew(stageRuntimeObjectClass.simpleName(),
+			.addStatement(BuilderUtils.instantiateByNew(stageRuntimeObjectClass.simpleName(),
 															   this.getAbbrev(),
 															   stageRuntimeObjectClass.simpleName(),
 															   stageConfigurationVar,
@@ -137,7 +137,7 @@ public class MainBuilder extends Builder{
 			.addStatement(BuilderUtils.methodCall(this.getAbbrev() + ".setName","\"" + this.getStageName() + "\""))
 			.addStatement(BuilderUtils.methodCall(this.getAbbrev() + ".execute"))
 			.addComment("Write " + netlistClass.getSimpleName())
-			.addStatement(BuilderUtils.classInstantiationByCall(String.class.getSimpleName(),
+			.addStatement(BuilderUtils.instantiateByCall(String.class.getSimpleName(),
 																outputFilenameVar,
 																runEnvVar
 																+ ".getOptionalValue",

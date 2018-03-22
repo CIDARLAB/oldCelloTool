@@ -100,7 +100,7 @@ public class RuntimeEnvBuilder extends Builder{
 			.methodBuilder("get" + name + "Option")
 			.addModifiers(Modifier.PROTECTED)
 			.returns(option)
-			.addStatement(BuilderUtils.classInstantiationByNew(option.getSimpleName(),
+			.addStatement(BuilderUtils.instantiateByNew(option.getSimpleName(),
 															   "rtn",
 															   option.getSimpleName(),
 															   argString + "." + name.toUpperCase(),

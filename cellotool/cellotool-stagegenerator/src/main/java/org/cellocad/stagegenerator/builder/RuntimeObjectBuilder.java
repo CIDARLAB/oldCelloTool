@@ -42,32 +42,44 @@ public class RuntimeObjectBuilder extends Builder{
 	}
 
 	public JavaFile build() {
-		// class def
-		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + "RuntimeObject");
-		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
-		Class<?> runtimeObjectClass = null;
-		try {
-			runtimeObjectClass = Class.forName("org.cellocad.common.runtime.RuntimeObject");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		builder.superclass(runtimeObjectClass);
-
-		MethodSpec method = null;
-
-		// constructor
+		// get relevant classes
 		Class<?> stageConfigurationClass = null;
 		Class<?> targetDataClass = null;
 		Class<?> netlistClass = null;
 		Class<?> runtimeEnvClass = null;
+		Class<?> algorithmProfileClass = null;
+		Class<?> algorithmClass = null;
+		Class<?> algorithmFactoryClass = null;
+		Class<?> runtimeExceptionClass = null;
+		Class<?> runtimeObjectClass = null;
 		try {
 			stageConfigurationClass = Class.forName("org.cellocad.common.stage.StageConfiguration");
 			targetDataClass = Class.forName("org.cellocad.common.target.data.TargetData");
 			netlistClass = Class.forName("org.cellocad.common.netlist.Netlist");
 			runtimeEnvClass = Class.forName("org.cellocad.common.runtime.environment.RuntimeEnv");
+			algorithmProfileClass = Class.forName("org.cellocad.common.profile.AlgorithmProfile");
+			algorithmClass = Class.forName("org.cellocad.common.algorithm.Algorithm");
+			algorithmFactoryClass = Class.forName("org.cellocad.common.algorithm.AlgorithmFactory");
+			runtimeExceptionClass = Class.forName("java.lang.RuntimeException");
+			runtimeObjectClass = Class.forName("org.cellocad.common.runtime.RuntimeObject");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		ClassName stageAlgorithmFactoryClass = ClassName.get(this.getPackageName() + "."
+															 + this.getStageName() + ".algorithm",
+															 this.getAbbrev() + algorithmFactoryClass.getSimpleName());
+		ClassName stageAlgorithmClass = ClassName.get(this.getPackageName() + "."
+													  + this.getStageName() + ".algorithm",
+													  this.getAbbrev() + algorithmClass.getSimpleName());
+
+		// class def
+		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + runtimeObjectClass.getSimpleName())
+			.addModifiers(javax.lang.model.element.Modifier.PUBLIC)
+			.superclass(runtimeObjectClass);
+
+		MethodSpec method = null;
+
+		// constructor
 		method = MethodSpec
 			.methodBuilder(this.getAbbrev() + "RuntimeObject")
 			.addModifiers(Modifier.PUBLIC)
@@ -80,50 +92,28 @@ public class RuntimeObjectBuilder extends Builder{
 		builder.addMethod(method);
 
 		// run
-		Class<?> algorithmProfileClass = null;
-		Class<?> algorithmClass = null;
-		Class<?> algorithmFactoryClass = null;
-		Class<?> runtimeExceptionClass = null;
-		try {
-			algorithmProfileClass = Class.forName("org.cellocad.common.profile.AlgorithmProfile");
-			algorithmClass = Class.forName("org.cellocad.common.algorithm.Algorithm");
-			algorithmFactoryClass = Class.forName("org.cellocad.common.algorithm.AlgorithmFactory");
-			runtimeExceptionClass = Class.forName("java.lang.RuntimeException");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		ClassName stageAlgorithmFactoryClass = ClassName.get(this.getPackageName() + "."
-															 + this.getStageName() + ".algorithm",
-															 this.getAbbrev() + algorithmFactoryClass.getSimpleName());
-		ClassName stageAlgorithmClass = ClassName.get(this.getPackageName() + "."
-													  + this.getStageName() + ".algorithm",
-													  this.getAbbrev() + algorithmClass.getSimpleName());
 		method = MethodSpec
 			.methodBuilder("run")
 			.addAnnotation(Override.class)
 			.addModifiers(Modifier.PROTECTED)
 			.returns(void.class)
 			.addComment(algorithmProfileClass.getSimpleName())
-			.addStatement(algorithmProfileClass.getSimpleName()
-						  + " "
-						  + "AProfile = this.get"
-						  + stageConfigurationClass.getSimpleName()
-						  + "().get"
-						  + algorithmProfileClass.getSimpleName()
-						  + "()")
+			.addStatement(BuilderUtils.instantiateByCall(algorithmProfileClass.getSimpleName(),
+																"AProfile",
+																"this.get"
+																+ stageConfigurationClass.getSimpleName()
+																+ "().get"
+																+ algorithmProfileClass.getSimpleName()))
 			.addComment("run " + algorithmClass.getSimpleName())
-			.addStatement(stageAlgorithmFactoryClass.simpleName()
-						  + " "
-						  + this.getStageName().substring(0,1)
-						  + "AF = new "
-						  + stageAlgorithmFactoryClass.simpleName()
-						  + "()")
-			.addStatement(stageAlgorithmClass.simpleName()
-						  + " algo = "
-						  + this.getStageName().substring(0,1)
-						  + "AF.get"
-						  + algorithmClass.getSimpleName()
-						  + "(AProfile)")
+			.addStatement(BuilderUtils.instantiateByNew(stageAlgorithmFactoryClass.simpleName(),
+														 this.getStageName().substring(0,1) + "AF",
+														 stageAlgorithmFactoryClass.simpleName()))
+			.addStatement(BuilderUtils.instantiateByCall(stageAlgorithmClass.simpleName(),
+														 "algo",
+														 this.getStageName().substring(0,1)
+														 + "AF.get"
+														 + algorithmClass.getSimpleName(),
+														 "AProfile"))
 			.beginControlFlow("if (algo == null)")
 			.addStatement("throw new "
 						  + runtimeExceptionClass.getSimpleName()
@@ -131,13 +121,17 @@ public class RuntimeObjectBuilder extends Builder{
 						  + algorithmClass.getSimpleName()
 						  + " not found!\")")
 			.endControlFlow()
-			.addStatement("algo.execute(this.get"
-						  + netlistClass.getSimpleName()
-						  + "(), this.get"
-						  + targetDataClass.getSimpleName()
-						  + "(), AProfile, this.get"
-						  + runtimeEnvClass.getSimpleName()
-						  + "())")
+			.addStatement(BuilderUtils.methodCall("algo.execute",
+												  "this.get"
+												  + netlistClass.getSimpleName()
+												  + "()",
+												  "this.get"
+												  + targetDataClass.getSimpleName()
+												  + "()",
+												  "AProfile",
+												  "this.get"
+												  + runtimeEnvClass.getSimpleName()
+												  + "())"))
 			.build();
 		builder.addMethod(method);
 

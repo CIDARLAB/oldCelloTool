@@ -33,7 +33,7 @@ import org.cellocad.common.Utils;
 
 public class BuilderUtils{
 
-	public static String classInstantiationByNew(String left, String name, String right, String... args) {
+	public static String instantiateByNew(String left, String name, String right, String... args) {
 		Utils.isNullRuntimeException(left,"left");
 		Utils.isNullRuntimeException(name,"name");
 		Utils.isNullRuntimeException(right,"right");
@@ -43,7 +43,7 @@ public class BuilderUtils{
 		return rtn;
 	}
 
-	public static String classInstantiationByCall(String left, String name, String right, String... args) {
+	public static String instantiateByCall(String left, String name, String right, String... args) {
 		Utils.isNullRuntimeException(left,"left");
 		Utils.isNullRuntimeException(name,"name");
 		Utils.isNullRuntimeException(right,"right");

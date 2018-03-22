@@ -43,11 +43,7 @@ public class AlgorithmBuilder extends Builder{
 	}
 
 	public JavaFile build() {
-		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + "Algorithm");
-		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC,
-							 javax.lang.model.element.Modifier.ABSTRACT);
-
-		// execute method
+		// get relevant classes
 		Class<?> algorithmClass = null;
 		Class<?> netlistClass = null;
 		Class<?> targetDataClass = null;
@@ -62,6 +58,11 @@ public class AlgorithmBuilder extends Builder{
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+
+		// class def
+		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + algorithmClass.getSimpleName());
+		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC,
+							 javax.lang.model.element.Modifier.ABSTRACT);
 
 		builder.superclass(algorithmClass);
 		MethodSpec.Builder methodBuilder = MethodSpec
@@ -102,8 +103,10 @@ public class AlgorithmBuilder extends Builder{
 		builder.addField(algorithmProfileClass,"AProfile",Modifier.PRIVATE);
 		builder.addField(runtimeEnvClass,"runtimeEnv",Modifier.PRIVATE);
 
-		TypeSpec algorithm = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "." + this.getStageName() + ".algorithm",algorithm).build();
+		TypeSpec ts = builder.build();
+		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
+											 + this.getStageName() + ".algorithm",
+											 ts).build();
 
 		return javaFile;
 	}

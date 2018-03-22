@@ -66,11 +66,11 @@ public class AlgorithmImplBuilder extends Builder{
 				builder.addMethod(method);
 			}
 		}
-		TypeSpec algorithm = builder.build();
+		TypeSpec ts = builder.build();
 		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
 											 + this.getStageName() + ".algorithm."
 											 + this.getAlgorithm(),
-											 algorithm).build();
+											 ts).build();
 
 		return javaFile;
 	}
