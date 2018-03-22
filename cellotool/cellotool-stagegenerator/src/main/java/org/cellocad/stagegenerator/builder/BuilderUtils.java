@@ -30,9 +30,17 @@ import org.cellocad.common.Utils;
  * @date: Mar 21, 2018
  *
  */
-
 public class BuilderUtils{
 
+	/**
+	 * Generate a class instantiation with the "new" keyword as a string.
+	 *
+	 * @param left the type of the lvalue.
+	 * @param name the lvalue name.
+	 * @param right the type of the rvalue.
+	 * @param args the arguments to the rvalue constructor.
+	 * @return
+	 */
 	public static String instantiateByNew(String left, String name, String right, String... args) {
 		Utils.isNullRuntimeException(left,"left");
 		Utils.isNullRuntimeException(name,"name");
@@ -43,6 +51,15 @@ public class BuilderUtils{
 		return rtn;
 	}
 
+	/**
+	 * Generate a class instantiation via a method call as a string.
+	 *
+	 * @param left the type of the lvalue.
+	 * @param name the name of the lvalue.
+	 * @param right the name of the method that generates the lvalue.
+	 * @param args the arguments to the function.
+	 * @return
+	 */
 	public static String instantiateByCall(String left, String name, String right, String... args) {
 		Utils.isNullRuntimeException(left,"left");
 		Utils.isNullRuntimeException(name,"name");
@@ -53,6 +70,13 @@ public class BuilderUtils{
 		return rtn;
 	}
 
+	/**
+	 * Generate a string for a method call.
+	 *
+	 * @param name the name of the method.
+	 * @param args the arguments to the method.
+	 * @return
+	 */
 	public static String methodCall(String name, String... args) {
 		Utils.isNullRuntimeException(name,"name");
 		String rtn = "";

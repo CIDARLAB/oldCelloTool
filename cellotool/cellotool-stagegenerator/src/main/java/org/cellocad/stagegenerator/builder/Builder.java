@@ -36,9 +36,11 @@ import com.squareup.javapoet.JavaFile;
 public abstract class Builder{
 
 	/**
-	 * Create a new builder class for the given Java package name.
+	 * Create a new builder class for the given Java package name, stage name, and stage abbreviation.
 	 *
-	 * @param pkg the package name for the generated class.
+	 * @param pkg the package name (group id).
+	 * @param name the stage name (artifact id).
+	 * @param abbrev the stage abbreviation.
 	 */
 	public Builder(final String pkg, final String name, final String abbrev) {
 		Pattern p = Pattern.compile("([\\p{L}_$][\\p{L}\\p{N}_$]*\\.)*[\\p{L}_$][\\p{L}\\p{N}_$]*");

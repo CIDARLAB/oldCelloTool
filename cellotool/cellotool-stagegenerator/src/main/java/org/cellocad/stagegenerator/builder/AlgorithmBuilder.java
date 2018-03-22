@@ -29,7 +29,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Builder for the Algorithm class in common.
+ * Builder for the Algorithm class of a stage.
  *
  * @author: Timothy Jones
  *
@@ -38,10 +38,20 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class AlgorithmBuilder extends Builder{
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#AlgorithmBuilder(String,String,String)
+	 */
 	public AlgorithmBuilder(final String pkg, final String name, final String abbrev) {
 		super(pkg,name,abbrev);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#build()
+	 */
 	public JavaFile build() {
 		// get relevant classes
 		Class<?> algorithmClass = null;
@@ -111,6 +121,14 @@ public class AlgorithmBuilder extends Builder{
 		return javaFile;
 	}
 
+	/**
+	 * Add a getter and a setter method to the TypeSpec Builder for a given field.
+	 *
+	 * @param builder the TypeSpec builder to which to add the method.
+	 * @param var the field name.
+	 * @param name the base name of the getter and setter functions, e.g. "Foo" in "getFoo()".
+	 * @param c the class of the field.
+	 */
 	private void addGetterSetter(TypeSpec.Builder builder, String var, String name, Class<?> c) {
 		MethodSpec m = null;
 		m = getGetter(var,name,c);
@@ -119,6 +137,14 @@ public class AlgorithmBuilder extends Builder{
 		builder.addMethod(m);
 	}
 
+	/**
+	 * Generate a getter method for a given field.
+	 *
+	 * @param var the field name.
+	 * @param name the base name of the getter functions, e.g. "Foo" in "getFoo()".
+	 * @param c the class of the field.
+	 * @return the generated MethodSpec.
+	 */
 	private MethodSpec getGetter(String var, String name, Class<?> c) {
 		MethodSpec rtn = MethodSpec
 			.methodBuilder("get" + name)
@@ -129,6 +155,14 @@ public class AlgorithmBuilder extends Builder{
 		return rtn;
 	}
 
+	/**
+	 * Generate a setter method for a given field.
+	 *
+	 * @param var the field name.
+	 * @param name the base name of the setter functions, e.g. "Foo" in "getFoo()".
+	 * @param c the class of the field.
+	 * @return the generated MethodSpec.
+	 */
 	private MethodSpec getSetter(String var, String name, Class<?> c) {
 		MethodSpec rtn = MethodSpec
 			.methodBuilder("set" + name)

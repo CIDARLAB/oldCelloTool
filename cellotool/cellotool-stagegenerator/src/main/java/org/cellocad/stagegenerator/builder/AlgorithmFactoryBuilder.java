@@ -34,7 +34,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Builder for the AlgorithmFactory class in common.
+ * Builder for the AlgorithmFactory class of a stage.
  *
  * @author: Timothy Jones
  *
@@ -43,6 +43,11 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class AlgorithmFactoryBuilder extends Builder{
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#AlgorithmFactoryBuilder(String,String,String)
+	 */
 	public AlgorithmFactoryBuilder(final String pkg, final String name, final String abbrev) {
 		super(pkg,name,abbrev);
 		List<String> alg = new ArrayList<>();
@@ -50,11 +55,22 @@ public class AlgorithmFactoryBuilder extends Builder{
 		this.setAlgorithmNames(alg);
 	}
 
+	/**
+	 * Create an AlgorithmFactoryBuilder.
+	 *
+	 * @param pkg the package name (group id).
+	 * @param name the stage name (artifact id).
+	 * @param abbrev the stage abbreviation.
+	 * @param algorithms a list of algorithm names for which to generate code.
+	 */
 	public AlgorithmFactoryBuilder(final String pkg, final String name, final String abbrev, final List<String> algorithms) {
 		super(pkg,name,abbrev);
 		initAlgorithms(algorithms);
 	}
 
+	/**
+	 * Check for algorithm name validity and store each name.
+	 */
 	private void initAlgorithms(final List<String> algorithms) {
 		List<String> accept = new ArrayList<>();
 		Pattern p = Pattern.compile("[\\p{L}_$][\\p{L}\\p{N}_$]*");
@@ -69,6 +85,11 @@ public class AlgorithmFactoryBuilder extends Builder{
 		this.setAlgorithmNames(accept);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#build()
+	 */
 	public JavaFile build() {
 		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + "AlgorithmFactory");
 		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);

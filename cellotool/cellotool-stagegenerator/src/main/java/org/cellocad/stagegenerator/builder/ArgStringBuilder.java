@@ -24,7 +24,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Builder for the Algorithm class in common.
+ * Builder for the ArgString class of a stage.
  *
  * @author: Timothy Jones
  *
@@ -33,10 +33,20 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class ArgStringBuilder extends Builder{
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#ArgStringBuilder(String,String,String)
+	 */
 	public ArgStringBuilder(final String pkg, final String name, final String abbrev) {
 		super(pkg,name,abbrev);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#build()
+	 */
 	public JavaFile build() {
 		// get relevant classes
 		Class<?> argStringClass = null;

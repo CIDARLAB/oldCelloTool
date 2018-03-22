@@ -28,7 +28,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Builder for the Algorithm class in common.
+ * Builder for the RuntimeEnv class of a stage.
  *
  * @author: Timothy Jones
  *
@@ -37,10 +37,20 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class RuntimeEnvBuilder extends Builder{
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#RuntimeEnvBuilder(String,String,String)
+	 */
 	public RuntimeEnvBuilder(final String pkg, final String name, final String abbrev) {
 		super(pkg,name,abbrev);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#build()
+	 */
 	public JavaFile build() {
 		// get relevant classes
 		Class<?> runtimeEnvClass = null;
@@ -95,6 +105,15 @@ public class RuntimeEnvBuilder extends Builder{
 		return javaFile;
 	}
 
+	/**
+	 * Generate an option getter method.
+	 *
+	 * @param name the name of the option.
+	 * @param option the option class.
+	 * @param argString the name of the ArgString class for this stage.
+	 * @param argDescription the name of the ArgDescription class for this stage.
+	 * @return the MethodSpec for the getter.
+	 */
 	private MethodSpec getOptionGetter(String name, Class<?> option, String argString, String argDescription) {
 		MethodSpec rtn = MethodSpec
 			.methodBuilder("get" + name + "Option")

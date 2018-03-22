@@ -28,7 +28,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Builder for the Algorithm class in common.
+ * Builder for the RuntimeObject class of a stage.
  *
  * @author: Timothy Jones
  *
@@ -37,10 +37,20 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class RuntimeObjectBuilder extends Builder{
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#RuntimeObjectBuilder(String,String,String)
+	 */
 	public RuntimeObjectBuilder(final String pkg, final String name, final String abbrev) {
 		super(pkg,name,abbrev);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#build()
+	 */
 	public JavaFile build() {
 		// get relevant classes
 		Class<?> stageConfigurationClass = null;

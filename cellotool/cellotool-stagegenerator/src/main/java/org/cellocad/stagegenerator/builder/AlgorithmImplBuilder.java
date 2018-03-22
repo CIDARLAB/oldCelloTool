@@ -29,7 +29,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Builder for the Algorithm class in common.
+ * Builder for a stage algorithm implementation.
  *
  * @author: Timothy Jones
  *
@@ -38,11 +38,24 @@ import com.squareup.javapoet.TypeSpec;
  */
 public class AlgorithmImplBuilder extends Builder{
 
+	/**
+	 * Create an AlgorithmImplBuilder.
+	 *
+	 * @param pkg the package name (group id).
+	 * @param name the stage name (artifact id).
+	 * @param abbrev the stage abbreviation.
+	 * @param algorithm the algorithm name.
+	 */
 	public AlgorithmImplBuilder(final String pkg, final String name, final String abbrev, final String algorithm) {
 		super(pkg,name,abbrev);
 		this.setAlgorithm(algorithm);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Builder#build()
+	 */
 	public JavaFile build() {
 		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAlgorithm());
 		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
