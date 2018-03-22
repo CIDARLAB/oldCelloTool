@@ -74,8 +74,8 @@ public class MainBuilder extends Builder{
 												  this.getAbbrev() + RuntimeObject.class.getSimpleName());
 
 		// class def
-		TypeSpec.Builder builder = TypeSpec.classBuilder("Main");
-		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
+		TypeSpec.Builder builder = TypeSpec.classBuilder("Main")
+			.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
 
 		String runEnvVar = "runEnv";
 		String stageConfigurationVar = "sc";
@@ -141,11 +141,11 @@ public class MainBuilder extends Builder{
 			.build();
 
 		builder.addMethod(method);
-		TypeSpec main = builder.build();
+		TypeSpec ts = builder.build();
 		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
 											 + this.getStageName() + "."
 											 + "runtime",
-											 main).build();
+											 ts).build();
 		return javaFile;
 	}
 
