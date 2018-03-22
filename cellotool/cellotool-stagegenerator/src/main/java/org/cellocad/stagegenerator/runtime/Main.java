@@ -20,18 +20,22 @@
  */
 package org.cellocad.stagegenerator.runtime;
 
+import java.io.File;
 import java.io.IOException;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.cellocad.stagegenerator.builder.AlgorithmBuilder;
-import org.cellocad.stagegenerator.builder.ArgDescriptionBuilder;
 import org.cellocad.stagegenerator.builder.AlgorithmFactoryBuilder;
-import org.cellocad.stagegenerator.builder.ArgStringBuilder;
 import org.cellocad.stagegenerator.builder.AlgorithmImplBuilder;
-import org.cellocad.stagegenerator.builder.RuntimeObjectBuilder;
-import org.cellocad.stagegenerator.builder.RuntimeEnvBuilder;
+import org.cellocad.stagegenerator.builder.ArgDescriptionBuilder;
+import org.cellocad.stagegenerator.builder.ArgStringBuilder;
+import org.cellocad.stagegenerator.builder.Builder;
 import org.cellocad.stagegenerator.builder.MainBuilder;
+import org.cellocad.stagegenerator.builder.RuntimeEnvBuilder;
+import org.cellocad.stagegenerator.builder.RuntimeObjectBuilder;
+import org.cellocad.stagegenerator.runtime.environment.ArgString;
+import org.cellocad.stagegenerator.runtime.environment.RuntimeEnv;
 
 /**
  * @author: Timothy Jones
@@ -42,80 +46,51 @@ import org.cellocad.stagegenerator.builder.MainBuilder;
 public class Main {
 
 	public static void main(String args[]) {
-		if (args.length < 3) {
-			displayHelp();
-			throw new IllegalArgumentException("Must specify a package name, stage name, and stage abbreviation.");
-		}
+		RuntimeEnv runEnv = new RuntimeEnv(args);
+		runEnv.setName("Stage Generator");
+		String pkg = runEnv.getOptionValue(ArgString.PKGNAME);
+		String name = runEnv.getOptionValue(ArgString.STAGENAME);
+		String abbrev = runEnv.getOptionValue(ArgString.STAGEABBREV);
+		String outputDir = runEnv.getOptionValue(ArgString.OUTPUTDIR);
+		File out = new File(outputDir);
 
 		List<String> algorithms = new ArrayList<>();
-		for (int i = 3; i < args.length; i++) {
-			algorithms.add(args[i]);
-		}
-		if (algorithms.size() == 0) {
-			algorithms.add("Base");
-		}
+		// for (int i = 3; i < args.length; i++) {
+		// 	algorithms.add(args[i]);
+		// }
+		// if (algorithms.size() == 0) {
+			// algorithms.add("Base");
+		// }
+		algorithms.add("Base");
 
-		AlgorithmBuilder alg = new AlgorithmBuilder(args[0],args[1],args[2]);
-		try {
-			alg.build().writeTo(System.out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		AlgorithmFactoryBuilder fac = new AlgorithmFactoryBuilder(args[0],args[1],args[2],algorithms);
-		try {
-			fac.build().writeTo(System.out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		AlgorithmBuilder alg = new AlgorithmBuilder(pkg,name,abbrev);
+		write(alg,out);
+		AlgorithmFactoryBuilder fac = new AlgorithmFactoryBuilder(pkg,name,abbrev,algorithms);
+		write(fac,out);
 
 		for (String a : algorithms) {
-			AlgorithmImplBuilder impl = new AlgorithmImplBuilder(args[0],args[1],args[2],a);
-			try {
-				impl.build().writeTo(System.out);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			AlgorithmImplBuilder impl = new AlgorithmImplBuilder(pkg,name,abbrev,a);
+			write(impl,out);
 		}
 
-		RuntimeObjectBuilder ro = new RuntimeObjectBuilder(args[0],args[1],args[2]);
-		try {
-			ro.build().writeTo(System.out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		MainBuilder main = new MainBuilder(args[0],args[1],args[2]);
-		try {
-			main.build().writeTo(System.out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		ArgDescriptionBuilder ad = new ArgDescriptionBuilder(args[0],args[1],args[2]);
-		try {
-			ad.build().writeTo(System.out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		ArgStringBuilder as = new ArgStringBuilder(args[0],args[1],args[2]);
-		try {
-			as.build().writeTo(System.out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		RuntimeEnvBuilder re = new RuntimeEnvBuilder(args[0],args[1],args[2]);
-		try {
-			re.build().writeTo(System.out);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		RuntimeObjectBuilder ro = new RuntimeObjectBuilder(pkg,name,abbrev);
+		write(ro,out);
+		MainBuilder main = new MainBuilder(pkg,name,abbrev);
+		write(main,out);
+		ArgDescriptionBuilder ad = new ArgDescriptionBuilder(pkg,name,abbrev);
+		write(ad,out);
+		ArgStringBuilder as = new ArgStringBuilder(pkg,name,abbrev);
+		write(as,out);
+		RuntimeEnvBuilder re = new RuntimeEnvBuilder(pkg,name,abbrev);
+		write(re,out);
 	}
 
-	private static void displayHelp() {
-		System.out.println("Arguments: <package name> <stage name> <abbrev> [method ...]");
+	private static void write(Builder b, File out) {
+		try {
+			b.build().writeTo(out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
