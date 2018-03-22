@@ -32,7 +32,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
@@ -47,11 +47,11 @@ public class TargetData extends CObject{
 		init();
 		parse(JArray, TargetDataDir);
 	}
-	
+
 	public TargetData(final JSONArray JArray){
 		this(JArray, "");
 	}
-	
+
 	private void parse(final JSONArray JArray, final String TargetDataDir){
 		for (int i = 0; i < JArray.size(); i++) {
 			JSONObject JObj = (JSONObject) JArray.get(i);
@@ -61,10 +61,10 @@ public class TargetData extends CObject{
 				temp = new ArrayList<JSONObject>();
 				this.getCollectionTypeData().put(collection, temp);
 			}
-			temp.add(JObj);			
+			temp.add(JObj);
 		}
 	}
-	
+
 	public JSONObject getJSONObjectAtIdx(String type, int index) {
 		JSONObject rtn = null;
 		List<JSONObject> temp = this.getCollectionTypeData().get(type);
@@ -73,7 +73,7 @@ public class TargetData extends CObject{
 		}
 		return rtn;
 	}
-	
+
 	public int getNumJSONObject(String type) {
 		int rtn = 0;
 		List<JSONObject> temp = this.getCollectionTypeData().get(type);
@@ -86,6 +86,6 @@ public class TargetData extends CObject{
 	protected Map< String, List<JSONObject> > getCollectionTypeData() {
 		return this.collectionTypeData;
 	}
-	
+
 	Map< String, List<JSONObject> > collectionTypeData;
 }

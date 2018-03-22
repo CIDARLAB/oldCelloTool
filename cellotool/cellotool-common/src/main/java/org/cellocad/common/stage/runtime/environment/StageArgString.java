@@ -24,17 +24,17 @@ import org.cellocad.common.runtime.environment.ArgString;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
 public class StageArgString extends ArgString{
 
-    /*
-     * Default
-     */
-    final static public String CONFIGFILE = "configFile";
-    final static public String INPUTNETLIST = "inputNetlist";
-    final static public String OUTPUTNETLIST = "outputNetlist";
-    
+	/*
+	 * Default
+	 */
+	final static public String CONFIGFILE = "configFile";
+	final static public String INPUTNETLIST = "inputNetlist";
+	final static public String OUTPUTNETLIST = "outputNetlist";
+
 }

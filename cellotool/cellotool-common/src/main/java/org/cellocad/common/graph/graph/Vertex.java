@@ -22,17 +22,17 @@ package org.cellocad.common.graph.graph;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */
 
 public class Vertex extends VertexTemplate<Edge>{
-	
+
 	public Vertex(){
 		super();
 	}
-	
+
 	public Vertex(final Vertex other){
 		super(other);
 	}
@@ -53,5 +53,5 @@ public class Vertex extends VertexTemplate<Edge>{
 		rtn = new Edge(e);
 		return rtn;
 	}
-	
+
 }

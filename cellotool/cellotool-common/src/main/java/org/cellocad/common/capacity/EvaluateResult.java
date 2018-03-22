@@ -22,10 +22,10 @@ package org.cellocad.common.capacity;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 7, 2017
  *
  */
 public enum EvaluateResult {
-		ERROR, UNDERFLOW, OK, OVERFLOW;
+	ERROR, UNDERFLOW, OK, OVERFLOW;
 }

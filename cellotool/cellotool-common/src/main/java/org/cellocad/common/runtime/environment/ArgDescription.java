@@ -22,7 +22,7 @@ package org.cellocad.common.runtime.environment;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 17, 2017
  *
  */
@@ -37,5 +37,5 @@ public class ArgDescription {
 	final static public String OPTIONS_DESCRIPTION = "options file";
 	final static public String OUTPUTDIR_DESCRIPTION = "output directory";
 	final static public String PYTHONDIR_DESCRIPTION = "python directory";
-	
+
 }

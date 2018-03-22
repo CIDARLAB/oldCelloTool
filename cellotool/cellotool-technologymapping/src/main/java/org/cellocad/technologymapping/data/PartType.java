@@ -22,7 +22,7 @@ package org.cellocad.technologymapping.data;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 6, 2018
  *
  */
@@ -33,7 +33,7 @@ public enum PartType {
 	RBS("rbs"),
 	RIBOZYME("ribozyme"),
 	SCAR("scar");
-	
+
 	private final String partType;
 
 	PartType(String partType) {

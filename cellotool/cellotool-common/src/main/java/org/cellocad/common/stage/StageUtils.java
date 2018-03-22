@@ -33,17 +33,17 @@ import org.json.simple.parser.ParseException;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
 public class StageUtils {
-	
+
 	static public StageConfiguration getStageConfiguration(final RuntimeEnv runEnv, final String configFile){
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		StageConfiguration rtn = null;
 		String configFilename = runEnv.getOptionValue(configFile);
-	    Reader configFileReader = null;
+		Reader configFileReader = null;
 		JSONObject jsonTop = null;
 		// Create File Reader
 		try {
@@ -53,21 +53,21 @@ public class StageUtils {
 		}
 		// Create JSON object from File Reader
 		JSONParser parser = new JSONParser();
-        try{
-        	jsonTop = (JSONObject) parser.parse(configFileReader);
-	    } catch (IOException e) {
-	        throw new RuntimeException("File IO Exception for: " + configFilename + ".");
-	    } catch (ParseException e) {
-	        throw new RuntimeException("Parser Exception for: " + configFilename + ".");
-	    }
+		try{
+			jsonTop = (JSONObject) parser.parse(configFileReader);
+		} catch (IOException e) {
+			throw new RuntimeException("File IO Exception for: " + configFilename + ".");
+		} catch (ParseException e) {
+			throw new RuntimeException("Parser Exception for: " + configFilename + ".");
+		}
 		// Create TargetInfo object
-        rtn = new StageConfiguration(jsonTop);
-	    try {
-	    	configFileReader.close();
+		rtn = new StageConfiguration(jsonTop);
+		try {
+			configFileReader.close();
 		} catch (IOException e) {
 			throw new RuntimeException("Error with file: " + configFilename);
 		}
-	    return rtn;
+		return rtn;
 	}
-	
+
 }

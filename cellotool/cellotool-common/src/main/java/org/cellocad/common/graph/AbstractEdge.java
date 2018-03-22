@@ -29,59 +29,59 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 15, 2017
  *
  */
- 
+
 abstract public class AbstractEdge <T extends AbstractVertex<?>> extends CObject {
 
 	private void init() {
 		this.dst = new CObjectCollection<T>();
 	}
-	
+
 	public AbstractEdge(){
 		this.init();
-        this.setSrc(null);
+		this.setSrc(null);
 	}
-	
+
 	public AbstractEdge(final T Src) {
 		this();
-        this.setSrc(Src);
-    }
-	
+		this.setSrc(Src);
+	}
+
 	public AbstractEdge(final AbstractEdge<T> other) {
 		super(other);
 		this.init();
-        this.setSrc(other.getSrc());
-        this.getMyDst().addAll(other.getMyDst());
-    }
+		this.setSrc(other.getSrc());
+		this.getMyDst().addAll(other.getMyDst());
+	}
 
 	public void setSrc(final T Src){
 		this.src = Src;
 	}
-		
+
 	public T getSrc(){
 		return this.src;
 	}
-	
+
 	public void addDst(final T Dst){
 		if (Dst != null) {
-			this.getMyDst().add(Dst);	
+			this.getMyDst().add(Dst);
 		}
 	}
-	
+
 	public T getDstAtIdx(int index){
 		T rtn = null;
 		if (
 				(index >= 0) &&
 				(index < this.getNumDst())
-			){
-			rtn = this.getMyDst().get(index);	
+				){
+			rtn = this.getMyDst().get(index);
 		}
 		return rtn;
 	}
-	
+
 	public int getNumDst(){
 		int rtn = this.getMyDst().size();
 		return rtn;
@@ -106,7 +106,7 @@ abstract public class AbstractEdge <T extends AbstractVertex<?>> extends CObject
 	}
 
 	public void printDot(final Writer os) throws IOException{
-		os.write(this.getData());			
+		os.write(this.getData());
 	}
 
 	/*
@@ -119,12 +119,12 @@ abstract public class AbstractEdge <T extends AbstractVertex<?>> extends CObject
 		result = prime * result;
 		for (int i = 0; i < this.getNumDst(); i ++) {
 			T dst = this.getDstAtIdx(i);
-			result = prime * result + ((dst == null) ? 0 : dst.getName().hashCode());	
+			result = prime * result + ((dst == null) ? 0 : dst.getName().hashCode());
 		}
 		result = prime * result + ((src == null) ? 0 : src.getName().hashCode());
 		return result;
 	}
-	
+
 	/*
 	 * Equals
 	 */
@@ -156,7 +156,7 @@ abstract public class AbstractEdge <T extends AbstractVertex<?>> extends CObject
 				}
 				else
 					return false;
-			}	
+			}
 		}
 		if (src == null) {
 			if (other.src != null)
@@ -186,7 +186,7 @@ abstract public class AbstractEdge <T extends AbstractVertex<?>> extends CObject
 		}
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";

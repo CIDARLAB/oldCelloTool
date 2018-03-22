@@ -22,20 +22,20 @@ package org.cellocad.sbolgenerator.data;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Feb 27, 2018
  *
  */
 public enum Direction {
 	UP("+"),
 	DOWN("-");
-	
+
 	private final String direction;
 
 	private Direction(String direction) {
 		this.direction = direction;
 	}
-	
+
 	public String toString() {
 		return direction;
 	}

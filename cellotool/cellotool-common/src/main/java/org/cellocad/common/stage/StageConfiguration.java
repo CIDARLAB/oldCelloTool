@@ -26,7 +26,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
@@ -34,26 +34,26 @@ public class StageConfiguration extends ProfileObject{
 
 	private void init() {
 	}
-	
+
 	public StageConfiguration(final JSONObject JObj){
 		super(JObj);
 		init();
 		parse(JObj);
 	}
-	
+
 	/*
 	 * Parse
 	 */
 	private void parseAlgorihtmProfile(final JSONObject JObj){
-    	JSONObject jsonObj;
-    	// parse AlgorithmProfile
-    	jsonObj = (JSONObject) JObj.get("AlgorithmProfile");
+		JSONObject jsonObj;
+		// parse AlgorithmProfile
+		jsonObj = (JSONObject) JObj.get("AlgorithmProfile");
 		if (jsonObj == null) {
 			throw new RuntimeException("'AlgorithmProfile' missing in StageConfiguration!");
 		}
 		this.setAlgorithmProfile(new AlgorithmProfile(jsonObj));
 	}
-	
+
 	private void parse(final JSONObject JObj){
 		this.parseAlgorihtmProfile(JObj);
 	}
@@ -64,10 +64,10 @@ public class StageConfiguration extends ProfileObject{
 	public AlgorithmProfile getAlgorithmProfile() {
 		return this.AProfile;
 	}
-	
+
 	private void setAlgorithmProfile(AlgorithmProfile AProfile) {
 		this.AProfile = AProfile;
 	}
-	
+
 	private AlgorithmProfile AProfile;
 }

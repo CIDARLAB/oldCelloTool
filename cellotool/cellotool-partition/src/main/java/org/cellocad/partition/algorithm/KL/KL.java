@@ -27,7 +27,7 @@ import org.cellocad.partition.algorithm.PTAlgorithm;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */
@@ -50,32 +50,32 @@ public class KL extends PTAlgorithm{
 
 	@Override
 	public void setDefaultParameterValues() {
-		
+
 	}
 
 	@Override
 	public void setParameterValues() {
-		
+
 	}
 
 	@Override
 	public void validateParameterValues() {
-		
+
 	}
 
 	@Override
 	public void preprocessing() {
-		
+
 	}
 
 	@Override
 	public void run() {
-		
+
 	}
 
 	@Override
 	public void postprocessing() {
-		
+
 	}
 
 }

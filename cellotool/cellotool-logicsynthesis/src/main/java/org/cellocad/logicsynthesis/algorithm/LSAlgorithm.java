@@ -29,7 +29,7 @@ import org.cellocad.common.target.data.TargetData;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
@@ -61,7 +61,7 @@ public abstract class LSAlgorithm extends Algorithm{
 		this.run();
 		this.postprocessing();
 	}
-	
+
 	/*
 	 * Getter and Setter
 	 */

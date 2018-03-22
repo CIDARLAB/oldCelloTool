@@ -22,14 +22,14 @@ package org.cellocad.technologymapping.data;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 12, 2018
  *
  */
 public enum GateType {
 	NOT("NOT"),
 	NOR("NOR");
-	
+
 	private final String gateType;
 
 	GateType(String gateType) {

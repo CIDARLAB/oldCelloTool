@@ -24,7 +24,7 @@ import org.cellocad.common.graph.graph.GraphTemplate;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 30, 2017
  *
  */
@@ -33,11 +33,11 @@ public class PGraph extends GraphTemplate<PNode, PEdge> {
 	public PGraph() {
 		super();
 	}
-	
+
 	public PGraph(final PGraph other) {
 		super();
 	}
-	
+
 	@Override
 	public PNode createV(final PNode other) {
 		PNode rtn = null;

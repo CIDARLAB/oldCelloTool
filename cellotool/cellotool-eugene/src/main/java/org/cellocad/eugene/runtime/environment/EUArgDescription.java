@@ -24,16 +24,16 @@ import org.cellocad.common.stage.runtime.environment.StageArgDescription;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Dec 6, 2017
  *
  */
 public class EUArgDescription extends StageArgDescription{
 
-    /*
-     * Placement
-     */
-    final static public String CONFIGFILE_DESCRIPTION = "config file for Eugene (EU)";
-    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Eugene (EU)";
-    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Eugene (EU)";
+	/*
+	 * Placement
+	 */
+	final static public String CONFIGFILE_DESCRIPTION = "config file for Eugene (EU)";
+	final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Eugene (EU)";
+	final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Eugene (EU)";
 }

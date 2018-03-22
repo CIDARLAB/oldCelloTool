@@ -28,7 +28,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
@@ -37,69 +37,69 @@ public class TargetConfiguration extends ProfileObject{
 	private void init() {
 		this.stages = new CObjectCollection<Stage>();
 	}
-	
+
 	public TargetConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
 		super(JObj);
 		init();
 		parse(JObj, TargetConfigurationDir);
 	}
-	
+
 	public TargetConfiguration(final JSONObject JObj){
 		this(JObj, "");
 	}
-	
+
 	/*
 	 * Parse
 	 */
 	private void parseStages(final JSONObject JObj, final String TargetConfigurationDir){
-    	JSONArray jsonArr;
-    	// parse PartitionProfile
-    	jsonArr = (JSONArray) JObj.get("stages");
+		JSONArray jsonArr;
+		// parse PartitionProfile
+		jsonArr = (JSONArray) JObj.get("stages");
 		if (jsonArr == null) {
 			throw new RuntimeException("'stages' missing in TargetInfo!");
 		}
-    	for (int i = 0; i < jsonArr.size(); i++)
-    	{
-    	    JSONObject jsonObj = (JSONObject) jsonArr.get(i);
-    	    Stage S = new Stage(jsonObj, TargetConfigurationDir);
-    	    this.addStage(S);
-    	}
+		for (int i = 0; i < jsonArr.size(); i++)
+		{
+			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			Stage S = new Stage(jsonObj, TargetConfigurationDir);
+			this.addStage(S);
+		}
 	}
-	
+
 	private void parse(final JSONObject JObj, final String TargetConfigurationDir){
 		this.parseStages(JObj, TargetConfigurationDir);
 	}
-	
+
 	private void addStage(final Stage stage){
 		if (stage != null){
 			this.getStages().add(stage);
 		}
 	}
-	
+
 	public Stage getStageByName(final String name){
 		Stage rtn = this.getStages().findCObjectByName(name);
 		return rtn;
 	}
-	
+
 	public Stage getStageAtIdx(int index){
 		Stage rtn = null;
 		if (
 				(index >= 0) &&
 				(index < this.getNumStage())
-			){
-			rtn = this.getStages().get(index);	
-		} 
+				){
+			rtn = this.getStages().get(index);
+		}
 		return rtn;
 	}
-	
+
 	public int getNumStage(){
 		int rtn = this.getStages().size();
 		return rtn;
 	}
-	
+
 	private CObjectCollection<Stage> getStages(){
 		return this.stages;
 	}
-	
+
 	CObjectCollection<Stage> stages;
 }

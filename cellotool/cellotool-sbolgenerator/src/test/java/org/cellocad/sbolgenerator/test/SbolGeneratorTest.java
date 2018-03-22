@@ -44,7 +44,7 @@ import org.junit.Test;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Feb 28, 2018
  *
  */
@@ -57,11 +57,11 @@ public class SbolGeneratorTest{
 		String tempDir = TestUtils.createTempDirectory().toString();
 
 		String[] args = new String[] {"-verilogFile","foo.v",
-									  "-targetDataDir",resourcesFilepath,
-									  "-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
-									  "-configDir",resourcesFilepath,
-									  "-configFile","config.json",
-									  "-outputDir",tempDir};									  
+				"-targetDataDir",resourcesFilepath,
+				"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
+				"-configDir",resourcesFilepath,
+				"-configFile","config.json",
+				"-outputDir",tempDir};
 
 		Stage currentStage = null;
 		// RuntimeEnv
@@ -79,8 +79,8 @@ public class SbolGeneratorTest{
 		SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		SG.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
-										 + Utils.getFileSeparator()
-										 + "sbolgenerator_netlist.json");
+				+ Utils.getFileSeparator()
+				+ "sbolgenerator_netlist.json");
 		Utils.deleteDirectory(new File(tempDir));
 	}
 

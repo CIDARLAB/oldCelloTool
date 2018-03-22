@@ -28,12 +28,12 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 6, 2017
  *
  */
 public class InterBlockProfile extends CapacityCollectionProfile {
-	
+
 	public InterBlockProfile(final JSONObject JObj,
 			final CObjectCollection<BlockProfile> Blocks,
 			final CObjectCollection<CapacityProfile> Capacity){
@@ -41,7 +41,7 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 		//parse
 		this.parse(JObj, Blocks);
 	}
-	
+
 	/*
 	 * Parse
 	 */
@@ -50,29 +50,29 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 		if (sourceName != null) {
 			BlockProfile source = Blocks.findCObjectByName(sourceName);
 			if (source == null) {
-    	    	throw new RuntimeException(sourceName + " not found.");
+				throw new RuntimeException(sourceName + " not found.");
 			}
 			this.setSource(source);
 		}
 		else {
-	    	throw new RuntimeException("Source not specified for " + this.getName() + ".");
+			throw new RuntimeException("Source not specified for " + this.getName() + ".");
 		}
 	}
-	
+
 	private void parseDestination(final JSONObject JObj, final CObjectCollection<BlockProfile> Blocks){
 		String destinationName = ProfileUtils.getString(JObj, "destination");
 		if (destinationName != null) {
 			BlockProfile destination = Blocks.findCObjectByName(destinationName);
 			if (destination == null) {
-    	    	throw new RuntimeException(destinationName + " not found.");
+				throw new RuntimeException(destinationName + " not found.");
 			}
 			this.setDestination(destination);
 		}
 		else {
-	    	throw new RuntimeException("Destination not specified for " + this.getName() + ".");
+			throw new RuntimeException("Destination not specified for " + this.getName() + ".");
 		}
 	}
-	
+
 	private void parse(final JSONObject JObj, final CObjectCollection<BlockProfile> Blocks){
 		// source
 		parseSource(JObj, Blocks);
@@ -87,19 +87,19 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 	private void setSource(final BlockProfile BProfile) {
 		this.source = BProfile;
 	}
-	
+
 	public BlockProfile getSource() {
 		return this.source;
 	}
-	
+
 	private void setDestination(final BlockProfile BProfile) {
 		this.destination = BProfile;
 	}
-	
+
 	public BlockProfile getDestination() {
 		return this.destination;
 	}
-	
+
 	/*
 	 * isValid
 	 */
@@ -111,7 +111,7 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 		rtn = rtn && (this.getDestination() != null);
 		return rtn;
 	}
-	
+
 	/*
 	 * HashCode
 	 */

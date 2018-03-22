@@ -22,13 +22,13 @@ package org.cellocad.sbolgenerator.data;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Feb 27, 2018
  *
  */
 public enum RepositoryType {
 	SYNBIOHUB("synbiohub");
-	
+
 	private final String repositoryType;
 
 	RepositoryType(String repositoryType) {

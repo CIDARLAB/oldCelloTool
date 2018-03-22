@@ -32,7 +32,7 @@ import org.cellocad.eugene.runtime.environment.EURuntimeEnv;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Dec 6, 2017
  *
  */
@@ -58,5 +58,5 @@ public class Main {
 		String outputFilename = runEnv.getOptionValue(EUArgString.OUTPUTNETLIST);
 		NetlistUtils.writeJSONForNetlist(netlist, outputFilename);
 	}
-	
+
 }

@@ -31,7 +31,7 @@ import org.cellocad.common.target.data.TargetData;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 17, 2017
  *
  */
@@ -54,24 +54,24 @@ abstract public class RuntimeObject extends CObject{
 		this.netlist = netlist;
 		this.runEnv = runEnv;
 	}
-	
+
 	protected StageConfiguration getStageConfiguration() {
 		return this.stageConfiguration;
 	}
-	
+
 
 	protected TargetData getTargetData() {
 		return this.targetData;
 	}
-	
+
 	protected Netlist getNetlist() {
 		return this.netlist;
 	}
-	
+
 	protected RuntimeEnv getRuntimeEnv() {
 		return this.runEnv;
 	}
-	
+
 	protected void logTrace(String str) {
 		this.getLogger().trace(str);
 	}
@@ -83,15 +83,15 @@ abstract public class RuntimeObject extends CObject{
 	protected void logInfo(String str) {
 		this.getLogger().info(str);
 	}
-	
+
 	protected void logWarn(String str) {
 		this.getLogger().warn(str);
 	}
-	
+
 	protected void logError(String str) {
 		this.getLogger().error(str);
 	}
-	
+
 	protected void logFatal(String str) {
 		this.getLogger().fatal(str);
 	}
@@ -99,7 +99,7 @@ abstract public class RuntimeObject extends CObject{
 	protected Logger getLogger() {
 		return RuntimeObject.logger;
 	}
-	    
+
 
 	/*private void setStageConfiguration(final StageConfiguration stageConfiguration) {
 		this.stageConfiguration = stageConfiguration;
@@ -115,7 +115,7 @@ abstract public class RuntimeObject extends CObject{
 	}*/
 
 	abstract protected void run();
-	
+
 	public void execute() {
 		this.getLogger().info("Executing " + this.getName());
 		this.run();
@@ -125,5 +125,5 @@ abstract public class RuntimeObject extends CObject{
 	private final TargetData targetData;
 	private final Netlist netlist;
 	private final RuntimeEnv runEnv;
-    private static final Logger logger = LogManager.getLogger(RuntimeObject.class.getSimpleName());
+	private static final Logger logger = LogManager.getLogger(RuntimeObject.class.getSimpleName());
 }

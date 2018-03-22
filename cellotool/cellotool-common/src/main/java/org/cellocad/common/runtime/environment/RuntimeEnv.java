@@ -34,49 +34,49 @@ import org.cellocad.common.target.runtime.environment.TargetArgString;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 13, 2017
  *
  */
 public class RuntimeEnv extends CObject{
-	
+
 	private void init(){
 		this.parser = new DefaultParser();
-		this.options = new Options();		
+		this.options = new Options();
 	}
-	
+
 	public RuntimeEnv(final String[] args){
 		super();
 		init();
 		this.setOptions();
 		try {
 			line = parser.parse(this.getOptions(), args);
-	    }
-	    catch(ParseException e) {
-	        // oops, something went wrong
-	        System.err.println( "Parsing failed.  Reason: " + e.getMessage() );
-	    }
+		}
+		catch(ParseException e) {
+			// oops, something went wrong
+			System.err.println( "Parsing failed.  Reason: " + e.getMessage() );
+		}
 		if (this.hasOption(ArgString.HELP)) {
 			this.printHelp();
 			Utils.exit(0);
 		}
 	}
-	
+
 	// print help
 	public void printHelp() {
-		 HelpFormatter formatter = new HelpFormatter();
-		 String name = this.getName();
-		 if (name.isEmpty()) {
-			 name = "\"EXECUTABLE\"";
-		 }
-		 formatter.printHelp(name, this.getOptions(), true);
+		HelpFormatter formatter = new HelpFormatter();
+		String name = this.getName();
+		if (name.isEmpty()) {
+			name = "\"EXECUTABLE\"";
+		}
+		formatter.printHelp(name, this.getOptions(), true);
 	}
 
 	// getter and setter
 	protected Options getOptions() {
 		return this.options;
 	}
-	
+
 	protected void setOptions() {
 		Options options = this.getOptions();
 		options.addOption(this.getHelpOption());
@@ -93,49 +93,49 @@ public class RuntimeEnv extends CObject{
 		Option rtn = new Option( ArgString.HELP, false, ArgDescription.HELP_DESCRIPTION);
 		return rtn;
 	}
-	
+
 	private Option getTargetDataFileOption(){
 		Option rtn = new Option( ArgString.TARGETDATAFILE, true, ArgDescription.TARGETDATAFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	private Option getTargetDataDirOption(){
 		Option rtn = new Option( ArgString.TARGETDATADIR, true, ArgDescription.TARGETDATADIR_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	protected Option getOptionsDirOption(){
 		Option rtn = new Option( TargetArgString.OPTIONS, true, TargetArgDescription.OPTIONS_DESCRIPTION);
 		return rtn;
 	}
-	
+
 	protected Option getOutputDirOption(){
 		Option rtn = new Option( TargetArgString.OUTPUTDIR, true, TargetArgDescription.OUTPUTDIR_DESCRIPTION);
 		return rtn;
 	}
-	
+
 	protected Option getPythonDirOption(){
 		Option rtn = new Option( TargetArgString.PYTHONDIR, true, TargetArgDescription.PYTHONDIR_DESCRIPTION);
 		return rtn;
 	}
-	
+
 	// get Values
 	protected String getDefault(final String str){
 		String rtn = null;
 		switch (str) {
-        case TargetArgString.OUTPUTDIR:
-        	rtn = "";
-        	rtn += Utils.getWorkingDirectory();
-        	break; 
-        case TargetArgString.PYTHONDIR:
-        	rtn = "";
-        	break;
+		case TargetArgString.OUTPUTDIR:
+			rtn = "";
+			rtn += Utils.getWorkingDirectory();
+			break;
+		case TargetArgString.PYTHONDIR:
+			rtn = "";
+			break;
 		}
 		return rtn;
 	}
-	
+
 	public String getOptionValue(final String str){
 		String rtn = null;
 		rtn = line.getOptionValue(str);
@@ -144,19 +144,19 @@ public class RuntimeEnv extends CObject{
 		}
 		return rtn;
 	}
-	
+
 	public String getOptionValue(final char c){
 		String rtn = null;
 		rtn = line.getOptionValue(c);
 		return rtn;
 	}
-	
+
 	public boolean hasOption(final String str){
 		boolean rtn = false;
 		rtn = line.hasOption(str);
 		return rtn;
 	}
-	
+
 	public boolean hasOption(final char c){
 		boolean rtn = false;
 		rtn = line.hasOption(c);
@@ -164,10 +164,10 @@ public class RuntimeEnv extends CObject{
 	}
 
 	protected void makeRequired(final Option arg){
-		arg.setRequired(true);		
+		arg.setRequired(true);
 	}
-	    
+
 	private CommandLineParser parser;
-    private CommandLine line;
-    private Options options;
+	private CommandLine line;
+	private Options options;
 }

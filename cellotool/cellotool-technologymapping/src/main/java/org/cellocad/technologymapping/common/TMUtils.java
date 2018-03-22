@@ -46,7 +46,7 @@ import org.cellocad.technologymapping.data.Part;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 12, 2018
  *
  */
@@ -66,7 +66,7 @@ public class TMUtils{
 
 	/**
 	 * Get all the input nodes in the netlist.
-	 * 
+	 *
 	 * @param netlist the netlist from which to collect input nodes.
 	 * @return the input nodes in the netlist.
 	 */
@@ -84,7 +84,7 @@ public class TMUtils{
 
 	/**
 	 * Get all the output nodes in a netlist.
-	 * 
+	 *
 	 * @param netlist the netlist from which to collect output nodes.
 	 * @return the output nodes in the netlist.
 	 */
@@ -102,7 +102,7 @@ public class TMUtils{
 
 	/**
 	 * Get all the logic nodes in the netlist.
-	 * 
+	 *
 	 * @param netlist the netlist from which to collect logic nodes.
 	 * @return the logic nodes in the netlist.
 	 */
@@ -111,9 +111,9 @@ public class TMUtils{
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
 			TMNode node = netlist.getVertexAtIdx(i);
-				if (!node.getNodeType().equals("TopOutput")
-				&&
-				!node.getNodeType().equals("TopInput")) {
+			if (!node.getNodeType().equals("TopOutput")
+					&&
+					!node.getNodeType().equals("TopInput")) {
 				rtn.add(node);
 			}
 		}
@@ -122,7 +122,7 @@ public class TMUtils{
 
 	/**
 	 * Get the set of groups present in a gate library.
-	 * 
+	 *
 	 * @param gateLibrary the gate library from which to build the list of groups.
 	 * @return the set of groups present in the library.
 	 */
@@ -137,7 +137,7 @@ public class TMUtils{
 
 	/**
 	 * Get a map of library gates to their type.
-	 * 
+	 *
 	 * @param gateLibrary the gate library from which to build the type map.
 	 * @return a map from gate type to a list of gates of that type.
 	 */
@@ -155,7 +155,7 @@ public class TMUtils{
 
 	/**
 	 * Check if there are nodes in the netlist without a gate assignment.
-	 * 
+	 *
 	 * @param netlist the netlist to check for assignments.
 	 * @return true if there are nodes without an assignment.
 	 */
@@ -176,7 +176,7 @@ public class TMUtils{
 
 	/**
 	 * Assign promoter activities to a list of boolean values from a low-high reference pair.
-	 * 
+	 *
 	 * @param logic the boolean list to which to assign activities.
 	 * @param inputActivitiy the activity values for false and true boolean states.
 	 * @return the list of promoter activities.
@@ -195,13 +195,13 @@ public class TMUtils{
 
 	/**
 	 * Set activities to all input nodes based on their boolean logic values.
-	 * 
+	 *
 	 * @param techMap the TechMap on which to assign input activities.
 	 * @param netlist the Netlist corresponding to the TechMap.
 	 * @param inputActivityReference the map from input name to reference low-high activity pair.
 	 */
 	public static void initInputActivities(TMNetlist netlist,
-										   Map<String,Pair<Double,Double>> inputActivityReference) {
+			Map<String,Pair<Double,Double>> inputActivityReference) {
 		List<TMNode> nodes = TMUtils.getInputNodes(netlist);
 		for (TMNode node : nodes) {
 			Pair<Double,Double> inputRef = inputActivityReference.get(node.getGate().getName());
@@ -213,7 +213,7 @@ public class TMUtils{
 
 	/**
 	 * Initialize toxicity at the output nodes.
-	 * 
+	 *
 	 * @param netlist the TMNetlist on which to assign output toxicity.
 	 */
 	public static void initOutputToxicity(TMNetlist netlist) {
@@ -227,7 +227,7 @@ public class TMUtils{
 
 	/**
 	 * Find the minimum growth (highest toxicity) for a TMNode.
-	 * 
+	 *
 	 * @param techNode the TechNode to search.
 	 */
 	public static Double minGrowth(TMNode node) {
@@ -240,7 +240,7 @@ public class TMUtils{
 
 	/**
 	 * Find the minimum growth (highest toxicity) for a TMNetlist.
-	 * 
+	 *
 	 * @param netlist the TMNetlist to search.
 	 */
 	public static Double minGrowth(TMNetlist netlist) {
@@ -257,12 +257,12 @@ public class TMUtils{
 
 	/**
 	 * Get the total number of roadblocks for the assignment.
-	 * 
+	 *
 	 * @return the number of roadblocks.
 	 */
 	public static Integer getNumRoadblocks(TMNetlist netlist,
-										   Collection<String> logicRoadblocks,
-										   Collection<String> inputRoadblocks) {
+			Collection<String> logicRoadblocks,
+			Collection<String> inputRoadblocks) {
 		int rtn = 0;
 		int num = netlist.getNumVertex();
 		for (int i = 0; i < num; i++) {
@@ -276,12 +276,12 @@ public class TMUtils{
 
 	/**
 	 * Get the number of roadblocks for a particular TMNode.
-	 * 
+	 *
 	 * @return the number of roadblocks.
 	 */
 	private static Integer getNumRoadblocks(TMNode node,
-											Collection<String> logicRoadblocks,
-											Collection<String> inputRoadblocks) {
+			Collection<String> logicRoadblocks,
+			Collection<String> inputRoadblocks) {
 		int rtn = 0;
 		Integer numInputRoadblocks = 0;
 		Integer numLogicRoadblocks = 0;
@@ -293,7 +293,7 @@ public class TMUtils{
 				numInputRoadblocks++;
 			}
 			if (logicRoadblocks.contains(src.getGate().getPromoter())) {
-					numLogicRoadblocks++;
+				numLogicRoadblocks++;
 			}
 		}
 		int total = numInputRoadblocks + numLogicRoadblocks;
@@ -307,7 +307,7 @@ public class TMUtils{
 
 	/**
 	 * Do a random assignment of gates onto the tech node map. Don't update the netlist.
-	 * 
+	 *
 	 * @param techMap the techMap on which to make the assignment.
 	 * @param netlist the netlist corresponding to the TechMap.
 	 * @param gateLibrary the gate library from which to make assignments.
@@ -318,7 +318,7 @@ public class TMUtils{
 		// Map<String,List<Gate>> gatesByType = TMUtils.getGatesByType(gateLibrary);
 		// Map<String,Iterator<Gate>> it = new HashMap<>();
 		// for (String type : gatesByType.keySet()) {
-			// it.put(type,gatesByType.get(type).iterator());
+		// it.put(type,gatesByType.get(type).iterator());
 		// }
 		Collections.shuffle(gateLibrary);
 		Iterator<Gate> it = gateLibrary.iterator();
@@ -333,8 +333,8 @@ public class TMUtils{
 				// 							   + " (node '" + node.getName() + "') exist in the library.");
 				// }
 				while (node.getGate() == null
-					   ||
-					   node.getGate() == new Gate()) {
+						||
+						node.getGate() == new Gate()) {
 					if (!it.hasNext()) {
 						throw new RuntimeException("Not enough gates in the library to cover the netlist.");
 					}
@@ -349,7 +349,7 @@ public class TMUtils{
 
 	/**
 	 * Assign input sensors from a library to a netlist.
-	 * 
+	 *
 	 * @param netlist the TMNetlist on which to assign input sensors.
 	 * @param inputLibrary the input library from which to make assignments.
 	 */
@@ -367,7 +367,7 @@ public class TMUtils{
 
 	/**
 	 * Assign output reporters from a library to a netlist.
-	 * 
+	 *
 	 * @param netlist the TMNetlist on which to assign output reporters.
 	 * @param outputLibrary the output library from which to make assignments.
 	 */
@@ -382,10 +382,10 @@ public class TMUtils{
 			node.setGate(g);
 		}
 	}
-	
+
 	/**
 	 * Update a netlist to reflect a gate assignment in a TechNode map.
-	 * 
+	 *
 	 * @param netlist the netlist to update.
 	 * @param techMap the TechMap from which to copy the assignment.
 	 */
@@ -406,7 +406,7 @@ public class TMUtils{
 
 	/**
 	 * Get a candidate gate for assignment.
-	 * 
+	 *
 	 * @param gate the Gate to be swapped or subsituted.
 	 * @param netlist the TMNetlist to use when checking for gate validity.
 	 * @param gateLibrary the gate library from which to pull candidates.
@@ -421,8 +421,8 @@ public class TMUtils{
 				options.add(g);
 			}
 			if (!netlist.hasGatesOfGroup(g.getGroup())
-				||
-				netlist.hasGate(g)) {
+					||
+					netlist.hasGate(g)) {
 				options.add(g);
 			}
 		}

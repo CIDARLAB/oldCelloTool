@@ -38,7 +38,7 @@ import org.junit.Test;
 
 /**
  * @author: Tim Jones
- * 
+ *
  * @date: Feb 23, 2018
  *
  */
@@ -56,13 +56,13 @@ public class LogicSynthesisTest{
 		String resourcesFilepath = TestUtils.getResourcesFilepath()	+ Utils.getFileSeparator();
 
 		String tempDir = TestUtils.createTempDirectory().toString();
-		
+
 		String[] args = new String[] {"-verilogFile",resourcesFilepath + verilogFilePrefix + ".v",
-									  "-targetDataDir",resourcesFilepath,
-									  "-targetDataFile","Eco1C1G1T1.UCF.json",
-									  "-configDir",resourcesFilepath,
-									  "-configFile","config.json",
-									  "-outputDir",tempDir};
+				"-targetDataDir",resourcesFilepath,
+				"-targetDataFile","Eco1C1G1T1.UCF.json",
+				"-configDir",resourcesFilepath,
+				"-configFile","config.json",
+				"-outputDir",tempDir};
 
 		Stage currentStage = null;
 		// RuntimeEnv
@@ -82,8 +82,8 @@ public class LogicSynthesisTest{
 		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
 		LS.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
-										 + Utils.getFileSeparator()
-										 + verilogFilePrefix + ".json");
+				+ Utils.getFileSeparator()
+				+ verilogFilePrefix + ".json");
 		Utils.deleteDirectory(new File(tempDir));
 	}
 

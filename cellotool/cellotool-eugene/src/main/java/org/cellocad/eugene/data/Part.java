@@ -24,7 +24,7 @@ import org.cellocad.common.CObject;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Feb 27, 2018
  *
  */

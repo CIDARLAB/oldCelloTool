@@ -26,7 +26,7 @@ import org.sbolstandard.core2.SequenceOntology;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Feb 27, 2018
  *
  */
@@ -37,7 +37,7 @@ public enum PartType {
 	RBS("rbs"),
 	RIBOZYME("ribozyme"),
 	SCAR("scar");
-	
+
 	private final String partType;
 
 	PartType(String partType) {

@@ -28,7 +28,7 @@ import org.cellocad.partition.common.Block;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */
@@ -41,20 +41,20 @@ public class PNode extends VertexTemplate<PEdge> {
 		this.setPlaceLock(false);
 		blockPlaceLock = "";
 	}
-	
+
 	public PNode(){
 		super();
 		init();
 	}
-	
+
 	public PNode(final PNode other){
 		super(other);
-		Block block = other.getMyBlock(); 
+		Block block = other.getMyBlock();
 		this.setMyBlock(block);
 		this.setLocked(other.getLocked());
 		if (block != null)
 			block.addPNode(this);
-        this.setMyWeight(other.getMyWeight());
+		this.setMyWeight(other.getMyWeight());
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class PNode extends VertexTemplate<PEdge> {
 	protected void addMeToDst(final PEdge e){
 		e.setDst(this);
 	}
-	
+
 	@Override
 	public PEdge createT(final PEdge e) {
 		PEdge rtn = null;
@@ -82,18 +82,18 @@ public class PNode extends VertexTemplate<PEdge> {
 			this.myBlock = block;
 		}
 	}
-		
+
 	public Block getMyBlock(){
 		return this.myBlock;
 	}
-	
+
 	/*
 	 * lock
 	 */
 	public void setLocked(boolean locked){
 		this.locked = locked;
 	}
-	
+
 	public void enableLocked(){
 		this.setLocked(true);
 	}
@@ -105,7 +105,7 @@ public class PNode extends VertexTemplate<PEdge> {
 	public void toggleLocked(){
 		this.setLocked(!this.getLocked());
 	}
-		
+
 	public boolean getLocked(){
 		return this.locked;
 	}
@@ -118,18 +118,18 @@ public class PNode extends VertexTemplate<PEdge> {
 			this.blockPlaceLock = block;
 		}
 	}
-		
+
 	public String getMyBlockLock(){
 		return this.blockPlaceLock;
 	}
-	
+
 	/*
 	 * PlaceLock
 	 */
 	public void setPlaceLock(boolean locked){
 		this.placeLock = locked;
 	}
-	
+
 	public void enablePlaceLock(){
 		this.setPlaceLock(true);
 	}
@@ -141,7 +141,7 @@ public class PNode extends VertexTemplate<PEdge> {
 	public void togglePlaceLock(){
 		this.setPlaceLock(!this.getLocked());
 	}
-		
+
 	public boolean getPlaceLock(){
 		return this.placeLock;
 	}
@@ -152,11 +152,11 @@ public class PNode extends VertexTemplate<PEdge> {
 	protected void setMyWeight(final Weight w){
 		this.myWeight = w;
 	}
-	
+
 	public Weight getMyWeight(){
 		return this.myWeight;
 	}
-	
+
 	/*
 	 * is valid?
 	 */
@@ -208,7 +208,7 @@ public class PNode extends VertexTemplate<PEdge> {
 			return false;
 		return true;
 	}
-	
+
 	/*
 	 * toString
 	 */
@@ -230,7 +230,7 @@ public class PNode extends VertexTemplate<PEdge> {
 		rtn = rtn + this.getEntryToString("locked", locked);
 		// placeLock
 		if (this.getPlaceLock()) {
-			rtn = rtn + this.getEntryToString("placeLock", blockPlaceLock);	
+			rtn = rtn + this.getEntryToString("placeLock", blockPlaceLock);
 		}
 		// Weight
 		rtn = rtn + Utils.getTabCharacter();
@@ -239,7 +239,7 @@ public class PNode extends VertexTemplate<PEdge> {
 		indentStr = this.getMyWeight().toString();
 		indentStr = Utils.addIndent(1, indentStr);
 		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + Utils.getNewLine();	
+		rtn = rtn + Utils.getNewLine();
 		// toString
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "toString() = ";
@@ -253,7 +253,7 @@ public class PNode extends VertexTemplate<PEdge> {
 		rtn = rtn + "]";
 		return rtn;
 	}
-	
+
 	private Block myBlock;
 	private boolean locked;
 	private Weight myWeight;

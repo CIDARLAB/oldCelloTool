@@ -24,14 +24,14 @@ import org.cellocad.common.CObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 15, 2017
  *
  */
 public abstract class HyperGraphTemplate<V extends HyperVertexTemplate<H>, H extends HyperEdgeTemplate<V>> extends CObject {
-	
+
 	public HyperGraphTemplate(){
 		super();
 	}
-	
+
 }

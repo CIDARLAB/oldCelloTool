@@ -38,7 +38,7 @@ import org.json.simple.parser.ParseException;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
@@ -48,7 +48,7 @@ public class NetlistUtils {
 		Utils.isNullRuntimeException(runEnv, "runEnv");
 		Netlist rtn = null;
 		String inputNetlistFilename = runEnv.getOptionValue(inputNetlist);
-	    Reader inputNetlistReader = null;
+		Reader inputNetlistReader = null;
 		JSONObject jsonTop = null;
 		// Create File Reader
 		try {
@@ -58,23 +58,23 @@ public class NetlistUtils {
 		}
 		// Create JSON object from File Reader
 		JSONParser parser = new JSONParser();
-        try{
-        	jsonTop = (JSONObject) parser.parse(inputNetlistReader);
-	    } catch (IOException e) {
-	        throw new RuntimeException("File IO Exception for: " + inputNetlistFilename + ".");
-	    } catch (ParseException e) {
-	        throw new RuntimeException("Parser Exception for: " + inputNetlistFilename + ".");
-	    }
+		try{
+			jsonTop = (JSONObject) parser.parse(inputNetlistReader);
+		} catch (IOException e) {
+			throw new RuntimeException("File IO Exception for: " + inputNetlistFilename + ".");
+		} catch (ParseException e) {
+			throw new RuntimeException("Parser Exception for: " + inputNetlistFilename + ".");
+		}
 		// Create TargetInfo object
-        rtn = new Netlist(jsonTop);
-	    try {
-	    	inputNetlistReader.close();
+		rtn = new Netlist(jsonTop);
+		try {
+			inputNetlistReader.close();
 		} catch (IOException e) {
 			throw new RuntimeException("Error with file: " + inputNetlistFilename);
 		}
-	    return rtn;
+		return rtn;
 	}
-	
+
 	static public void writeJSONForNetlist(final Netlist netlist, final String filename){
 		try {
 			OutputStream outputStream = new FileOutputStream(filename);
@@ -88,5 +88,5 @@ public class NetlistUtils {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

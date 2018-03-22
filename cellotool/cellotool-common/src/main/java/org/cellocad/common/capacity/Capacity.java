@@ -28,14 +28,14 @@ import org.cellocad.common.profile.DerivedProfile;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 7, 2017
  *
  */
 
-// TODO: Capacity is a constraint, make constraint engine 
+// TODO: Capacity is a constraint, make constraint engine
 public class Capacity extends DerivedProfile<CapacityProfile> {
-	
+
 	public Capacity(final CapacityProfile CP, final CObjectCollection<CObject> capacityUnits) {
 		super(CP);
 		Utils.isNullRuntimeException(capacityUnits, "CapacityUnits");
@@ -45,14 +45,14 @@ public class Capacity extends DerivedProfile<CapacityProfile> {
 		this.setUpperBoundType(CP.getUpperBoundType());
 		myUnits = new Units(CP.getCapacityUnits(), capacityUnits);
 	}
-	
+
 	/*
 	 * units
 	 */
 	private Units getUnits() {
 		return this.myUnits;
 	}
-	
+
 	/*
 	 * Evaluate
 	 */
@@ -62,7 +62,7 @@ public class Capacity extends DerivedProfile<CapacityProfile> {
 		valid = (this.isValid() && wObj.isValid());
 		valid = valid && (this.getUnits().doUnitsAlign(wObj.getUnits()));
 		if (valid) {
-			int total = wObj.getTotal();			
+			int total = wObj.getTotal();
 			if (total < this.getLowerBound()) {
 				rtn = EvaluateResult.UNDERFLOW;
 			}
@@ -75,7 +75,7 @@ public class Capacity extends DerivedProfile<CapacityProfile> {
 		}
 		return rtn;
 	}
-	
+
 	public boolean canFit (final Weight wObj) {
 		boolean rtn = false;
 		EvaluateResult result = this.evaluate(wObj);
@@ -110,37 +110,37 @@ public class Capacity extends DerivedProfile<CapacityProfile> {
 			this.setUpperBound(this.getUpperBound() + 1);
 		}
 	}
-	
+
 	private void setLowerBound(int lowerBound) {
 		this.lowerBound = lowerBound;
 	}
-	
+
 	public int getLowerBound() {
 		return this.lowerBound;
 	}
-	
+
 	private void setLowerBoundType(final LowerBoundType type) {
 		this.lowerBoundType = type;
 		this.reduce();
 	}
-	
+
 	public LowerBoundType getLowerBoundType() {
 		return this.lowerBoundType;
 	}
-		
+
 	private void setUpperBound(int upperBound) {
 		this.upperBound = upperBound;
 	}
-	
+
 	public int getUpperBound() {
 		return this.upperBound;
 	}
-	
+
 	private void setUpperBoundType(final UpperBoundType type) {
 		this.upperBoundType = type;
 		this.reduce();
 	}
-	
+
 	public UpperBoundType getUpperBoundType() {
 		return this.upperBoundType;
 	}
@@ -158,7 +158,7 @@ public class Capacity extends DerivedProfile<CapacityProfile> {
 		rtn = rtn && (this.getUnits().isValid());
 		return rtn;
 	}
-	
+
 	/*
 	 * HashCode
 	 */
@@ -201,10 +201,10 @@ public class Capacity extends DerivedProfile<CapacityProfile> {
 			return false;
 		return true;
 	}
-	
+
 	/*
 	 * toString
-	 */	
+	 */
 	@Override
 	public String toString() {
 		String rtn = "";
@@ -224,7 +224,7 @@ public class Capacity extends DerivedProfile<CapacityProfile> {
 		rtn = rtn + this.getUpperBoundType().toString();
 		rtn = rtn + " ";
 		rtn = rtn + this.getUpperBound();
-		rtn = rtn + Utils.getNewLine();	
+		rtn = rtn + Utils.getNewLine();
 		// toString
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "toString() = ";

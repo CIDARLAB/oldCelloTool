@@ -28,7 +28,7 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 15, 2018
  *
  */
@@ -70,7 +70,7 @@ public abstract class PairTable<L extends Number, R extends Number> extends CObj
 	 */
 	public Pair<L,R> getRow(int i) {
 		return new Pair<L,R>(this.getData().getFirst().get(i),
-							 this.getData().getSecond().get(i));
+				this.getData().getSecond().get(i));
 	}
 
 	/**
@@ -108,7 +108,7 @@ public abstract class PairTable<L extends Number, R extends Number> extends CObj
 		}
 		return rtn;
 	}
-	
+
 	/**
 	 * Get the minimum first-value in the table greater than the specified value.
 	 *
@@ -120,8 +120,8 @@ public abstract class PairTable<L extends Number, R extends Number> extends CObj
 		for (int i = 0; i < this.size(); i++) {
 			L first = this.getRow(i).getFirst();
 			if ((first.doubleValue() >= x.doubleValue())
-				&&
-				(first.doubleValue() < sup)) {
+					&&
+					(first.doubleValue() < sup)) {
 				sup = first.doubleValue();
 				rtn = i;
 			}
@@ -140,8 +140,8 @@ public abstract class PairTable<L extends Number, R extends Number> extends CObj
 		for (int i = 0; i < this.size(); i++) {
 			L first = this.getRow(i).getFirst();
 			if ((first.doubleValue() <= x.doubleValue())
-				&&
-				(first.doubleValue() > inf)) {
+					&&
+					(first.doubleValue() > inf)) {
 				inf = first.doubleValue();
 				rtn = i;
 			}
@@ -162,7 +162,7 @@ public abstract class PairTable<L extends Number, R extends Number> extends CObj
 	private void setData(Pair<List<L>, List<R>> data) {
 		this.data = data;
 	}
-	
+
 	/*
 	 * HashCode
 	 */

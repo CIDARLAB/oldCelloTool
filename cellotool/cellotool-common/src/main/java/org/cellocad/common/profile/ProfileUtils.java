@@ -25,7 +25,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
@@ -51,11 +51,11 @@ public class ProfileUtils {
 				&& Utils.isLong(value)
 				) {
 			Long temp = (Long) value;
-	    	rtn = (Byte) temp.byteValue();
+			rtn = (Byte) temp.byteValue();
 		}
 		return rtn;
 	}
-	
+
 	public static Character getCharacter(final JSONObject JObj, final String member) {
 		Character rtn = null;
 		Object value = ProfileUtils.getObject(JObj, member);
@@ -63,9 +63,9 @@ public class ProfileUtils {
 				(value != null)
 				&& Utils.isString(value)
 				) {
-	    	String data = (String) value;
-	    	if (data.length() > 0)
-	    		rtn = data.charAt(0);
+			String data = (String) value;
+			if (data.length() > 0)
+				rtn = data.charAt(0);
 		}
 		return rtn;
 	}
@@ -77,8 +77,8 @@ public class ProfileUtils {
 				(value != null)
 				&& Utils.isLong(value)
 				) {
-        	Long temp = (Long) value;
-        	rtn = (Short) temp.shortValue();
+			Long temp = (Long) value;
+			rtn = (Short) temp.shortValue();
 		}
 		return rtn;
 	}
@@ -90,8 +90,8 @@ public class ProfileUtils {
 				(value != null)
 				&& Utils.isLong(value)
 				) {
-        	Long temp = (Long) value;
-        	rtn = (Integer) temp.intValue();
+			Long temp = (Long) value;
+			rtn = (Integer) temp.intValue();
 		}
 		return rtn;
 	}
@@ -115,8 +115,8 @@ public class ProfileUtils {
 				(value != null)
 				&& Utils.isDouble(value)
 				) {
-        	Double temp = (Double) value;
-        	rtn = (Float) temp.floatValue();
+			Double temp = (Double) value;
+			rtn = (Float) temp.floatValue();
 		}
 		return rtn;
 	}
@@ -128,11 +128,11 @@ public class ProfileUtils {
 				(value != null)
 				&& Utils.isDouble(value)
 				) {
-        	rtn = (Double) value;
+			rtn = (Double) value;
 		}
 		return rtn;
 	}
-	
+
 	public static String getString(final JSONObject JObj, final String member) {
 		String rtn = null;
 		Object value = ProfileUtils.getObject(JObj, member);
@@ -140,7 +140,7 @@ public class ProfileUtils {
 				(value != null)
 				&& Utils.isString(value)
 				) {
-        	rtn = (String) value;
+			rtn = (String) value;
 		}
 		return rtn;
 	}

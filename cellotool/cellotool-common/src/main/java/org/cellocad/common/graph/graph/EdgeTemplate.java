@@ -25,31 +25,31 @@ import org.cellocad.common.graph.AbstractEdge;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 2, 2017
  *
  */
 public class EdgeTemplate<T extends VertexTemplate<?>> extends AbstractEdge<T>{
-	
+
 	public EdgeTemplate(){
 		super();
-        this.setSrc(null);
-        this.setDst(null);
+		this.setSrc(null);
+		this.setDst(null);
 	}
-	
+
 	public EdgeTemplate(final T Src) {
 		super(Src);
-        this.setDst(null);
-    }
-	
+		this.setDst(null);
+	}
+
 	public EdgeTemplate(final EdgeTemplate<T> other) {
 		super(other);
-    }
-	
+	}
+
 	public void setDst(final T Dst){
 		this.addDst(Dst);
 	}
-		
+
 	public T getDst(){
 		return this.getDstAtIdx(0);
 	}
@@ -58,7 +58,7 @@ public class EdgeTemplate<T extends VertexTemplate<?>> extends AbstractEdge<T>{
 	public void addDst(final T Dst){
 		if (Dst != null) {
 			if (this.getNumDst() == 0) {
-				this.getMyDst().add(Dst);				
+				this.getMyDst().add(Dst);
 			}
 			else {
 				this.getMyDst().set(0, Dst);

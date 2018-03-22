@@ -22,21 +22,21 @@ package org.cellocad.common.graph.hypergraph;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 15, 2017
  *
  */
 public class HyperEdge extends HyperEdgeTemplate<HyperVertex>{
-	
+
 	public HyperEdge(){
-        super();
+		super();
 	}
-	
+
 	public HyperEdge(final HyperVertex Src) {
-        super(Src);
-    }
-	
+		super(Src);
+	}
+
 	public HyperEdge(final HyperEdge other) {
 		super(other);
-    }
+	}
 }

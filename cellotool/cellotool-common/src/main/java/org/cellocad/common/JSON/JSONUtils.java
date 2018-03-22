@@ -24,7 +24,7 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
@@ -53,9 +53,9 @@ public class JSONUtils {
 			rtn += "null";
 		}
 		rtn += "\": ";
-		return rtn;	
+		return rtn;
 	}
-	
+
 	static public String getEntryToString(final String name, final String value) {
 		String rtn = "";
 		rtn += JSONUtils.getKeyEntryToString(name);
@@ -71,7 +71,7 @@ public class JSONUtils {
 		rtn += Utils.getNewLine();
 		return rtn;
 	}
-	
+
 	static public String getEntryToString(final String name, int value) {
 		String rtn = "";
 		rtn += JSONUtils.getKeyEntryToString(name);
@@ -80,14 +80,14 @@ public class JSONUtils {
 		rtn += Utils.getNewLine();
 		return rtn;
 	}
-	
+
 	static public String getStartEntryString() {
 		String rtn = "";
 		rtn += "{";
 		rtn += Utils.getNewLine();
 		return rtn;
 	}
-	
+
 	static public String getEndEntryString() {
 		String rtn = "";
 		rtn += "}";
@@ -112,7 +112,7 @@ public class JSONUtils {
 		rtn += Utils.getNewLine();
 		return rtn;
 	}
-	
+
 	static public String getEndArrayString() {
 		String rtn = "";
 		rtn += "]";

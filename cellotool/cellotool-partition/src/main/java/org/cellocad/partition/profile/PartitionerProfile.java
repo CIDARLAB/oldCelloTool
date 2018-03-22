@@ -28,20 +28,20 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
 public class PartitionerProfile extends ProfileObject {
-	
-	
-	public PartitionerProfile(final CObjectCollection<PartitionProfile> PProfiles, 
+
+
+	public PartitionerProfile(final CObjectCollection<PartitionProfile> PProfiles,
 			final CObjectCollection<AlgorithmProfile> AProfiles,
 			final JSONObject JObj){
 		super(JObj);
-		parse(PProfiles, AProfiles, JObj);		
+		parse(PProfiles, AProfiles, JObj);
 	}
-	
+
 	/*
 	 * Parse
 	 */
@@ -70,7 +70,7 @@ public class PartitionerProfile extends ProfileObject {
 		}
 		this.setAProfile(APObj);
 	}
-	
+
 	private void parse(final CObjectCollection<PartitionProfile> PProfiles,
 			final CObjectCollection<AlgorithmProfile> AProfiles,
 			final JSONObject JObj){
@@ -81,8 +81,8 @@ public class PartitionerProfile extends ProfileObject {
 		// AlgorithmProfile
 		this.parseAlgorithmProfile(AProfiles, JObj);
 	}
-	
-	
+
+
 	private void setPProfile(final PartitionProfile PProfile){
 		this.PProfile = PProfile;
 	}
@@ -90,15 +90,15 @@ public class PartitionerProfile extends ProfileObject {
 	public PartitionProfile getPProfile(){
 		return this.PProfile;
 	}
-	
+
 	private void setAProfile(final AlgorithmProfile AProfile){
 		this.AProfile = AProfile;
 	}
-		
+
 	public AlgorithmProfile getAProfile(){
 		return this.AProfile;
 	}
-	
+
 	/*
 	 * HashCode
 	 */

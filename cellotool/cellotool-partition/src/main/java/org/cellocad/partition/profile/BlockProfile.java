@@ -27,12 +27,12 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
 public class BlockProfile extends CapacityCollectionProfile {
-	
+
 	public BlockProfile(final JSONObject JObj,
 			final CObjectCollection<CapacityProfile> Capacity){
 		super(JObj, Capacity);

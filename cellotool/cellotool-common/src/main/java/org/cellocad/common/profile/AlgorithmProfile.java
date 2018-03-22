@@ -32,7 +32,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
@@ -52,9 +52,9 @@ public class AlgorithmProfile extends ProfileObject {
 		floatParameters = new HashMap<String, Float>();
 		doubleParameters = new HashMap<String, Double>();
 		stringParameters = new HashMap<String, String>();
-		this.parse(JObj);		
+		this.parse(JObj);
 	}
-	
+
 	public String getTypeName(){
 		String rtn = "";
 		int type = this.getType();
@@ -64,70 +64,70 @@ public class AlgorithmProfile extends ProfileObject {
 		}
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, Boolean> getBooleanParameter(final String name){
 		Boolean value = booleanParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, Boolean> rtn = new Pair<Boolean, Boolean>(new Boolean(first), new Boolean(value));
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, Byte> getByteParameter(final String name){
 		Byte value = byteParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, Byte> rtn = new Pair<Boolean, Byte>(new Boolean(first), new Byte(value));
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, Character> getCharParameter(final String name){
 		Character value = charParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, Character> rtn = new Pair<Boolean, Character>(new Boolean(first), new Character(value));
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, Short> getShortParameter(final String name){
 		Short value = shortParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, Short> rtn = new Pair<Boolean, Short>(new Boolean(first), new Short(value));
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, Integer> getIntParameter(final String name){
 		Integer value = intParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, Integer> rtn = new Pair<Boolean, Integer>(new Boolean(first), new Integer(value));
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, Long> getLongParameter(final String name){
 		Long value = longParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, Long> rtn = new Pair<Boolean, Long>(new Boolean(first), new Long(value));
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, Float> getFloatParameter(final String name){
 		Float value = floatParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, Float> rtn = new Pair<Boolean, Float>(new Boolean(first), new Float(value));
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, Double> getDoubleParameter(final String name){
 		Double value = doubleParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, Double> rtn = new Pair<Boolean, Double>(new Boolean(first), new Double(value));
 		return rtn;
 	}
-	
+
 	public Pair<Boolean, String> getStringParameter(final String name){
 		String value = stringParameters.get(name);
 		boolean first = (value != null);
 		Pair<Boolean, String> rtn = new Pair<Boolean, String>(new Boolean(first), new String(value));
 		return rtn;
 	}
-	
+
 	/*
 	 * Parse
 	 */
@@ -166,57 +166,57 @@ public class AlgorithmProfile extends ProfileObject {
 			throw new RuntimeException("Value not specified for parameter " + name + ".");
 		}
 		switch (type) {
-	        case BOOLEAN:{
-	        	Boolean data = ProfileUtils.getBoolean(JObj, "value");
-	        	booleanParameters.put(name, data);
-	            break;
-	        }
-	        case BYTE:{
-	        	Byte data = ProfileUtils.getByte(JObj, "value");
-	        	byteParameters.put(name, data);
-	            break;
-	        }
-	        case CHAR:{
-	        	Character c = ProfileUtils.getCharacter(JObj, "value");
-	        	charParameters.put(name, c);
-	            break;
-	        }
-	        case SHORT:{
-	        	Short data = ProfileUtils.getShort(JObj, "value");
-	        	shortParameters.put(name, data);
-	            break;
-	        }
-	        case INT:{
-	        	Integer data = ProfileUtils.getInteger(JObj, "value");
-	        	intParameters.put(name, data);
-	            break;
-	        }
-	        case LONG:{
-	        	Long data = ProfileUtils.getLong(JObj, "value");
-	        	longParameters.put(name, data);
-	            break;
-	        }
-	        case FLOAT:{
-	        	Float data = ProfileUtils.getFloat(JObj, "value");
-	        	floatParameters.put(name, data);
-	            break;
-	        }
-	        case DOUBLE:{
-	        	Double data = ProfileUtils.getDouble(JObj, "value");
-	        	doubleParameters.put(name, data);
-	            break;
-	        }
-	        case STRING:{
-	        	String data = ProfileUtils.getString(JObj, "value");
-	        	stringParameters.put(name, data);
-	            break;
-	        }
-	        default:{
-				throw new RuntimeException("Invalid type for parameter " + name + ".");
-	        }
+		case BOOLEAN:{
+			Boolean data = ProfileUtils.getBoolean(JObj, "value");
+			booleanParameters.put(name, data);
+			break;
+		}
+		case BYTE:{
+			Byte data = ProfileUtils.getByte(JObj, "value");
+			byteParameters.put(name, data);
+			break;
+		}
+		case CHAR:{
+			Character c = ProfileUtils.getCharacter(JObj, "value");
+			charParameters.put(name, c);
+			break;
+		}
+		case SHORT:{
+			Short data = ProfileUtils.getShort(JObj, "value");
+			shortParameters.put(name, data);
+			break;
+		}
+		case INT:{
+			Integer data = ProfileUtils.getInteger(JObj, "value");
+			intParameters.put(name, data);
+			break;
+		}
+		case LONG:{
+			Long data = ProfileUtils.getLong(JObj, "value");
+			longParameters.put(name, data);
+			break;
+		}
+		case FLOAT:{
+			Float data = ProfileUtils.getFloat(JObj, "value");
+			floatParameters.put(name, data);
+			break;
+		}
+		case DOUBLE:{
+			Double data = ProfileUtils.getDouble(JObj, "value");
+			doubleParameters.put(name, data);
+			break;
+		}
+		case STRING:{
+			String data = ProfileUtils.getString(JObj, "value");
+			stringParameters.put(name, data);
+			break;
+		}
+		default:{
+			throw new RuntimeException("Invalid type for parameter " + name + ".");
+		}
 		}
 	}
-	
+
 	private void parseParameters(final JSONObject JObj){
 		JSONArray jsonArr = (JSONArray) JObj.get("parameters");
 		for (int i = 0; i < jsonArr.size(); i++){

@@ -25,7 +25,7 @@ import org.cellocad.partition.graph.PNode;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */
@@ -36,38 +36,38 @@ public class Move extends CObject {
 		this.setSrcBlock(null);
 		this.setDstBlock(null);
 	}
-	
+
 	public Move(final PNode node, final Block srcBlock, final Block dstBlock){
 		this.setPNode(node);
 		this.setSrcBlock(srcBlock);
 		this.setDstBlock(dstBlock);
 	}
-	
+
 	/*
 	 * null source block means not assigned
 	 * null destination block means remove/no assignment
 	 */
-	
+
 	public void setPNode(final PNode node){
 		this.node = node;
 	}
-		
+
 	public PNode getPNode(){
 		return this.node;
 	}
-	
+
 	public void setSrcBlock(final Block srcBlock){
 		this.srcBlock = srcBlock;
 	}
-		
+
 	public Block getSrcBlock(){
 		return this.srcBlock;
 	}
-	
+
 	public void setDstBlock(final Block dstBlock){
 		this.dstBlock = dstBlock;
 	}
-	
+
 	public Block getDstBlock(){
 		return this.dstBlock;
 	}
@@ -75,14 +75,14 @@ public class Move extends CObject {
 	/*
 	 * Undo
 	 */
-	
+
 	public void makeUndo(){
 		Block Src = this.getSrcBlock();
 		Block Dst = this.getDstBlock();
 		this.setSrcBlock(Dst);
 		this.setDstBlock(Src);
 	}
-	
+
 	public Move createUndo(final Move move){
 		Move rtn = new Move(move.getPNode(), move.getDstBlock(), move.getSrcBlock());
 		return rtn;
@@ -150,7 +150,7 @@ public class Move extends CObject {
 			return false;
 		return true;
 	}
-	
+
 	/*
 	 * toString
 	 */
@@ -158,7 +158,7 @@ public class Move extends CObject {
 	public String toString() {
 		return "Move [node=" + node + ", srcBlock=" + srcBlock.getName() + ", dstBlock=" + dstBlock.getName() + "]";
 	}
-	
+
 	private PNode node;
 	private Block srcBlock;
 	private Block dstBlock;

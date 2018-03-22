@@ -23,7 +23,7 @@ package org.cellocad.common.graph.graph;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */

@@ -32,7 +32,7 @@ import org.cellocad.logicsynthesis.runtime.environment.LSRuntimeEnv;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
@@ -60,5 +60,5 @@ public class Main {
 		String outputFilename = runEnv.getOptionValue(LSArgString.OUTPUTNETLIST);
 		NetlistUtils.writeJSONForNetlist(netlist, outputFilename);
 	}
-	
+
 }

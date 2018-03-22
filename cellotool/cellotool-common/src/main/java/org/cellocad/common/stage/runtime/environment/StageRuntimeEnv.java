@@ -26,7 +26,7 @@ import org.cellocad.common.runtime.environment.RuntimeEnv;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
@@ -53,18 +53,18 @@ public class StageRuntimeEnv extends RuntimeEnv{
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	protected Option getInputNetlistOption(){
 		Option rtn = new Option( StageArgString.INPUTNETLIST, true, StageArgDescription.INPUTNETLIST_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
-	
+
+
 	protected Option getOutputNetlistOption(){
 		Option rtn = new Option( StageArgString.OUTPUTNETLIST, true, StageArgDescription.OUTPUTNETLIST_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 }

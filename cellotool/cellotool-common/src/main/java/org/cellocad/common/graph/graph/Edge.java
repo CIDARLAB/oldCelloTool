@@ -22,7 +22,7 @@ package org.cellocad.common.graph.graph;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */
@@ -31,16 +31,16 @@ public class Edge extends EdgeTemplate<Vertex>{
 	public Edge(){
 		super();
 	}
-	
+
 	public Edge(final Vertex Src, final Vertex Dst) {
-        super(Src);
-        this.setDst(Dst);
-    }
-	
+		super(Src);
+		this.setDst(Dst);
+	}
+
 	public Edge(final Edge other) {
 		super(other);
-        this.setSrc(other.getSrc());
-        this.setDst(other.getDst());
-    }
+		this.setSrc(other.getSrc());
+		this.setDst(other.getDst());
+	}
 
 }

@@ -23,7 +23,7 @@ package org.cellocad.partition.common;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 8, 2017
  *
  */
@@ -34,7 +34,7 @@ public class PTUtils {
 		rtn = PTUtils.class.getClassLoader().getResource(".").getPath();
 		return rtn;
 	}
-	
+
 	static public String getResourcesFilepath(){
 		String rtn = "";
 		rtn += PTUtils.getFilepath();

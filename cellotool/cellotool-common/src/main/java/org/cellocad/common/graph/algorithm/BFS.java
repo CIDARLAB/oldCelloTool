@@ -32,7 +32,7 @@ import org.cellocad.common.graph.AbstractVertex.VertexType;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 1, 2017
  *
  */
@@ -41,15 +41,15 @@ public class BFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>, G exten
 	private void init() {
 		BFS = new LinkedList<V>();
 	}
-	
+
 	private void reset() {
 		this.getBFS().clear();
 	}
-	
+
 	private void doBFS() {
 		G g = this.getGraph();
 		Queue<V> q = new LinkedList<V>();
-		// initialize VertexDiscovery		
+		// initialize VertexDiscovery
 		// get Source Vertex
 		for (int i = 0; i < g.getNumVertex(); i++) {
 			V v = g.getVertexAtIdx(i);
@@ -77,26 +77,26 @@ public class BFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>, G exten
 					if (dst.getVertexDiscovery() == VertexDiscovery.UNVISITED) {
 						this.getBFS().add(dst);
 						q.add(dst);
-					}	
+					}
 				}
 			}
 			v.setVertexDiscovery(VertexDiscovery.VISITED);
 		}
 	}
-	
+
 	private Queue<V> getBFS() {
 		return this.BFS;
 	}
-	
+
 	public BFS() {
 		init();
 	}
-	
+
 	public BFS(final G g) {
 		init();
 		this.setGraph(g);
 	}
-	
+
 	public void setGraph(final G g) {
 		reset();
 		this.graph = g;
@@ -106,7 +106,7 @@ public class BFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>, G exten
 	public G getGraph() {
 		return this.graph;
 	}
-	
+
 	public V getNextVertex() {
 		V rtn = null;
 		if (!this.getBFS().isEmpty())

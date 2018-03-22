@@ -30,7 +30,7 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 15, 2017
  *
  */
@@ -38,9 +38,9 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 
 	private void init(){
 		this.inEdges = new ArrayList<T>();
-		this.outEdges = new ArrayList<T>();		
+		this.outEdges = new ArrayList<T>();
 	}
-	
+
 	private void reset() {
 		this.setVertexType(VertexType.NONE);
 		this.setVertexColor(VertexColor.WHITE);
@@ -48,17 +48,17 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 		this.inEdges.clear();
 		this.outEdges.clear();
 	}
-	
+
 	public AbstractVertex(){
 		init();
 		reset();
 	}
 
-	abstract protected void addMeToSrc(T e);	
+	abstract protected void addMeToSrc(T e);
 	abstract protected void addMeToDst(T e);
-	
+
 	public abstract T createT(T e);
-	
+
 	/*@SuppressWarnings("unchecked")
 	private T createT(T other) {
 		T rtn = null;
@@ -72,7 +72,7 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 		}
 		return rtn;
 	}*/
-	
+
 	public AbstractVertex(final AbstractVertex<T> other){
 		super(other);
 		init();
@@ -93,52 +93,52 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 			this.addMeToDst(e);
 		}
 	}
-	
+
 	/*
 	 * VertexType
 	 */
 	public enum VertexType {
-	    NONE, SOURCE, SINK
+		NONE, SOURCE, SINK
 	}
-	
+
 	public void setVertexType(final VertexType vertexType) {
 		this.vertexType = vertexType;
 	}
-	
+
 	public VertexType getVertexType() {
 		return this.vertexType;
 	}
-	
+
 	/*
 	 * VertexColor
 	 */
 	public enum VertexColor {
-	    BLACK, GREY, WHITE
+		BLACK, GREY, WHITE
 	}
-	
+
 	public void setVertexColor(final VertexColor vertexColor) {
 		this.vertexColor = vertexColor;
 	}
-	
+
 	public VertexColor getVertexColor() {
 		return this.vertexColor;
 	}
-	
+
 	/*
 	 * VertexDiscovery
 	 */
 	public enum VertexDiscovery {
-	    VISITED, TOUCHED, UNVISITED
+		VISITED, TOUCHED, UNVISITED
 	}
-	
+
 	public void setVertexDiscovery(final VertexDiscovery vertexDiscovery) {
 		this.vertexDiscovery = vertexDiscovery;
 	}
-	
+
 	public VertexDiscovery getVertexDiscovery() {
 		return this.vertexDiscovery;
 	}
-	
+
 	/*
 	 * InEdge
 	 */
@@ -147,33 +147,33 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 			inEdges.add(edge);
 		}
 	}
-	
+
 	public void removeInEdge(final T edge){
 		if (edge != null){
 			inEdges.remove(edge);
 		}
 	}
-	
+
 	public T getInEdgeAtIdx(int index){
 		T rtn = null;
 		if (
 				(index >= 0) &&
 				(index < this.getNumInEdge())
-			){
-			rtn = inEdges.get(index);	
-		} 
+				){
+			rtn = inEdges.get(index);
+		}
 		return rtn;
 	}
-	
+
 	public int getNumInEdge(){
 		int rtn = inEdges.size();
 		return rtn;
 	}
-	
+
 	public void clearInEdge(){
 		inEdges.clear();
 	}
-	
+
 	/*
 	 * OutEdge
 	 */
@@ -182,33 +182,33 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 			outEdges.add(edge);
 		}
 	}
-	
+
 	public void removeOutEdge(final T edge){
 		if (edge != null){
 			outEdges.remove(edge);
 		}
 	}
-	
+
 	public T getOutEdgeAtIdx(int index){
 		T rtn = null;
 		if (
 				(index >= 0) &&
 				(index < this.getNumOutEdge())
-			){
-			rtn = outEdges.get(index);	
+				){
+			rtn = outEdges.get(index);
 		}
 		return rtn;
 	}
-	
+
 	public int getNumOutEdge(){
 		int rtn = outEdges.size();
 		return rtn;
 	}
-	
+
 	public void clearOutEdge(){
 		outEdges.clear();
 	}
-	
+
 	/*
 	 * dot file
 	 */
@@ -221,11 +221,11 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 		rtn += Utils.getNewLine();
 		return rtn;
 	}
-	
+
 	public void printDot(final Writer os) throws IOException{
-		os.write(this.getData());			
+		os.write(this.getData());
 	}
-	
+
 	/*
 	 * HashCode
 	 */
@@ -290,7 +290,7 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 		rtn = rtn + " dst = ";
 		for (int i = 0; i < edge.getNumDst(); i ++) {
 			rtn = rtn + edge.getDstAtIdx(i).getName();
-			rtn = rtn + ", ";			
+			rtn = rtn + ", ";
 		}
 		rtn = rtn + "]";
 		return rtn;
@@ -308,7 +308,7 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 		}
 		return rtn;
 	}
-	
+
 	protected String getOutEdgesToString() {
 		String rtn = "";
 		//outEdge
@@ -321,7 +321,7 @@ abstract public class AbstractVertex <T extends AbstractEdge<?>> extends CObject
 		}
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";

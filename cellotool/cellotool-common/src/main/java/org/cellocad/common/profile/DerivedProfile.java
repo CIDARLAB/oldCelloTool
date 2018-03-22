@@ -25,7 +25,7 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 9, 2017
  *
  */
@@ -40,10 +40,10 @@ public class DerivedProfile<T extends ProfileObject> extends CObject{
 	public T getProfile() {
 		return this.Profile;
 	}
-	
+
 	protected void setProfile(final T Profile) {
 		this.Profile = Profile;
 	}
-	
+
 	private T Profile;
 }

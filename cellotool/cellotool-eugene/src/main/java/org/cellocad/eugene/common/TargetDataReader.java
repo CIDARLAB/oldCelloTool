@@ -35,7 +35,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Feb 27, 2018
  *
  */

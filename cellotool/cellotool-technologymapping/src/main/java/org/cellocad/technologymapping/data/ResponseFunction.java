@@ -26,7 +26,7 @@ import org.cellocad.common.CObject;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 9, 2018
  *
  */
@@ -43,7 +43,7 @@ public class ResponseFunction<T extends Curve> extends CObject implements Double
 	public Double apply(double value) {
 		return this.getCurve().apply(value);
 	}
-	
+
 	/**
 	 * @return the offThreshold
 	 */

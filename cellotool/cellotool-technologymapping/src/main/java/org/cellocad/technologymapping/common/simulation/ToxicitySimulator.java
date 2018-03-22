@@ -46,7 +46,7 @@ import org.cellocad.technologymapping.data.Toxicity;
  * Toxicity values for reach repressor in that row of the truth table.
  *
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 16, 2018
  *
  */
@@ -65,7 +65,7 @@ public class ToxicitySimulator extends Simulator{
 
 	/**
 	 * Create a new ToxicitySimulator.
-	 * 
+	 *
 	 * @param netlist the TMetlist corresponding to the TechMap.
 	 */
 	public ToxicitySimulator(TMNetlist netlist) {
@@ -80,7 +80,7 @@ public class ToxicitySimulator extends Simulator{
 
 	/**
 	 * Assign toxicities for a TMNetlist.
-	 * 
+	 *
 	 * @param techMap the TechMap on which to assign toxicities.
 	 * @param netlist the netlist corresponding to the TechMap.
 	 */
@@ -95,7 +95,7 @@ public class ToxicitySimulator extends Simulator{
 
 	/**
 	 * Compute toxicities for a TMNetlist.
-	 * 
+	 *
 	 * @param netlist the TMNetlist for which to compute toxicities.
 	 */
 	private static List<Double> computeToxicity(TMNetlist netlist) {
@@ -140,7 +140,7 @@ public class ToxicitySimulator extends Simulator{
 
 	/**
 	 * Compute and assign toxicity for an individual TMNode.
-	 * 
+	 *
 	 * @param techNode the TMNode to which to assign toxicity.
 	 */
 	private static List<Double> computeNodeToxicity(final TMNode node) {
@@ -192,7 +192,7 @@ public class ToxicitySimulator extends Simulator{
 
 	/**
 	 * Collect the input activities for a TMNode.
-	 * 
+	 *
 	 * @param node the TMNode from which to collect.
 	 */
 	private static List<Double> collectInputActivities(final TMNode node) {
@@ -216,7 +216,7 @@ public class ToxicitySimulator extends Simulator{
 
 	/**
 	 * Get a column from a matrix (List of Lists).
-	 * 
+	 *
 	 * @param input the set of inputs.
 	 * @param i the column to select.
 	 */
@@ -230,7 +230,7 @@ public class ToxicitySimulator extends Simulator{
 
 	/**
 	 * Throw an exception if the toxicity list is ragged.
-	 * 
+	 *
 	 * @param input the set of inputs to check.
 	 * @return false if the inputs are not ragged.
 	 */

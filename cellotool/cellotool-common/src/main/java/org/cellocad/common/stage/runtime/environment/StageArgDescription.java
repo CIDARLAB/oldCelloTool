@@ -24,17 +24,17 @@ import org.cellocad.common.runtime.environment.ArgDescription;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
 public class StageArgDescription extends ArgDescription{
 
-    /*
-     * Default
-     */
-    final static public String CONFIGFILE_DESCRIPTION = "config file for Stage";
-    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Stage";
-    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Stage";
-    
+	/*
+	 * Default
+	 */
+	final static public String CONFIGFILE_DESCRIPTION = "config file for Stage";
+	final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Stage";
+	final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Stage";
+
 }

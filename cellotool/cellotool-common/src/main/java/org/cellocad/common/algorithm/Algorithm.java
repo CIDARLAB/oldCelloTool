@@ -26,7 +26,7 @@ import org.cellocad.common.CObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 17, 2017
  *
  */
@@ -50,23 +50,23 @@ public abstract class Algorithm extends CObject{
 	protected void logInfo(String str) {
 		this.getLogger().info(str);
 	}
-	
+
 	protected void logWarn(String str) {
 		this.getLogger().warn(str);
 	}
-	
+
 	protected void logError(String str) {
 		this.getLogger().error(str);
 	}
-	
+
 	protected void logFatal(String str) {
 		this.getLogger().fatal(str);
 	}
-	
+
 	protected Logger getLogger() {
 		return Algorithm.logger;
 	}
-	
-    private static final Logger logger = LogManager.getLogger(Algorithm.class.getSimpleName());
-    
+
+	private static final Logger logger = LogManager.getLogger(Algorithm.class.getSimpleName());
+
 }

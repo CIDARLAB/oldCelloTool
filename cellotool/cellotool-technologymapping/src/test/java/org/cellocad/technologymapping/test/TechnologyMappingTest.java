@@ -41,7 +41,7 @@ import org.junit.Test;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 6, 2018
  *
  */
@@ -54,11 +54,11 @@ public class TechnologyMappingTest{
 		String tempDir = TestUtils.createTempDirectory().toString();
 
 		String[] args = new String[] {"-verilogFile","foo.v",
-									  "-targetDataDir",resourcesFilepath,
-									  "-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
-									  "-configDir",resourcesFilepath,
-									  "-configFile","config.json",
-									  "-outputDir",tempDir};
+				"-targetDataDir",resourcesFilepath,
+				"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
+				"-configDir",resourcesFilepath,
+				"-configFile","config.json",
+				"-outputDir",tempDir};
 
 		Stage currentStage = null;
 		// RuntimeEnv
@@ -76,8 +76,8 @@ public class TechnologyMappingTest{
 		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		TM.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
-										 + Utils.getFileSeparator()
-										 + "technologymapping_netlist.json");
+				+ Utils.getFileSeparator()
+				+ "technologymapping_netlist.json");
 		Utils.deleteDirectory(new File(tempDir));
 	}
 

@@ -26,35 +26,35 @@ import org.cellocad.common.graph.graph.EdgeTemplate;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
 public class PEdge extends EdgeTemplate<PNode>{
-	
+
 	private void init() {
 		myWeight = new Weight();
 	}
-	
+
 	public PEdge(){
 		super();
-        this.setSrc(null);
-        this.setDst(null);
-        init();
+		this.setSrc(null);
+		this.setDst(null);
+		init();
 	}
-	
+
 	public PEdge(final PNode Src, final PNode Dst) {
 		this();
-        this.setSrc(Src);
-        this.setDst(Dst);
-    }
-	
+		this.setSrc(Src);
+		this.setDst(Dst);
+	}
+
 	public PEdge(final PEdge other) {
 		super(other);
-        this.setSrc(other.getSrc());
-        this.setDst(other.getDst());
-        this.setMyWeight(other.getMyWeight());
-    }
+		this.setSrc(other.getSrc());
+		this.setDst(other.getDst());
+		this.setMyWeight(other.getMyWeight());
+	}
 
 	/*
 	 * Weight
@@ -62,11 +62,11 @@ public class PEdge extends EdgeTemplate<PNode>{
 	protected void setMyWeight(Weight w){
 		this.myWeight = w;
 	}
-	
+
 	public Weight getMyWeight(){
 		return this.myWeight;
 	}
-	
+
 	/*
 	 * HashCode
 	 */
@@ -116,7 +116,7 @@ public class PEdge extends EdgeTemplate<PNode>{
 		indentStr = this.getMyWeight().toString();
 		indentStr = Utils.addIndent(1, indentStr);
 		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + Utils.getNewLine();	
+		rtn = rtn + Utils.getNewLine();
 		// toString
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "toString() = ";

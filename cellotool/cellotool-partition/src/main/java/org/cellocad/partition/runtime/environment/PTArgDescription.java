@@ -24,17 +24,17 @@ import org.cellocad.common.stage.runtime.environment.StageArgDescription;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 5, 2017
  *
  */
 public class PTArgDescription extends StageArgDescription{
-	
-    /*
-     * Partitioning (PT)
-     */
-    final static public String CONFIGFILEPT_DESCRIPTION = "config file for Partitioning (PT)";
-    final static public String INPUTNETLISTPT_DESCRIPTION = "input netlist file for Partitioning (PT)";
-    final static public String OUTPUTNETLISTPT_DESCRIPTION = "output netlist file for Partitioning (PT)";
-    
+
+	/*
+	 * Partitioning (PT)
+	 */
+	final static public String CONFIGFILEPT_DESCRIPTION = "config file for Partitioning (PT)";
+	final static public String INPUTNETLISTPT_DESCRIPTION = "input netlist file for Partitioning (PT)";
+	final static public String OUTPUTNETLISTPT_DESCRIPTION = "output netlist file for Partitioning (PT)";
+
 }

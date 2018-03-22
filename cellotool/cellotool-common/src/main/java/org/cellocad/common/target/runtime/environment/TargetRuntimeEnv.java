@@ -27,7 +27,7 @@ import org.cellocad.common.runtime.environment.RuntimeEnv;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
@@ -46,7 +46,7 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		options.addOption(this.getTargetConfigDirOption());
 		options.addOption(this.getNetlistConstraintFileOption());
 	}
-	
+
 	/*
 	 * Options
 	 */
@@ -55,22 +55,22 @@ public class TargetRuntimeEnv extends RuntimeEnv{
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	protected Option getTargetConfigFileOption(){
 		Option rtn = new Option( TargetArgString.TARGETCONFIGFILE, true, TargetArgDescription.TARGETCONFIGFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	protected Option getTargetConfigDirOption(){
 		Option rtn = new Option( TargetArgString.TARGETCONFIGDIR, true, TargetArgDescription.TARGETCONFIGDIR_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
-		
+
 	protected Option getNetlistConstraintFileOption(){
 		Option rtn = new Option( TargetArgString.NETLISTCONSTRAINTFILE, true, TargetArgDescription.NETLISTCONSTRAINTFILE_DESCRIPTION);
 		return rtn;
 	}
-	
+
 }

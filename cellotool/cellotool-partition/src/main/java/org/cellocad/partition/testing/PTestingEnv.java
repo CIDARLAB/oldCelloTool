@@ -26,7 +26,7 @@ import org.cellocad.common.runtime.environment.RuntimeEnv;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 28, 2017
  *
  */
@@ -34,40 +34,40 @@ import org.cellocad.common.runtime.environment.RuntimeEnv;
 //TODO: create runtime environment, then pass to each stage of CAD tool
 public class PTestingEnv extends RuntimeEnv{
 
-	
+
 	public PTestingEnv(final String[] args){
 		super(args);
 	}
-	
+
 	private Option getHelpOption(){
 		Option rtn = new Option( HELP, "print this message" );
-		return rtn;		
+		return rtn;
 	}
 
 	private Option getProfileFilenameOption(){
 		Option rtn = new Option( PROFILEFILENAME, true, "profile filename" );
 		this.makeRequired(rtn);
-		return rtn;		
+		return rtn;
 	}
 
 	private Option getProfileNameOption(){
 		Option rtn = new Option( PROFILENAME, true, "profile name" );
 		this.makeRequired(rtn);
-		return rtn;		
+		return rtn;
 	}
-	
+
 	private Option getGraphFilenameOption(){
 		Option rtn = new Option( GRAPHFILENAME, true, "graph filename" );
 		this.makeRequired(rtn);
-		return rtn;		
+		return rtn;
 	}
-	
+
 	private Option getCelloDirOption0(){
 		Option rtn = new Option( CELLODIR, true, "cello directory top directory" );
 		this.makeRequired(rtn);
-		return rtn;		
+		return rtn;
 	}
-	
+
 	protected Options getOptions(){
 		Options rtn = new Options();
 		// help
@@ -83,9 +83,9 @@ public class PTestingEnv extends RuntimeEnv{
 		return rtn;
 	}
 
-    static public String HELP = "help";
-    static public String PROFILEFILENAME= "profileFilename";
-    static public String PROFILENAME = "profileName";
-    static public String GRAPHFILENAME = "graphFilename";
-    static public String CELLODIR = "celloDir";
+	static public String HELP = "help";
+	static public String PROFILEFILENAME= "profileFilename";
+	static public String PROFILENAME = "profileName";
+	static public String GRAPHFILENAME = "graphFilename";
+	static public String CELLODIR = "celloDir";
 }

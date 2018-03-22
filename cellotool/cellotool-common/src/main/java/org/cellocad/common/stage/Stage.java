@@ -34,12 +34,12 @@ import org.json.simple.parser.ParseException;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
 public class Stage extends ProfileObject{
-	
+
 	private void init() {
 	}
 
@@ -48,7 +48,7 @@ public class Stage extends ProfileObject{
 		init();
 		parse(JObj, TargetConfigurationDir);
 	}
-	
+
 	public Stage(final JSONObject JObj){
 		this(JObj, "");
 	}
@@ -56,8 +56,8 @@ public class Stage extends ProfileObject{
 	 * Parse
 	 */
 	private void parseStageConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
-    	// parse StageConfiguration
-	    Reader configFileReader = null;
+		// parse StageConfiguration
+		Reader configFileReader = null;
 		JSONObject jsonObj = null;
 		String configFilename = null;
 		// type
@@ -80,13 +80,13 @@ public class Stage extends ProfileObject{
 			}
 			// Create JSON object from File Reader
 			JSONParser parser = new JSONParser();
-	        try{
-	        	jsonObj = (JSONObject) parser.parse(configFileReader);
-		    } catch (IOException e) {
-		        throw new RuntimeException("File IO Exception for: " + configFilename + ".");
-		    } catch (ParseException e) {
-		        throw new RuntimeException("Parser Exception for: " + configFilename + ".");
-		    }
+			try{
+				jsonObj = (JSONObject) parser.parse(configFileReader);
+			} catch (IOException e) {
+				throw new RuntimeException("File IO Exception for: " + configFilename + ".");
+			} catch (ParseException e) {
+				throw new RuntimeException("Parser Exception for: " + configFilename + ".");
+			}
 		}
 		else if (type.equalsIgnoreCase("data")) {
 			// configData
@@ -99,14 +99,14 @@ public class Stage extends ProfileObject{
 		this.setStageConfiguration(new StageConfiguration(jsonObj));
 		//close file
 		if (type.equalsIgnoreCase("file")) {
-		    try {
-		    	configFileReader.close();
+			try {
+				configFileReader.close();
 			} catch (IOException e) {
 				throw new RuntimeException("Error with file: " + configFilename);
 			}
 		}
 	}
-	
+
 	private void parse(final JSONObject JObj, final String TargetConfigurationDir){
 		this.parseStageConfiguration(JObj, TargetConfigurationDir);
 	}
@@ -117,10 +117,10 @@ public class Stage extends ProfileObject{
 	public StageConfiguration getStageConfiguration() {
 		return this.stageConfiguration;
 	}
-	
+
 	private void setStageConfiguration(final StageConfiguration sc) {
 		this.stageConfiguration = sc;
 	}
-	
+
 	StageConfiguration stageConfiguration;
 }

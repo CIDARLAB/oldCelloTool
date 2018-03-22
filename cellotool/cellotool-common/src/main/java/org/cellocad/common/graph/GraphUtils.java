@@ -38,7 +38,7 @@ import org.cellocad.common.graph.graph.Vertex;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 28, 2017
  *
  */
@@ -54,7 +54,7 @@ public class GraphUtils {
 		}
 		return rtn;
 	}
-	
+
 	static private void addVertexEdge(final String src, final String dst, final Graph g){
 		Vertex Src = null;
 		Vertex Dst = null;
@@ -66,7 +66,7 @@ public class GraphUtils {
 		Dst.addInEdge(e);
 		g.addEdge(e);
 	}
-	
+
 	static public Graph getGraph(final String filename){
 		// read csv
 		Graph rtn = new Graph();
@@ -84,15 +84,15 @@ public class GraphUtils {
 		}
 		for (CSVRecord record : records) {
 			if (record.size() < 2){
-				continue;				
+				continue;
 			}
-		    String src = record.get(0);
-		    String dst = record.get(1);
-		    if ((src != null) &&
-		    	(dst != null))
-		    {
-		    	GraphUtils.addVertexEdge(src,dst, rtn);
-		    }
+			String src = record.get(0);
+			String dst = record.get(1);
+			if ((src != null) &&
+					(dst != null))
+			{
+				GraphUtils.addVertexEdge(src,dst, rtn);
+			}
 		}
 		return rtn;
 	}
@@ -111,7 +111,7 @@ public class GraphUtils {
 			e.printStackTrace();
 		}
 	}
-	
+
 	static public void writeDotFileForGraph(final Graph G){
 		String name = G.getName();
 		if (name.isEmpty()){

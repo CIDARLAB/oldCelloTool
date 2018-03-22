@@ -28,7 +28,7 @@ import org.cellocad.technologymapping.common.netlist.TMNode;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 14, 2018
  *
  */
@@ -36,7 +36,7 @@ public class ScoreUtils{
 
 	/**
 	 * Evaluate the score for a given assignment.
-	 * 
+	 *
 	 * @param netlist the TMNetlist to score.
 	 * @return the score.
 	 */
@@ -56,7 +56,7 @@ public class ScoreUtils{
 
 	/**
 	 * Return the lowest on by highest off ratio for a TMNode.
-	 * 
+	 *
 	 * @param node the TechNode to score.
 	 * @return the on off ratio.
 	 */
@@ -78,12 +78,12 @@ public class ScoreUtils{
 			Double a = activity.get(i);
 
 			if (l == true
-				&&
-				lowestOn > a) {
+					&&
+					lowestOn > a) {
 				lowestOn = a;
 			} else if (l == false
-					   &&
-					   highestOff < a) {
+					&&
+					highestOff < a) {
 				highestOff = a;
 			}
 		}

@@ -76,8 +76,8 @@ public class Base extends SGAlgorithm{
 			e.printStackTrace();
 		}
 		this.setSbolFilename(this.getRuntimeEnv().getOptionValue("outputDir")
-							 + Utils.getFileSeparator()
-							 + this.getNetlist().getName() + ".xml");
+				+ Utils.getFileSeparator()
+				+ this.getNetlist().getName() + ".xml");
 	}
 
 	@Override
@@ -101,13 +101,13 @@ public class Base extends SGAlgorithm{
 	}
 
 	@Override
-	protected void validateParameterValues() {		
+	protected void validateParameterValues() {
 	}
 
 	@Override
 	protected void preprocessing() {
 	}
-	
+
 	@Override
 	protected void run() {
 		Netlist netlist = this.getNetlist();
@@ -147,11 +147,11 @@ public class Base extends SGAlgorithm{
 	 */
 	private SBOLDocument createSBOLDocument(Netlist netlist) throws SynBioHubException, SBOLValidationException {
 		SBOLDocument sbolDocument = new SBOLDocument();
-		
+
 		Set<String> uniquePartNames = new HashSet<>();
 
 		for (int i = 0; i < netlist.getNumVertex(); i++) {
-            NetlistNode node = netlist.getVertexAtIdx(i);
+			NetlistNode node = netlist.getVertexAtIdx(i);
 			if (!node.getNodeType().equals("TopOutput")) {
 				for (CObject part : node.getParts()) {
 					uniquePartNames.add(part.getName());
@@ -163,7 +163,7 @@ public class Base extends SGAlgorithm{
 		if (this.getRepositoryUrl() != null) {
 			frontend = new SynBioHubFrontend(this.getRepositoryUrl().toString());
 		}
-		
+
 		// create part component definitions
 		sbolDocument.setDefaultURIprefix("http://cellocad.org/v2");
 		for (String partName : uniquePartNames) {
@@ -195,21 +195,21 @@ public class Base extends SGAlgorithm{
 		}
 
 		// create transcriptional unit component definitions and sequences
-        for (int i = 0; i < netlist.getNumVertex(); i++) {
-            NetlistNode node = netlist.getVertexAtIdx(i);
-            if (!node.getNodeType().equals("TopInput") && !node.getNodeType().equals("TopOutput")) {
+		for (int i = 0; i < netlist.getNumVertex(); i++) {
+			NetlistNode node = netlist.getVertexAtIdx(i);
+			if (!node.getNodeType().equals("TopInput") && !node.getNodeType().equals("TopOutput")) {
 				// build transcriptional unit
 				List<String> txnUnit = new ArrayList<>();
 				String unitNamePrefix = "";
-                for (int j = 0; j < node.getNumInEdge(); j++) {
-                    NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
-                    for (CObject part : upstreamNode.getParts()) {
+				for (int j = 0; j < node.getNumInEdge(); j++) {
+					NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
+					for (CObject part : upstreamNode.getParts()) {
 						if (part.getType() == PartType.PROMOTER.ordinal()) {
 							txnUnit.add(part.getName());
 							unitNamePrefix += part.getName() + "_";
 						}
 					}
-                }
+				}
 				for (CObject part : node.getParts()) {
 					if (part.getType() != PartType.PROMOTER.ordinal()) {
 						txnUnit.add(part.getName());
@@ -226,30 +226,30 @@ public class Base extends SGAlgorithm{
 					Part p = this.getPartLibrary().findCObjectByName(partName);
 					Component c = cd.createComponent(partName,AccessType.PUBLIC,p.getUri());
 					SequenceAnnotation sa =
-						cd.createSequenceAnnotation("SequenceAnnotation" + String.valueOf(j),
-													"SequenceAnnotation" + String.valueOf(j) + "_Range",
-													seqCounter,
-													seqCounter + p.getSequence().length());
+							cd.createSequenceAnnotation("SequenceAnnotation" + String.valueOf(j),
+									"SequenceAnnotation" + String.valueOf(j) + "_Range",
+									seqCounter,
+									seqCounter + p.getSequence().length());
 					sa.setComponent(c.getIdentity());
 					seqCounter += p.getSequence().length() + 1;
 					sequence += p.getSequence();
 					if (j != 0) {
 						cd.createSequenceConstraint(cd.getDisplayId() + "Constraint" + String.valueOf(j),
-													RestrictionType.PRECEDES,
-													cd.getComponent(txnUnit.get(j-1)).getIdentity(),
-													cd.getComponent(partName).getIdentity());
+								RestrictionType.PRECEDES,
+								cd.getComponent(txnUnit.get(j-1)).getIdentity(),
+								cd.getComponent(partName).getIdentity());
 					}
 				}
 				Sequence s = sbolDocument.createSequence(cd.getDisplayId() + "_sequence",sequence,Sequence.IUPAC_DNA);
 				cd.addSequence(s);
-            }
+			}
 		}
 		return sbolDocument;
 	}
 
 	/**
-	 * Perform VPR model generation. 
-	 * @param selectedRepo - The specified synbiohub repository the user wants VPR model generator to connect to. 
+	 * Perform VPR model generation.
+	 * @param selectedRepo - The specified synbiohub repository the user wants VPR model generator to connect to.
 	 * @param generatedModel - The file to generate the model from.
 	 * @return The generated model.
 	 * @throws SBOLValidationException
@@ -265,7 +265,7 @@ public class Base extends SGAlgorithm{
 		interactionAdder.addInteractions(generatedModel);
 		return generatedModel;
 	}
-	
+
 	/*
 	 * Getter and Setter
 	 */
@@ -324,7 +324,7 @@ public class Base extends SGAlgorithm{
 	public void setGateLibrary(CObjectCollection<Gate> gateLibrary) {
 		this.gateLibrary = gateLibrary;
 	}
-	
+
 	/**
 	 * @return the sbolDocument
 	 */
@@ -359,5 +359,5 @@ public class Base extends SGAlgorithm{
 	private CObjectCollection<Gate> gateLibrary;
 	private SBOLDocument sbolDocument;
 	private String sbolFilename;
-	
+
 }

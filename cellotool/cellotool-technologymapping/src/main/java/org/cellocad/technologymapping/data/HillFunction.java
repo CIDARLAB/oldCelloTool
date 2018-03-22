@@ -22,7 +22,7 @@ package org.cellocad.technologymapping.data;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 9, 2018
  *
  */
@@ -31,7 +31,7 @@ public class HillFunction extends Curve {
 	private Double ymin;
 	private Double k;
 	private Double n;
-	
+
 	@Override
 	public Double apply(double input) {
 		return this.getYmin()+(this.getYmax()-this.getYmin())/(1.0 + Math.pow(input/this.getK(),this.getN()));

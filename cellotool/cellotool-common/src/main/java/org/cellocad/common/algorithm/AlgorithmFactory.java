@@ -25,14 +25,14 @@ import org.cellocad.common.profile.AlgorithmProfile;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
 public abstract class AlgorithmFactory<T extends Algorithm> extends CObject{
 
 	abstract protected T getAlgorithm(final String name);
-	
+
 	public T getAlgorithm(final AlgorithmProfile AProfile){
 		T rtn = null;
 		if (AProfile != null){

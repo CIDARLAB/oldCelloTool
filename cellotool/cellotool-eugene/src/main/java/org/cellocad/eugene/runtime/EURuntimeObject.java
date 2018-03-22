@@ -31,7 +31,7 @@ import org.cellocad.eugene.algorithm.EUAlgorithmFactory;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Dec 6, 2017
  *
  */

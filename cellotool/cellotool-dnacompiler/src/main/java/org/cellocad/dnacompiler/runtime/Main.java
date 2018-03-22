@@ -37,7 +37,7 @@ import org.cellocad.technologymapping.runtime.TMRuntimeObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 7, 2017
  *
  */
@@ -47,40 +47,40 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-	    Stage currentStage = null;
+		Stage currentStage = null;
 		// RuntimeEnv
-	    TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
+		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("dnaCompiler");
 		// VerilogFile
 		String verilogFile = runEnv.getOptionValue(TargetArgString.VERILOG);
 		// Netlist
 		Netlist netlist = new Netlist();
 		// TargetConfiguration
-	    TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
 		// Stages
 		// LogicSynthesis
-	    currentStage = targetCfg.getStageByName("LogicSynthesis");
+		currentStage = targetCfg.getStageByName("LogicSynthesis");
 		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
 		LS.execute();
 		// Partition
-	    // currentStage = targetCfg.getStageByName("Partition");
+		// currentStage = targetCfg.getStageByName("Partition");
 		// PTRuntimeObject PT = new PTRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		// PT.execute();
 		// TechnologyMapping
-	    currentStage = targetCfg.getStageByName("TechnologyMapping");
+		currentStage = targetCfg.getStageByName("TechnologyMapping");
 		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		TM.execute();
 		// Eugene
-        currentStage = targetCfg.getStageByName("Eugene");
+		currentStage = targetCfg.getStageByName("Eugene");
 		EURuntimeObject EU = new EURuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		EU.execute();
-        // SbolGenerator
-	    currentStage = targetCfg.getStageByName("SbolGenerator");
-        SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		// SbolGenerator
+		currentStage = targetCfg.getStageByName("SbolGenerator");
+		SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		SG.execute();
-        NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir") + Utils.getFileSeparator() + netlist.getName() + ".json");
+		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir") + Utils.getFileSeparator() + netlist.getName() + ".json");
 	}
 
 }

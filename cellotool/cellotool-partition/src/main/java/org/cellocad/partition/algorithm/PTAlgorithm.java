@@ -28,12 +28,12 @@ import org.cellocad.partition.graph.PGraph;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
 abstract public class PTAlgorithm extends Algorithm{
-		
+
 	public void execute(final PGraph G, final Partition P, final AlgorithmProfile AProfile, final RuntimeEnv runtimeEnv){
 		// set members
 		this.setPGraph(G);
@@ -52,15 +52,15 @@ abstract public class PTAlgorithm extends Algorithm{
 	private void setPGraph(final PGraph g){
 		this.pGraph = g;
 	}
-	
+
 	private void setPartition(final Partition P){
 		this.partition = P;
 	}
-	
+
 	private void setAlgorithmProfile(final AlgorithmProfile AP){
 		this.algorithmProfile = AP;
 	}
-	
+
 	private void setRuntimeEnv(final RuntimeEnv runtimeEnv){
 		this.runtimeEnv = runtimeEnv;
 	}
@@ -68,15 +68,15 @@ abstract public class PTAlgorithm extends Algorithm{
 	protected PGraph getPGraph(){
 		return this.pGraph;
 	}
-	
+
 	protected Partition getPartition(){
 		return this.partition;
 	}
-	
+
 	protected AlgorithmProfile getAlgorithmProfile(){
 		return this.algorithmProfile;
 	}
-	
+
 	protected RuntimeEnv getRuntimeEnv(){
 		return this.runtimeEnv;
 	}
@@ -93,7 +93,7 @@ abstract public class PTAlgorithm extends Algorithm{
 		result = prime * result + ((partition == null) ? 0 : partition.hashCode());
 		return result;
 	}
-	
+
 	/*
 	 * Equals
 	 */
@@ -128,5 +128,5 @@ abstract public class PTAlgorithm extends Algorithm{
 	private Partition partition;
 	private AlgorithmProfile algorithmProfile;
 	private RuntimeEnv runtimeEnv;
-	
+
 }

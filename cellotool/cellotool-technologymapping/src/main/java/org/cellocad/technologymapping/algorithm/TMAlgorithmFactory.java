@@ -25,7 +25,7 @@ import org.cellocad.technologymapping.algorithm.SimulatedAnnealing.SimulatedAnne
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 4, 2017
  *
  */
@@ -39,5 +39,5 @@ public class TMAlgorithmFactory extends AlgorithmFactory<TMAlgorithm>{
 		}
 		return rtn;
 	}
-	
+
 }

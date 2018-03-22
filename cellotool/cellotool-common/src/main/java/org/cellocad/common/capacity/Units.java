@@ -29,7 +29,7 @@ import org.cellocad.common.profile.ProfileObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 7, 2017
  *
  */
@@ -46,13 +46,13 @@ public class Units extends CObject {
 	private void copyUnitsEnables(final boolean[] array) {
 		this.UnitsEnables = Arrays.copyOf(array, array.length);
 	}
-	
+
 	public Units() {
 		super();
 		this.disableUnitsEnabled();
 		this.initUnitsEnables(0);
 	}
-	
+
 	public Units(Units other) {
 		super(other);
 		Utils.isNullRuntimeException(other, "Other");
@@ -60,12 +60,12 @@ public class Units extends CObject {
 		this.copyUnitsEnables(other.UnitsEnables);
 		this.setProfileUnits(other.getProfileUnits());
 	}
-	
+
 	public Units(final CObjectCollection<ProfileObject> units, final CObjectCollection<CObject> allUnits) {
 		this();
 		resetWithProfileObject(units, allUnits);
 	}
-	
+
 	public void resetWithProfileObject(final CObjectCollection<ProfileObject> units, final CObjectCollection<CObject> allUnits) {
 		Utils.isNullRuntimeException(units, "Units");
 		CObjectCollection<CObject> unitsTemp = new CObjectCollection<CObject>();
@@ -78,7 +78,7 @@ public class Units extends CObject {
 		}
 		this.resetWithCObject(unitsTemp, allUnits);
 	}
-	
+
 	public void resetWithCObject(final CObjectCollection<CObject> units, final CObjectCollection<CObject> allUnits) {
 		Utils.isNullRuntimeException(units, "Units");
 		Utils.isNullRuntimeException(allUnits, "AllUnits");
@@ -95,7 +95,7 @@ public class Units extends CObject {
 		}
 		this.enableUnitsEnabled();
 	}
-	
+
 	/*
 	 * Units
 	 */
@@ -106,7 +106,7 @@ public class Units extends CObject {
 	private void setProfileUnits(CObjectCollection<CObject> units) {
 		this.allUnits = units;
 	}
-	
+
 	private boolean getUnitsEnabled() {
 		return this.UnitsEnabled;
 	}
@@ -118,11 +118,11 @@ public class Units extends CObject {
 	private void enableUnitsEnabled() {
 		this.setUnitsEnabled(true);
 	}
-	
+
 	private void disableUnitsEnabled() {
 		this.setUnitsEnabled(false);
 	}
-	
+
 	/*
 	 * doUnitsAlign
 	 */
@@ -137,7 +137,7 @@ public class Units extends CObject {
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * isValid
 	 */
@@ -151,7 +151,7 @@ public class Units extends CObject {
 		rtn = rtn && state;
 		return rtn;
 	}
-		
+
 	/*
 	 * HashCode
 	 */
@@ -208,7 +208,7 @@ public class Units extends CObject {
 		}
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";

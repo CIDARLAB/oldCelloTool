@@ -24,16 +24,16 @@ import org.cellocad.common.stage.runtime.environment.StageArgDescription;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
 public class LSArgDescription extends StageArgDescription{
 
-    /*
-     * Logic Synthesis (LS)
-     */
-    final static public String CONFIGFILE_DESCRIPTION = "config file for Logic Synthesis (LS)";
-    final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Logic Synthesis (LS)";
-    final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Logic Synthesis (LS)";
+	/*
+	 * Logic Synthesis (LS)
+	 */
+	final static public String CONFIGFILE_DESCRIPTION = "config file for Logic Synthesis (LS)";
+	final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Logic Synthesis (LS)";
+	final static public String OUTPUTNETLIST_DESCRIPTION = "output netlist file for Logic Synthesis (LS)";
 }

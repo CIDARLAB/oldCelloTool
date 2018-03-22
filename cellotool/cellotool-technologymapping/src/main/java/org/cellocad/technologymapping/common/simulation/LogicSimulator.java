@@ -33,7 +33,7 @@ import org.cellocad.technologymapping.common.netlist.TMNode;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 7, 2018
  *
  */
@@ -48,7 +48,7 @@ public class LogicSimulator extends Simulator{
 
 	/**
 	 * Create a new LogicSimulator.
-	 * 
+	 *
 	 * @param netlist the TMNetlist on which to operate.
 	 */
 	public LogicSimulator(TMNetlist netlist) {
@@ -134,7 +134,7 @@ public class LogicSimulator extends Simulator{
 		}
 		return rtn;
 	}
-	
+
 	private static List<Boolean> computeLogicalNot(List<Boolean> input) {
 		List<Boolean> rtn = new ArrayList<>();
 		for (Boolean b : input) {

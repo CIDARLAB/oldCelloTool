@@ -31,7 +31,7 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 31, 2017
  *
  */
@@ -51,7 +51,7 @@ public class PartitionUtils {
 			e.printStackTrace();
 		}
 	}
-	
+
 	static public void writeDotFileForPartition(final Partition P){
 		String name = P.getName();
 		if (name.isEmpty()){
@@ -59,5 +59,5 @@ public class PartitionUtils {
 		}
 		PartitionUtils.writeDotFileForPartition(P, name);
 	}
-	
+
 }

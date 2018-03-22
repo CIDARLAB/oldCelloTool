@@ -31,7 +31,7 @@ import org.cellocad.common.graph.AbstractVertex.VertexType;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 1, 2017
  *
  */
@@ -40,15 +40,15 @@ public class DFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>, G exten
 	private void init() {
 		DFS = new Stack<V>();
 	}
-	
+
 	private void reset() {
 		this.getDFS().clear();
 	}
-	
+
 	private void doDFS() {
 		G g = this.getGraph();
 		Stack<V> stack = new Stack<V>();
-		// initialize VertexDiscovery		
+		// initialize VertexDiscovery
 		// get Source Vertex
 		for (int i = 0; i < g.getNumVertex(); i++) {
 			V v = g.getVertexAtIdx(i);
@@ -82,20 +82,20 @@ public class DFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>, G exten
 			v.setVertexDiscovery(VertexDiscovery.VISITED);
 		}
 	}
-	
+
 	private Stack<V> getDFS() {
 		return this.DFS;
 	}
-	
+
 	public DFS() {
 		init();
 	}
-	
+
 	public DFS(final G g) {
 		init();
 		this.setGraph(g);
 	}
-	
+
 	public void setGraph(final G g) {
 		reset();
 		this.graph = g;
@@ -105,7 +105,7 @@ public class DFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>, G exten
 	public G getGraph() {
 		return this.graph;
 	}
-	
+
 	public V getNextVertex() {
 		V rtn = null;
 		if (!this.getDFS().isEmpty())

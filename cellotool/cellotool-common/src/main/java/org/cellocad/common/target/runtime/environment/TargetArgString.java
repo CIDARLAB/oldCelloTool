@@ -24,18 +24,18 @@ import org.cellocad.common.runtime.environment.ArgString;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
 public class TargetArgString extends ArgString{
-	
-    /*
-     * Target
-     */
+
+	/*
+	 * Target
+	 */
 	final static public String VERILOG = "verilogFile";
-    final static public String TARGETCONFIGFILE = "configFile";
+	final static public String TARGETCONFIGFILE = "configFile";
 	final static public String TARGETCONFIGDIR = "configDir";
 	final static public String NETLISTCONSTRAINTFILE = "netlistConstraintFile";
-	
+
 }

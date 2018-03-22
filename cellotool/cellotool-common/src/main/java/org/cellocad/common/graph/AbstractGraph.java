@@ -31,7 +31,7 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 15, 2017
  *
  */
@@ -183,7 +183,7 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		if (
 				(index >= 0) &&
 				(index < this.getNumVertex())
-			){
+				){
 			rtn = vertices.get(index);
 		}
 		return rtn;
@@ -220,9 +220,9 @@ abstract public class AbstractGraph<V extends AbstractVertex<E>, E extends Abstr
 		if (
 				(index >= 0) &&
 				(index < this.getNumEdge())
-			){
+				){
 			rtn = edges.get(index);
-		} 
+		}
 		return rtn;
 	}
 

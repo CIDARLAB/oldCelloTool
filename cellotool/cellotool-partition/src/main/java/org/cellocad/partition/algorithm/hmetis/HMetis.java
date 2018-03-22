@@ -46,7 +46,7 @@ import org.cellocad.partition.runtime.environment.PTArgString;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 13, 2017
  *
  */
@@ -56,26 +56,26 @@ public class HMetis extends PTAlgorithm{
 		integerVertexMap = new HashMap<Integer, PNode>();
 		vertexIntegerMap = new HashMap<PNode, Integer>();
 	}
-	
+
 	public HMetis() {
 		this.init();
 	}
-	
+
 	private void writePartitionFile() throws IOException {
 		Map<PNode, Integer> vertexIntegerMap = this.getVertexIntegerMap();
 		//header lines are: [number of blocks]
-		//				    [number of edges] [number of vertices] 
+		//				    [number of edges] [number of vertices]
 		//	subsequent lines give each edge, one edge per line
-				
+
 		Path out_path = Paths.get("graph_file.txt");
 		int num_blocks = this.getPartition().getNumBlock();
 		PGraph graph = this.getPGraph();
-		
+
 		//for now just write out num_blocks in top line, later can add other params there
 		List<String> out_lines = new ArrayList<String>();
 		out_lines.add(Integer.toString(num_blocks));
 		out_lines.add(Integer.toString(graph.getNumEdge()) + " " + Integer.toString(graph.getNumVertex()));
-		
+
 		// vertices
 		PNode src = null;
 		PNode dst = null;
@@ -92,23 +92,23 @@ public class HMetis extends PTAlgorithm{
 			out_line += srcInteger.intValue() + " " + dstInteger.intValue();
 			out_lines.add(out_line);
 		}
-				
-		Files.write(out_path, out_lines, Charset.forName("UTF-8"),StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING, 
+
+		Files.write(out_path, out_lines, Charset.forName("UTF-8"),StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING,
 				StandardOpenOption.WRITE);
-		
+
 	}
-	
+
 	private void readPartitionedFile(Map<PNode, Integer> nodeBlockMap) throws IOException {
 		Map<Integer, PNode> integerVertexMap = this.getIntegerVertexMap();
 		Path in_path = Paths.get("partitioned_graph.txt");
-		
+
 		List<String> all_lines = Files.readAllLines(in_path);
 		int current_block = 0;
 		for(String line: all_lines) {
 			if(line.startsWith("block")) {
 				String[] splits = line.split(":");
 				current_block = Integer.parseInt(splits[1]);
-			}			
+			}
 			else {
 				int vertex = Integer.parseInt(line);
 				PNode node = integerVertexMap.get(vertex);
@@ -117,22 +117,22 @@ public class HMetis extends PTAlgorithm{
 			}
 		}
 	}
-	
+
 	private void assignPNodesToBlocks(Map<PNode, Integer> nodeBlockMap) {
 		List<Move> moves = new ArrayList<Move>();
 		Move move = null;
 		Iterator<Map.Entry<PNode, Integer>> it = nodeBlockMap.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry<PNode, Integer> pair = (Map.Entry<PNode, Integer>) it.next();
-	        Integer block_idx = pair.getValue();
+		while (it.hasNext()) {
+			Map.Entry<PNode, Integer> pair = (Map.Entry<PNode, Integer>) it.next();
+			Integer block_idx = pair.getValue();
 			Block block_assignment = this.getPartition().getBlockAtIdx(block_idx);
 			PNode node = pair.getKey();
 			move = new Move(node, node.getMyBlock(), block_assignment);
 			moves.add(move);
-	    }	    
-	    this.getPartition().doMoves(moves);
+		}
+		this.getPartition().doMoves(moves);
 	}
-	
+
 	private void callMetis() throws IOException {
 		String OSPath;
 		String line;
@@ -170,20 +170,20 @@ public class HMetis extends PTAlgorithm{
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void setDefaultParameterValues() {
-		
+
 	}
 
 	@Override
 	public void setParameterValues() {
-		
+
 	}
 
 	@Override
 	public void validateParameterValues() {
-		
+
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public class HMetis extends PTAlgorithm{
 			PNode node = graph.getVertexAtIdx(i);
 			vertexIntegerMap.put(node, new Integer(temp));
 			integerVertexMap.put(new Integer(temp), node);
-		}		
+		}
 	}
 
 	@Override
@@ -207,26 +207,26 @@ public class HMetis extends PTAlgorithm{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			callMetis();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		
-		
+
+
+
 		try {
 			readPartitionedFile(nodeBlockMap);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// System.out.println(vertex_assignment);
-		
+
 		//make moves
 		assignPNodesToBlocks(nodeBlockMap);
-		
+
 		/*System.out.println("block counts");
 		for(int i=0; i<this.getPartition().getNumBlock(); ++i) {
 			System.out.println(this.getPartition().getBlockAtIdx(i).getNumPNode());
@@ -235,23 +235,23 @@ public class HMetis extends PTAlgorithm{
 
 	@Override
 	public void postprocessing() {
-		
+
 	}
-	
+
 	/*
 	 * integerVertexMap
 	 */
 	private Map<Integer, PNode> integerVertexMap;
-	
+
 	private Map<Integer, PNode> getIntegerVertexMap(){
 		return this.integerVertexMap;
 	}
-	
+
 	/*
 	 * vertexIntegerMap
 	 */
 	private Map<PNode, Integer> vertexIntegerMap;
-	
+
 	private Map<PNode, Integer> getVertexIntegerMap(){
 		return this.vertexIntegerMap;
 	}

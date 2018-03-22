@@ -25,12 +25,12 @@ import org.cellocad.common.stage.runtime.environment.StageRuntimeEnv;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 4, 2017
  *
  */
 public class TMRuntimeEnv extends StageRuntimeEnv{
-	
+
 	public TMRuntimeEnv(String[] args) {
 		super(args);
 	}
@@ -43,13 +43,13 @@ public class TMRuntimeEnv extends StageRuntimeEnv{
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	protected Option getConfigFileOption(){
 		Option rtn = new Option( TMArgString.CONFIGFILE, true, TMArgDescription.CONFIGFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	protected Option getOutputNetlistOption(){
 		Option rtn = new Option( TMArgString.OUTPUTNETLIST, true, TMArgDescription.OUTPUTNETLIST_DESCRIPTION);
 		this.makeRequired(rtn);

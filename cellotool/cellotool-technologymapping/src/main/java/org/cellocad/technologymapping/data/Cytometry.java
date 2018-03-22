@@ -27,7 +27,7 @@ import org.cellocad.common.CObject;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 15, 2018
  *
  */
@@ -100,5 +100,5 @@ public class Cytometry extends CObject{
 			return false;
 		return true;
 	}
-	
+
 }

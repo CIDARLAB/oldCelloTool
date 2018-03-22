@@ -38,7 +38,7 @@ import org.cellocad.partition.profile.PartitionerProfile;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
@@ -50,15 +50,15 @@ public class Partitioner extends CObject {
 		this.setPProfile(PProfile);
 		this.setRuntimeEnv(runtimeEnv);
 		if ((graph == null) || (PProfile == null)){
-	    	throw new RuntimeException("Logic Circuit or PartitionProfile not specified!");
+			throw new RuntimeException("Logic Circuit or PartitionProfile not specified!");
 		}
 	}
 
 	// TODO: attach partitionIDToLogicCircuit
 	private void attachPartitionIDToLogicCircuit(final PGraph G, final Map<PNode, Vertex> PGraphToLCVertex, final Map<PEdge, Edge> PGraphToLCEdge){
-		
+
 	}
-		
+
 	private PGraph convertLogicCircuitToPGraph(final Map<PNode, Vertex> PGraphToLCVertex, final Map<PEdge, Edge> PGraphToLCEdge){
 		PGraph rtn = new PGraph();
 		Map<Vertex, PNode> LCToPGraphVertex = new HashMap<Vertex, PNode>();
@@ -81,7 +81,7 @@ public class Partitioner extends CObject {
 			edge.setType(e.getType());
 			LCToPGraphEdge.put(e, edge);
 			PGraphToLCEdge.put(edge, e);
-			rtn.addEdge(edge);	
+			rtn.addEdge(edge);
 		}
 		// for each PNode:
 		for (int i = 0; i < this.getLogicCircuit().getNumVertex(); i++){
@@ -93,15 +93,15 @@ public class Partitioner extends CObject {
 				Edge e = v.getOutEdgeAtIdx(j);
 				PEdge edge = LCToPGraphEdge.get(e);
 				assert (edge != null);
-				node.addOutEdge(edge);				
+				node.addOutEdge(edge);
 			}
 			// set inEdge for PNode
 			for (int j = 0; j < v.getNumInEdge(); j ++){
 				Edge e = v.getInEdgeAtIdx(j);
 				PEdge edge = LCToPGraphEdge.get(e);
 				assert (edge != null);
-				node.addInEdge(edge);				
-			}			
+				node.addInEdge(edge);
+			}
 		}
 		// for each PEdge:
 		for (int i = 0; i < this.getLogicCircuit().getNumEdge(); i++){
@@ -128,7 +128,7 @@ public class Partitioner extends CObject {
 		assert(rtn.isValid());
 		return rtn;
 	}
-	
+
 	public void run(){
 		// map for conversion
 		Map<PNode, Vertex> PGraphToLCVertex = new HashMap<PNode, Vertex>();
@@ -144,7 +144,7 @@ public class Partitioner extends CObject {
 		PTAlgorithmFactory PAF = new PTAlgorithmFactory();
 		PTAlgorithm algo = PAF.getAlgorithm(AProfile);
 		if (algo == null){
-	    	throw new RuntimeException("Algorithm not found!");
+			throw new RuntimeException("Algorithm not found!");
 		}
 		algo.execute(G, P, AProfile, this.getRuntimeEnv());
 		// write dot file for Partition
@@ -164,19 +164,19 @@ public class Partitioner extends CObject {
 	private void setRuntimeEnv(final RuntimeEnv runtimeEnv) {
 		this.runtimeEnv = runtimeEnv;
 	}
-	
+
 	protected Graph getLogicCircuit(){
 		return this.graph;
 	}
-	
+
 	protected PartitionerProfile getPProfile(){
 		return this.PProfile;
 	}
-	
+
 	protected RuntimeEnv getRuntimeEnv(){
 		return this.runtimeEnv;
 	}
-	
+
 	/*
 	 * HashCode
 	 */

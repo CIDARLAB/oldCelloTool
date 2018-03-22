@@ -24,16 +24,16 @@ import org.cellocad.common.graph.AbstractVertex;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 15, 2017
  *
  */
 abstract public class HyperVertexTemplate <T extends HyperEdgeTemplate<?>> extends AbstractVertex<T> {
-	
+
 	public HyperVertexTemplate(){
 		super();
 	}
-	
+
 	public HyperVertexTemplate(final HyperVertexTemplate<T> other){
 		super(other);
 	}

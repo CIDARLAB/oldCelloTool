@@ -32,16 +32,16 @@ import org.cellocad.common.target.data.TargetData;
 import org.cellocad.common.target.data.TargetDataUtils;
 import org.cellocad.common.target.runtime.environment.TargetArgString;
 import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
+import org.cellocad.dnacompiler.test.common.TestUtils;
 import org.cellocad.eugene.runtime.EURuntimeObject;
 import org.cellocad.logicsynthesis.runtime.LSRuntimeObject;
 import org.cellocad.sbolgenerator.runtime.SGRuntimeObject;
 import org.cellocad.technologymapping.runtime.TMRuntimeObject;
-import org.cellocad.technologymapping.test.common.TestUtils;
 import org.junit.Test;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 12, 2018
  *
  */
@@ -52,13 +52,13 @@ public class DnaCompilerTest{
 		String resourcesFilepath = TestUtils.getResourcesFilepath() + Utils.getFileSeparator();
 
 		String tempDir = TestUtils.createTempDirectory().toString();
-		
+
 		String[] args = new String[] {"-verilogFile",resourcesFilepath + "and_structural.v",
-									  "-targetDataDir",resourcesFilepath,
-									  "-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
-									  "-configDir",resourcesFilepath,
-									  "-configFile","config.json",
-									  "-outputDir",tempDir};
+				"-targetDataDir",resourcesFilepath,
+				"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
+				"-configDir",resourcesFilepath,
+				"-configFile","config.json",
+				"-outputDir",tempDir};
 
 		Stage currentStage = null;
 		// RuntimeEnv
@@ -90,8 +90,8 @@ public class DnaCompilerTest{
 		SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
 		SG.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
-										 + Utils.getFileSeparator()
-										 + "dnacompiler.json");
+				+ Utils.getFileSeparator()
+				+ "dnacompiler.json");
 		Utils.deleteDirectory(new File(tempDir));
 	}
 

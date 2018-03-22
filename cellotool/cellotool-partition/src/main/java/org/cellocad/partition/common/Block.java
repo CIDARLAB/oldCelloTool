@@ -36,7 +36,7 @@ import org.cellocad.partition.profile.BlockProfile;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */
@@ -45,42 +45,42 @@ public class Block extends CapacityCollection<BlockProfile> {
 	private void init(){
 		this.nodes = new CObjectCollection<PNode>();
 	}
-	
+
 	public Block(BlockProfile BP, CObjectCollection<Capacity> capacity, CObjectCollection<CObject> capacityUnits){
 		super(BP, capacity);
 		init();
 		Utils.isNullRuntimeException(capacityUnits, "CapacityUnits");
 		myWeight = new Weight(capacityUnits, capacityUnits);
 	}
-	
+
 	/*
 	 * myWeight
-	 */	
+	 */
 	private Weight getMyWeight() {
 		return this.myWeight;
 	}
-	
+
 	/*
 	 * Evaluate
-	 */	
+	 */
 	public boolean canFit () {
 		boolean rtn = false;
 		rtn = this.canFit(this.getMyWeight());
 		return rtn;
 	}
-	
+
 	public boolean isOverflow () {
 		boolean rtn = false;
 		rtn = this.isOverflow(this.getMyWeight());
 		return rtn;
 	}
-	
+
 	public boolean isUnderflow () {
 		boolean rtn = false;
 		rtn = this.isUnderflow(this.getMyWeight());
 		return rtn;
 	}
-	
+
 	@Override
 	public boolean canFit (final Weight wObj) {
 		boolean rtn = false;
@@ -113,7 +113,7 @@ public class Block extends CapacityCollection<BlockProfile> {
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * PNode
 	 */
@@ -123,30 +123,30 @@ public class Block extends CapacityCollection<BlockProfile> {
 			myWeight.inc(node.getMyWeight());
 		}
 	}
-	
+
 	public void removePNode(final PNode node){
 		if ((node != null) && this.PNodeExists(node)) {
 			nodes.remove(node);
 			myWeight.dec(node.getMyWeight());
 		}
 	}
-	
+
 	public PNode getPNodeAtIdx(int index){
 		PNode rtn = null;
 		if (
 				(index >= 0) &&
 				(index < this.getNumPNode())
-			){
-			rtn = nodes.get(index);	
-		} 
+				){
+			rtn = nodes.get(index);
+		}
 		return rtn;
 	}
-	
+
 	public int getNumPNode(){
 		int rtn = nodes.size();
 		return rtn;
 	}
-	
+
 	private boolean PNodeExists(final PNode node){
 		boolean rtn = (node != null) && (nodes.contains(node));
 		return rtn;
@@ -179,12 +179,12 @@ public class Block extends CapacityCollection<BlockProfile> {
 		}
 		return rtn;
 	}
-	
+
 	public void printDot(final Writer os) throws IOException{
 		PGraph g = this.convertToPGraph();
 		g.printDot(os);
 	}
-	
+
 	/*
 	 * HashCode
 	 */
@@ -236,7 +236,7 @@ public class Block extends CapacityCollection<BlockProfile> {
 		}
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";
@@ -255,7 +255,7 @@ public class Block extends CapacityCollection<BlockProfile> {
 		rtn = rtn + this.getNodesToString();
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "}";
-		rtn = rtn + Utils.getNewLine();	
+		rtn = rtn + Utils.getNewLine();
 		// Weight
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "myWeight = ";
@@ -263,7 +263,7 @@ public class Block extends CapacityCollection<BlockProfile> {
 		indentStr = this.getMyWeight().toString();
 		indentStr = Utils.addIndent(1, indentStr);
 		rtn = rtn + Utils.getTabCharacter();
-		rtn = rtn + Utils.getNewLine();		
+		rtn = rtn + Utils.getNewLine();
 		// toString
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "toString() = ";
@@ -277,7 +277,7 @@ public class Block extends CapacityCollection<BlockProfile> {
 		rtn = rtn + "]";
 		return rtn;
 	}
-	
+
 	private CObjectCollection<PNode> nodes;
 	private Weight myWeight;
 }

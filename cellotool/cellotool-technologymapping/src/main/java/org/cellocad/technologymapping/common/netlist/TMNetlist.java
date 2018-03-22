@@ -33,7 +33,7 @@ import org.cellocad.technologymapping.data.Gate;
 /**
  * @author: Timothy Jones
  * @author: Vincent Mirian
- * 
+ *
  * @date: Mar 17, 2018
  *
  */
@@ -169,7 +169,7 @@ public class TMNetlist extends GraphTemplate<TMNode,TMEdge>{
 
 	/**
 	 * Check whether a given gate exists in the TMNetlist.
-	 * 
+	 *
 	 * @param gate the gate the check for.
 	 * @return whether the gate exists.
 	 */
@@ -185,7 +185,7 @@ public class TMNetlist extends GraphTemplate<TMNode,TMEdge>{
 
 	/**
 	 * Check whether a given gate exists in the TMNetlist.
-	 * 
+	 *
 	 * @param gate the gate the check for.
 	 * @return whether the gate exists.
 	 */
@@ -201,7 +201,7 @@ public class TMNetlist extends GraphTemplate<TMNode,TMEdge>{
 
 	/**
 	 * Check if any gates of a particular group have been assigned.
-	 * 
+	 *
 	 * @param techNodes the collection of TMNode objects to check for group assignments.
 	 * @param group the group for which to check.
 	 * @return true if there are gates in the netlist of the specified group.

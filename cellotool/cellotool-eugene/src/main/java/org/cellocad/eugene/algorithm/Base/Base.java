@@ -55,7 +55,7 @@ import org.cidarlab.eugene.util.DeviceUtils;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Dec 6, 2017
  *
  */
@@ -166,7 +166,7 @@ public class Base extends EUAlgorithm{
 					partSequence += "(.SEQUENCE(\"" + p.getSequence();
 					partSequence += "\"));";
 					eugenePartSequences.add(partSequence);
-				
+
 					if (p.getType() != PartType.PROMOTER.ordinal()) {
 						devDef += "	  " + p.getName() + "," + Utils.getNewLine();
 					}
@@ -254,11 +254,11 @@ public class Base extends EUAlgorithm{
 			Eugene eug = new Eugene();
 
 			File cruft = new File(Utils.getWorkingDirectory()
-								  + Utils.getFileSeparator()
-								  + "exports");
+					+ Utils.getFileSeparator()
+					+ "exports");
 			(new File(cruft.getPath()
-					  + Utils.getFileSeparator()
-					  + "pigeon")).delete();
+					+ Utils.getFileSeparator()
+					+ "pigeon")).delete();
 			cruft.delete();
 
 			EugeneCollection ec = eug.executeScript(this.getEugeneInputScript());
@@ -355,7 +355,7 @@ public class Base extends EUAlgorithm{
 					NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
 					for (CObject part : upstreamNode.getParts()) {
 						if ((part.getType() == PartType.PROMOTER.ordinal()) &&
-							(part.getIdx() != UNASSIGNED)){
+								(part.getIdx() != UNASSIGNED)){
 							part.setIdx(UNASSIGNED); // unassigned -- part of an output plasmid
 							break;
 						}

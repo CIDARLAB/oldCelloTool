@@ -30,13 +30,13 @@ import java.util.RandomAccess;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
 
 public class CObjectCollection<T extends CObject> extends CObject implements List<T>, RandomAccess, Cloneable, Serializable{
-	
+
 	private void init(){
 		collection = new ArrayList<T>();
 	}
@@ -60,7 +60,7 @@ public class CObjectCollection<T extends CObject> extends CObject implements Lis
 		}
 		return rtn;
 	}
-	
+
 	public T findCObjectByIdx(final int index){
 		T rtn = null, cobjTemp = null;
 		Iterator<T> cobjIt = collection.iterator();
@@ -76,7 +76,7 @@ public class CObjectCollection<T extends CObject> extends CObject implements Lis
 		return rtn;
 	}
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	List<T> collection;
@@ -136,7 +136,7 @@ public class CObjectCollection<T extends CObject> extends CObject implements Lis
 	public Iterator<T> iterator() {
 		return collection.iterator();
 	}
-	
+
 	@Override
 	public int lastIndexOf(Object o) {
 		return collection.lastIndexOf(o);
@@ -237,13 +237,13 @@ public class CObjectCollection<T extends CObject> extends CObject implements Lis
 	protected String getCollectionElementToString() {
 		String rtn = "";
 		for (int i = 0; i < this.size(); i++) {
-			rtn = rtn + Utils.getTabCharacter();	
+			rtn = rtn + Utils.getTabCharacter();
 			T element = this.get(i);
 			rtn = rtn + element.toString();
 		}
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";
@@ -253,9 +253,9 @@ public class CObjectCollection<T extends CObject> extends CObject implements Lis
 		rtn = rtn + Utils.getNewLine();
 		rtn = rtn + this.getCollectionElementToString();
 		rtn = rtn + "}";
-		rtn = rtn + Utils.getNewLine();	
+		rtn = rtn + Utils.getNewLine();
 		return rtn;
 	}
-	
-	
+
+
 }

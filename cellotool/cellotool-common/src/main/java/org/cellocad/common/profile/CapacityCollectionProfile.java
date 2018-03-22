@@ -27,7 +27,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 7, 2017
  *
  */
@@ -36,7 +36,7 @@ public class CapacityCollectionProfile extends ProfileObject {
 	private void init() {
 		this.myCapacity = new CObjectCollection<CapacityProfile>();
 	}
-	
+
 	public CapacityCollectionProfile(final JSONObject JObj,
 			final CObjectCollection<CapacityProfile> Capacity){
 		super(JObj);
@@ -53,28 +53,28 @@ public class CapacityCollectionProfile extends ProfileObject {
 		JSONArray jsonArr = (JSONArray) JObj.get("capacity");
 		if (jsonArr != null) {
 			for (int i = 0; i < jsonArr.size(); i++) {
-	    	    Object jsonObj = (Object) jsonArr.get(i);
-	    	    if (Utils.isString(jsonObj)) {
-	    	    	String capacityName = (String) jsonObj;
-	    	    	CapacityProfile capacity = this.capacity.findCObjectByName(capacityName);
-	    	    	if (capacity != null) {
-	    	    		this.addCapacity(capacity);
-	    	    	}
-	        	    else {
-	        	    	throw new RuntimeException(capacityName + " not found.");
-	        	    }
-	    	    }
+				Object jsonObj = (Object) jsonArr.get(i);
+				if (Utils.isString(jsonObj)) {
+					String capacityName = (String) jsonObj;
+					CapacityProfile capacity = this.capacity.findCObjectByName(capacityName);
+					if (capacity != null) {
+						this.addCapacity(capacity);
+					}
+					else {
+						throw new RuntimeException(capacityName + " not found.");
+					}
+				}
 			}
 		}
 	}
-	
+
 	private void parse(final JSONObject JObj){
 		// name
 		// parseName(JObj);
 		// capacity
 		parseCapacity(JObj);
 	}
-	
+
 	/*
 	 * capacity
 	 */
@@ -90,10 +90,10 @@ public class CapacityCollectionProfile extends ProfileObject {
 				(0 <= index) &&
 				(index < this.getNumCapacity())) {
 			rtn = myCapacity.get(index);
-		}		
+		}
 		return rtn;
 	}
-	
+
 	public int getNumCapacity() {
 		return myCapacity.size();
 	}
@@ -111,7 +111,7 @@ public class CapacityCollectionProfile extends ProfileObject {
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * HashCode
 	 */
@@ -148,7 +148,7 @@ public class CapacityCollectionProfile extends ProfileObject {
 			return false;
 		return true;
 	}
-	
+
 	private final CObjectCollection<CapacityProfile> capacity;
 	private CObjectCollection<CapacityProfile> myCapacity;
 }

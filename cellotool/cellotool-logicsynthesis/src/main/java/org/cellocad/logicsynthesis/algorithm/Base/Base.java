@@ -49,7 +49,7 @@ import edu.byu.ece.edif.util.parse.ParseException;
 /**
  * @author: Vincent Mirian
  * @author: Timothy Jones
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
@@ -94,13 +94,13 @@ public class Base extends LSAlgorithm{
 
 		String filename = Utils.getFilename(this.getVerilogFile());
 		this.setYosysScriptFilename(this.getRuntimeEnv().getOptionValue("outputDir")
-									+ Utils.getFileSeparator()
-									+ filename
-									+ "_YosysScript");
+				+ Utils.getFileSeparator()
+				+ filename
+				+ "_YosysScript");
 		this.setYosysEdifFilename(this.getRuntimeEnv().getOptionValue("outputDir")
-								  + Utils.getFileSeparator()
-								  + filename
-								  + ".edif");
+				+ Utils.getFileSeparator()
+				+ filename
+				+ ".edif");
 
 		// exec
 		String exec = "";

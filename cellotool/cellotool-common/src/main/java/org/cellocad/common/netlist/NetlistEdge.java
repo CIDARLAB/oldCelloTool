@@ -31,27 +31,27 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 17, 2017
  *
  */
 public class NetlistEdge extends EdgeTemplate<NetlistNode>{
-	
+
 	public NetlistEdge(){
 		super();
 	}
-	
+
 	public NetlistEdge(final NetlistNode Src, final NetlistNode Dst) {
-        super(Src);
-        this.setDst(Dst);
-    }
-	
+		super(Src);
+		this.setDst(Dst);
+	}
+
 	public NetlistEdge(final NetlistEdge other) {
 		super(other);
-        this.setSrc(other.getSrc());
-        this.setDst(other.getDst());
-    }
-	
+		this.setSrc(other.getSrc());
+		this.setDst(other.getDst());
+	}
+
 	public NetlistEdge(final JSONObject JObj){
 		this();
 		this.parse(JObj);
@@ -67,13 +67,13 @@ public class NetlistEdge extends EdgeTemplate<NetlistNode>{
 		}
 	}
 	private void parse(final JSONObject JObj){
-    	this.parseName(JObj);
+		this.parseName(JObj);
 	}
 
 	/*
 	 * Write
-	 */	
-	protected String getJSONHeader(){	
+	 */
+	protected String getJSONHeader(){
 		String rtn = "";
 		// name
 		rtn += JSONUtils.getEntryToString("name", this.getName());
@@ -83,8 +83,8 @@ public class NetlistEdge extends EdgeTemplate<NetlistNode>{
 		rtn += JSONUtils.getEntryToString("dst", this.getDst().getName());
 		return rtn;
 	}
-	
-	protected String getJSONFooter(){	
+
+	protected String getJSONFooter(){
 		String rtn = "";
 		return rtn;
 	}
@@ -99,5 +99,5 @@ public class NetlistEdge extends EdgeTemplate<NetlistNode>{
 		str = Utils.addIndent(indent, str);
 		os.write(str);
 	}
-	
+
 }

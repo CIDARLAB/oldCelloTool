@@ -27,7 +27,7 @@ import org.cellocad.common.CObjectCollection;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Feb 27, 2018
  *
  */
@@ -35,7 +35,7 @@ public class Gate extends CObject{
 
 	private CObjectCollection<Part> parts;
 	private URI uri;
-	
+
 	/**
 	 * @return the parts
 	 */

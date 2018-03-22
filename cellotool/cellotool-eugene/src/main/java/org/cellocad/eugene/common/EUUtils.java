@@ -23,7 +23,7 @@ package org.cellocad.eugene.common;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 8, 2017
  *
  */
@@ -34,11 +34,11 @@ public class EUUtils {
 		rtn = EUUtils.class.getClassLoader().getResource(".").getPath();
 		return rtn;
 	}
-	
+
 	static public String getResourcesFilepath(){
 		String rtn = "";
 		rtn += EUUtils.getFilepath();
 		return rtn;
 	}
-	
+
 }

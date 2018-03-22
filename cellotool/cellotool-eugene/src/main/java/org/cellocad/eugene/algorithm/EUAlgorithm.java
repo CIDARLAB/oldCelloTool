@@ -29,7 +29,7 @@ import org.cellocad.common.target.data.TargetData;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Dec 6, 2017
  *
  */
@@ -58,7 +58,7 @@ public abstract class EUAlgorithm extends Algorithm{
 		this.run();
 		this.postprocessing();
 	}
-	
+
 	/*
 	 * Getter and Setter
 	 */

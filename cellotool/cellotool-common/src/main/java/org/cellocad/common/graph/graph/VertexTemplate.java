@@ -24,20 +24,20 @@ import org.cellocad.common.graph.AbstractVertex;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 2, 2017
  *
  */
 public abstract class VertexTemplate <T extends EdgeTemplate<?>> extends AbstractVertex<T>{
-	
+
 	public VertexTemplate(){
 		super();
 	}
-	
+
 	public VertexTemplate(final VertexTemplate<T> other){
 		super(other);
 	}
-		
+
 	/*
 	 * toString
 	 */

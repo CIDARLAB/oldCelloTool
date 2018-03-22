@@ -25,7 +25,7 @@ import java.io.IOException;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 8, 2017
  *
  */
@@ -36,7 +36,7 @@ public class TestUtils {
 		rtn = TestUtils.class.getClassLoader().getResource(".").getPath();
 		return rtn;
 	}
-	
+
 	static public String getResourcesFilepath(){
 		String rtn = "";
 		rtn += TestUtils.getFilepath();
@@ -54,5 +54,5 @@ public class TestUtils {
 		}
 		return file;
 	}
-	
+
 }

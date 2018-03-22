@@ -32,7 +32,7 @@ import org.cellocad.sbolgenerator.runtime.environment.SGRuntimeEnv;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
@@ -58,5 +58,5 @@ public class Main {
 		String outputFilename = runEnv.getOptionValue(SGArgString.OUTPUTNETLIST);
 		NetlistUtils.writeJSONForNetlist(netlist, outputFilename);
 	}
-	
+
 }

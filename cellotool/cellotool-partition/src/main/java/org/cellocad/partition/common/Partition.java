@@ -40,7 +40,7 @@ import org.cellocad.partition.profile.PartitionProfile;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */
@@ -62,7 +62,7 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 			this.blockCapacityUnits.add(cObj);
 		}
 	}
-	
+
 	private void initBlockCapacity(){
 		final PartitionProfile PProfile = this.getProfile();
 		CapacityProfile CP = null;
@@ -73,7 +73,7 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 			this.blockCapacity.add(capacity);
 		}
 	}
-	
+
 	private void initBlocks(){
 		final PartitionProfile PProfile = this.getProfile();
 		// initBlocks
@@ -85,13 +85,13 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 			this.addBlock(block);
 		}
 	}
-	
+
 	private void initBlockInformation(){
 		this.initBlockCapacityUnits();
 		this.initBlockCapacity();
 		this.initBlocks();
 	}
-	
+
 	private void initInterBlocksInformation(){
 		//final PartitionProfile PProfile = this.getProfile();
 	}
@@ -100,9 +100,9 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 		super(PProfile);
 		init();
 		initBlockInformation();
-		initInterBlocksInformation();	
+		initInterBlocksInformation();
 	}
-	
+
 	/*
 	 * Blocks
 	 */
@@ -112,34 +112,34 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 			blocks.add(block);
 		}
 	}
-	
+
 	/*private void removeBlock(final Block block){
 		if (block != null){
 			blocks.remove(block);
 		}
 	}*/
-	
+
 	public Block getBlockAtIdx(int index){
 		Block rtn = null;
 		if (
 				(index >= 0) &&
 				(index < this.getNumBlock())
-			){
-			rtn = blocks.get(index);	
-		} 
+				){
+			rtn = blocks.get(index);
+		}
 		return rtn;
 	}
-	
+
 	public int getNumBlock(){
 		int rtn = blocks.size();
 		return rtn;
 	}
-	
+
 	private boolean blockExists(final Block block){
 		boolean rtn = (block != null) && (blocks.contains(block));
 		return rtn;
 	}
-	
+
 	/*
 	 * Move
 	 */
@@ -154,7 +154,7 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 		}
 		return rtn;
 	}
-	
+
 	private boolean doMove(final Move move){
 		boolean rtn = false;
 		boolean moveIsValid = move.isValid();
@@ -178,7 +178,7 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * dot file
 	 */
@@ -208,7 +208,7 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 	protected String getDotSubgraphFooter(){
 		return getDotFooter();
 	}
-	
+
 	public void printDot(final Writer os) throws IOException{
 		os.write(this.getDotHeader());
 		// for each block
@@ -218,8 +218,8 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 			os.write(this.getDotSubgraphHeader(block));
 			// print nodes
 			for (int j = 0; j < block.getNumPNode(); j++) {
-				PNode node = block.getPNodeAtIdx(j);	
-				node.printDot(os);			
+				PNode node = block.getPNodeAtIdx(j);
+				node.printDot(os);
 			}
 			// print subgraph footer
 			os.write(this.getDotSubgraphFooter());
@@ -232,7 +232,7 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 				}
 			}
 		}
-		os.write(this.getDotFooter());		
+		os.write(this.getDotFooter());
 	}
 
 	/*
@@ -284,10 +284,10 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 	protected String getBlockToString() {
 		String rtn = "";
 		rtn = rtn + blocks.toString();
-		rtn = Utils.addIndent(1, rtn);		
+		rtn = Utils.addIndent(1, rtn);
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";
@@ -308,7 +308,7 @@ public class Partition extends DerivedProfile<PartitionProfile>{
 		rtn = rtn + this.getBlockToString();
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "}";
-		rtn = rtn + Utils.getNewLine();	
+		rtn = rtn + Utils.getNewLine();
 		// toString
 		rtn = rtn + Utils.getTabCharacter();
 		rtn = rtn + "toString() = ";

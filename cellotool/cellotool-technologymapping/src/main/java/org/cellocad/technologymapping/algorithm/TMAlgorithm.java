@@ -29,7 +29,7 @@ import org.cellocad.common.target.data.TargetData;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 4, 2017
  *
  */
@@ -58,7 +58,7 @@ public abstract class TMAlgorithm extends Algorithm{
 		this.run();
 		this.postprocessing();
 	}
-	
+
 	/*
 	 * Getter and Setter
 	 */

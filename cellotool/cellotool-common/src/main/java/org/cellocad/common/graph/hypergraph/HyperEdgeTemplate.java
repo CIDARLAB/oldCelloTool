@@ -24,7 +24,7 @@ import org.cellocad.common.graph.AbstractEdge;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 14, 2017
  *
  */
@@ -33,13 +33,13 @@ public class HyperEdgeTemplate<T extends HyperVertexTemplate<?>> extends Abstrac
 	public HyperEdgeTemplate(){
 		super();
 	}
-	
+
 	public HyperEdgeTemplate(final T Src) {
 		super(Src);
-    }
-	
+	}
+
 	public HyperEdgeTemplate(final HyperEdgeTemplate<T> other) {
 		super(other);
-    }
-	
+	}
+
 }

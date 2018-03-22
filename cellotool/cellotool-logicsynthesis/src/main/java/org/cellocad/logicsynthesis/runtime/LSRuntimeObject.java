@@ -31,7 +31,7 @@ import org.cellocad.logicsynthesis.algorithm.LSAlgorithmFactory;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
@@ -45,7 +45,7 @@ public class LSRuntimeObject extends RuntimeObject{
 			) {
 		super(stageConfiguration, targetData, netlist, runEnv);
 	}
-	
+
 	public LSRuntimeObject(
 			final String verilogFile,
 			final StageConfiguration stageConfiguration,
@@ -56,7 +56,7 @@ public class LSRuntimeObject extends RuntimeObject{
 		super(stageConfiguration, targetData, netlist, runEnv);
 		this.setVerilogFile(verilogFile);
 	}
-	
+
 	/*
 	 * getter and setter
 	 */
@@ -80,7 +80,7 @@ public class LSRuntimeObject extends RuntimeObject{
 		LSAlgorithmFactory LSAF = new LSAlgorithmFactory();
 		LSAlgorithm algo = LSAF.getAlgorithm(AProfile);
 		if (algo == null){
-	    	throw new RuntimeException("Algorithm not found!");
+			throw new RuntimeException("Algorithm not found!");
 		}
 		algo.execute(verilogFile, this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
 	}

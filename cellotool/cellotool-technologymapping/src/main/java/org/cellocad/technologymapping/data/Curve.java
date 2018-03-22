@@ -26,10 +26,10 @@ import org.cellocad.common.CObject;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 9, 2018
  *
  */
 public abstract class Curve extends CObject implements DoubleFunction<Double>{
-	
+
 }

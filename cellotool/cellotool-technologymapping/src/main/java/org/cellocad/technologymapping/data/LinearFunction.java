@@ -22,7 +22,7 @@ package org.cellocad.technologymapping.data;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 9, 2018
  *
  */
@@ -39,7 +39,7 @@ public class LinearFunction extends Curve {
 		this.setSlope(slope);
 		this.setOffset(offset);
 	}
-	
+
 	@Override
 	public Double apply(double input) {
 		return this.getSlope()*input + this.getOffset();
@@ -72,5 +72,5 @@ public class LinearFunction extends Curve {
 	public void setOffset(Double offset) {
 		this.offset = offset;
 	}
-	
+
 }

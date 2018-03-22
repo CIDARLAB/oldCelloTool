@@ -25,7 +25,7 @@ import org.cellocad.sbolgenerator.algorithm.Base.Base;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */

@@ -25,7 +25,7 @@ import org.cellocad.logicsynthesis.algorithm.Base.Base;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */

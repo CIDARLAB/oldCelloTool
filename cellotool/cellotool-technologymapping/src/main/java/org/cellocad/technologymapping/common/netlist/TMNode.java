@@ -29,7 +29,7 @@ import org.cellocad.technologymapping.data.Gate;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 17, 2018
  *
  */

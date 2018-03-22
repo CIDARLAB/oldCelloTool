@@ -46,7 +46,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 6, 2018
  *
  */
@@ -330,7 +330,7 @@ public class TargetDataReader {
 		Integer num = td.getNumJSONObject("response_functions");
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("response_functions",i);
-			// could have an equation parser, or 'equation_type' field in target data 
+			// could have an equation parser, or 'equation_type' field in target data
 			if (((String)json.get("equation")).equals("ymin+(ymax-ymin)/(1.0+(x/K)^n)")) {
 				ResponseFunction<HillFunction> rf = new ResponseFunction<>();
 				rf.setName((String)json.get("gate_name"));
@@ -372,7 +372,7 @@ public class TargetDataReader {
 			}
 			gateParts.add(parts.findCObjectByName(json.get("promoter").toString()));
 			gatePartsMap.put(json.get("gate_name").toString(),
-							 new Pair<String,CObjectCollection<Part>>(json.get("promoter").toString(),gateParts));
+					new Pair<String,CObjectCollection<Part>>(json.get("promoter").toString(),gateParts));
 
 		}
 		return gatePartsMap;

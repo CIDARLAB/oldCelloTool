@@ -34,7 +34,7 @@ import org.json.simple.parser.ParseException;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 22, 2017
  *
  */
@@ -48,9 +48,9 @@ public class TargetDataUtils {
 		// get Target File
 		String targetFilename = runEnv.getOptionValue(targetDataFile);
 		String targetDir = runEnv.getOptionValue(targetDataDir);
-	    File targetFile = new File(targetDir + Utils.getFileSeparator() + targetFilename);
-	    Reader targetReader = null;
-	    JSONArray jsonTop = null;
+		File targetFile = new File(targetDir + Utils.getFileSeparator() + targetFilename);
+		Reader targetReader = null;
+		JSONArray jsonTop = null;
 		// Create File Reader
 		try {
 			targetReader = new FileReader(targetFile);
@@ -59,20 +59,20 @@ public class TargetDataUtils {
 		}
 		// Create JSON object from File Reader
 		JSONParser parser = new JSONParser();
-        try{
-        	jsonTop = (JSONArray) parser.parse(targetReader);
-	    } catch (IOException e) {
-	        throw new RuntimeException("File IO Exception for: " + targetFile + ".");
-	    } catch (ParseException e) {
-	        throw new RuntimeException("Parser Exception for: " + targetFile + ".");
-	    }
+		try{
+			jsonTop = (JSONArray) parser.parse(targetReader);
+		} catch (IOException e) {
+			throw new RuntimeException("File IO Exception for: " + targetFile + ".");
+		} catch (ParseException e) {
+			throw new RuntimeException("Parser Exception for: " + targetFile + ".");
+		}
 		// Create TargetInfo object
-	    rtn = new TargetData(jsonTop, targetDataDir);
-	    try {
+		rtn = new TargetData(jsonTop, targetDataDir);
+		try {
 			targetReader.close();
 		} catch (IOException e) {
 			throw new RuntimeException("Error with file: " + targetFile);
 		}
-	    return rtn;
-	}	
+		return rtn;
+	}
 }

@@ -23,7 +23,7 @@ package org.cellocad.sbolgenerator.common;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 8, 2017
  *
  */
@@ -34,11 +34,11 @@ public class SGUtils {
 		rtn = SGUtils.class.getClassLoader().getResource(".").getPath();
 		return rtn;
 	}
-	
+
 	static public String getResourcesFilepath(){
 		String rtn = "";
 		rtn += SGUtils.getFilepath();
 		return rtn;
 	}
-	
+
 }

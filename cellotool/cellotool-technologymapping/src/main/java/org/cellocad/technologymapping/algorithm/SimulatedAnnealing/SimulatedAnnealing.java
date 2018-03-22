@@ -42,7 +42,7 @@ import org.cellocad.technologymapping.data.Part;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 12, 2018
  *
  */
@@ -194,7 +194,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 					Integer bIdx = 0; // need to know the second gate index
 					for(int i = 0; i < logicNodes.size(); i++) {
 						if (logicNodes.get(i).getGate().getName()
-							.equals(bGate.getName())) {
+								.equals(bGate.getName())) {
 							bIdx = i;
 							break;
 						}
@@ -250,22 +250,22 @@ public class SimulatedAnnealing extends TMAlgorithm{
 
 				// simulated annealing accept or reject
 				Double probability = Math.exp( (ScoreUtils.getScore(tmpNetlist)
-												-
-												ScoreUtils.getScore(netlist))
-											   / temperature ); // e^b
-				Double ep = Math.random();
+						-
+						ScoreUtils.getScore(netlist))
+						/ temperature ); // e^b
+						Double ep = Math.random();
 
-				if (ep < probability) {
-					Integer finalBlocks = TMUtils.getNumRoadblocks(tmpNetlist,
-																   this.getLogicRoadblocks(),
-																   this.getInputRoadblocks());
-					if ((!this.getCheckRoadblocks() || finalBlocks == 0)
-						&&
-						(!this.getCheckToxicity() || TMUtils.minGrowth(tmpNetlist) > this.getToxicityThreshold()))
-						{
-							netlist = tmpNetlist;
+						if (ep < probability) {
+							Integer finalBlocks = TMUtils.getNumRoadblocks(tmpNetlist,
+									this.getLogicRoadblocks(),
+									this.getInputRoadblocks());
+							if ((!this.getCheckRoadblocks() || finalBlocks == 0)
+									&&
+									(!this.getCheckToxicity() || TMUtils.minGrowth(tmpNetlist) > this.getToxicityThreshold()))
+							{
+								netlist = tmpNetlist;
+							}
 						}
-				}
 			}
 			bestAssignments.add(netlist);
 		}

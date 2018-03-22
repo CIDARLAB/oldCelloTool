@@ -31,7 +31,7 @@ import org.cellocad.sbolgenerator.algorithm.SGAlgorithmFactory;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 21, 2017
  *
  */
@@ -45,7 +45,7 @@ public class SGRuntimeObject extends RuntimeObject{
 			) {
 		super(stageConfiguration, targetData, netlist, runEnv);
 	}
-	
+
 	@Override
 	protected void run() {
 		// AlgorithmProfile
@@ -54,7 +54,7 @@ public class SGRuntimeObject extends RuntimeObject{
 		SGAlgorithmFactory SGAF = new SGAlgorithmFactory();
 		SGAlgorithm algo = SGAF.getAlgorithm(AProfile);
 		if (algo == null){
-	    	throw new RuntimeException("Algorithm not found!");
+			throw new RuntimeException("Algorithm not found!");
 		}
 		algo.execute(this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
 	}

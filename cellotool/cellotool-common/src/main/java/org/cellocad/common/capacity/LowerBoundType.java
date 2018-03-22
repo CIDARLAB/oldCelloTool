@@ -22,7 +22,7 @@ package org.cellocad.common.capacity;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 7, 2017
  *
  */
@@ -51,7 +51,7 @@ public enum LowerBoundType {
 		}
 		return rtn;
 	}
-	
+
 	public String toString() {
 		String rtn = null;
 		switch (this) {
@@ -73,5 +73,5 @@ public enum LowerBoundType {
 		}
 		}
 		return rtn;
-	}		
+	}
 }

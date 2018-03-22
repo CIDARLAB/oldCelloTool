@@ -30,7 +30,7 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 13, 2018
  *
  */
@@ -55,8 +55,8 @@ public class LSUtils {
 			}
 
 			File file = new File(path
-								 + Utils.getFileSeparator()
-								 + Paths.get(resource).getFileName().toString());
+					+ Utils.getFileSeparator()
+					+ Paths.get(resource).getFileName().toString());
 
 			try (FileOutputStream out = new FileOutputStream(file)) {
 				//copy stream

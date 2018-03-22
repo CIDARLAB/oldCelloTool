@@ -24,18 +24,18 @@ import org.cellocad.common.runtime.environment.ArgDescription;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
 public class TargetArgDescription extends ArgDescription{
-	
-    /*
-     * Target
-     */
+
+	/*
+	 * Target
+	 */
 	final static public String VERILOG_DESCRIPTION = "verilog file";
 	final static public String TARGETCONFIGFILE_DESCRIPTION = "config file for Target";
 	final static public String TARGETCONFIGDIR_DESCRIPTION = "config directory for Target";
 	final static public String NETLISTCONSTRAINTFILE_DESCRIPTION = "netlist constraint file";
-	
+
 }

@@ -25,20 +25,20 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
 public class ProfileObject extends CObject{
 
 	public ProfileObject(){
-		
+
 	}
-	
+
 	protected ProfileObject(final JSONObject JObj){
 		this.parseName(JObj);
 	}
-	
+
 	/*
 	 * Parse
 	 */
@@ -46,7 +46,7 @@ public class ProfileObject extends CObject{
 		// name
 		String name = (String) ProfileUtils.getString(JObj, "name");
 		if (name == null) {
-	    	throw new RuntimeException("Name not specified!");
+			throw new RuntimeException("Name not specified!");
 		}
 		this.setName(name);
 	}

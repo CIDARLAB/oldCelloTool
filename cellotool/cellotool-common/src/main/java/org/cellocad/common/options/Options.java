@@ -35,7 +35,7 @@ import org.cellocad.common.CObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 8, 2017
  *
  */
@@ -45,7 +45,7 @@ public class Options extends CObject{
 		this.stageValues = new HashMap<String, String>();
 		this.stageArgValues = new HashMap<String, Map <String, String>>();
 	}
-	
+
 	public Options(String filename) {
 		init();
 		Reader in = null;
@@ -62,31 +62,31 @@ public class Options extends CObject{
 		}
 		for (CSVRecord record : records) {
 			if (record.size() < 2){
-				continue;				
+				continue;
 			}
-		    String arg = record.get(0);
-		    String value = record.get(1);
-		    if ((arg != null) &&
-		    	(value != null))
-		    {
-		    	// stage param
-		    	if (arg.contains(".")) {
-		    		StringTokenizer st = new StringTokenizer(arg,".");
-		    		String stageName = st.nextToken();
-		    		String argumentName = st.nextToken();
-		    		Map <String, String> params = this.getStageArgValue().get(stageName);
-		    		if (params == null) {
-		    			params = new HashMap<String, String>();
-		    			this.getStageArgValue().put(stageName, params);
-		    		}
-		    		params.put(argumentName, value);
-		    		
-		    	}
-		    	// stage name
-		    	else {
-		    		this.getStageValue().put(arg, value);
-		    	}
-		    }
+			String arg = record.get(0);
+			String value = record.get(1);
+			if ((arg != null) &&
+					(value != null))
+			{
+				// stage param
+				if (arg.contains(".")) {
+					StringTokenizer st = new StringTokenizer(arg,".");
+					String stageName = st.nextToken();
+					String argumentName = st.nextToken();
+					Map <String, String> params = this.getStageArgValue().get(stageName);
+					if (params == null) {
+						params = new HashMap<String, String>();
+						this.getStageArgValue().put(stageName, params);
+					}
+					params.put(argumentName, value);
+
+				}
+				// stage name
+				else {
+					this.getStageValue().put(arg, value);
+				}
+			}
 		}
 	}
 
@@ -95,7 +95,7 @@ public class Options extends CObject{
 		rtn = this.getStageValue().get(stage);
 		return rtn;
 	}
-	
+
 	public String getStageArgValueName(String stage, String arg) {
 		String rtn = null;
 		Map <String, String> params = this.getStageArgValue().get(stage);
@@ -104,18 +104,18 @@ public class Options extends CObject{
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * Getter and Setter
 	 */
 	private Map <String, String> getStageValue() {
 		return this.stageValues;
 	}
-	
+
 	private Map <String, Map <String, String>> getStageArgValue() {
 		return this.stageArgValues;
 	}
-	
+
 	private Map <String, String> stageValues;
 	private Map <String, Map <String, String>> stageArgValues;
 }

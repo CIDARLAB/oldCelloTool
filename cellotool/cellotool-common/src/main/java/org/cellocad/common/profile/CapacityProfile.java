@@ -29,12 +29,12 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 6, 2017
  *
  */
 public class CapacityProfile extends ProfileObject{
-	
+
 	private void reset() {
 		this.setLowerBound(0);
 		this.setLowerBoundType(LowerBoundType.GREATER_THAN_OR_EQUAL);
@@ -45,7 +45,7 @@ public class CapacityProfile extends ProfileObject{
 	private void init() {
 		this.myCapacityUnits = new CObjectCollection<ProfileObject>();
 	}
-	
+
 	public CapacityProfile(final JSONObject JObj, final CObjectCollection<ProfileObject> CapacityUnits){
 		super(JObj);
 		init();
@@ -54,30 +54,30 @@ public class CapacityProfile extends ProfileObject{
 		// parse
 		this.parse(JObj);
 	}
-	
+
 	/*
 	 * Parse
 	 */
 	private void parseUnits(final JSONObject JObj){
 		JSONArray jsonArr = (JSONArray) JObj.get("units");
 		if (jsonArr == null) {
-	    	throw new RuntimeException("Units not specified for capacity " + this.getName());
+			throw new RuntimeException("Units not specified for capacity " + this.getName());
 		}
 		for (int i = 0; i < jsonArr.size(); i++) {
-    	    Object jsonObj = (Object) jsonArr.get(i);
-    	    if (Utils.isString(jsonObj)) {
-    	    	String unitName = (String) jsonObj;
-    	    	ProfileObject unit = capacityUnits.findCObjectByName(unitName);
-    	    	if (unit != null) {
-    	    		this.addCapacityUnit(unit);
-    	    	}
-        	    else {
-        	    	throw new RuntimeException(unitName + " not found.");
-        	    }
-    	    }
+			Object jsonObj = (Object) jsonArr.get(i);
+			if (Utils.isString(jsonObj)) {
+				String unitName = (String) jsonObj;
+				ProfileObject unit = capacityUnits.findCObjectByName(unitName);
+				if (unit != null) {
+					this.addCapacityUnit(unit);
+				}
+				else {
+					throw new RuntimeException(unitName + " not found.");
+				}
+			}
 		}
 	}
-	
+
 	private void parseLowerBound(final JSONObject JObj){
 		Integer IntegerValue = ProfileUtils.getInteger(JObj, "lower_bound");
 		if (IntegerValue != null) {
@@ -85,7 +85,7 @@ public class CapacityProfile extends ProfileObject{
 			this.setLowerBound(value);
 		}
 	}
-	
+
 	private void parseLowerBoundType(final JSONObject JObj){
 		String StringValue = ProfileUtils.getString(JObj, "lower_bound_type");
 		if (StringValue != null) {
@@ -95,18 +95,18 @@ public class CapacityProfile extends ProfileObject{
 			}
 		}
 	}
-	
+
 	private void parseUpperBound(final JSONObject JObj){
 		Integer IntegerValue = ProfileUtils.getInteger(JObj, "upper_bound");
 		if (IntegerValue == null) {
-	    	throw new RuntimeException("UpperBound not specified for capacity " + this.getName());
+			throw new RuntimeException("UpperBound not specified for capacity " + this.getName());
 		}
 		if (IntegerValue != null) {
 			int value = IntegerValue.intValue();
 			this.setUpperBound(value);
 		}
 	}
-	
+
 	private void parseUpperBoundType(final JSONObject JObj){
 		String StringValue = ProfileUtils.getString(JObj, "upper_bound_type");
 		if (StringValue != null) {
@@ -116,7 +116,7 @@ public class CapacityProfile extends ProfileObject{
 			}
 		}
 	}
-	
+
 	private void parse(final JSONObject JObj){
 		// name
 		// parseName(JObj);
@@ -147,18 +147,18 @@ public class CapacityProfile extends ProfileObject{
 				(0 <= index) &&
 				(index < this.getNumCapacityUnit())) {
 			rtn = this.myCapacityUnits.get(index);
-		}		
+		}
 		return rtn;
 	}
-	
+
 	public int getNumCapacityUnit() {
 		return this.myCapacityUnits.size();
 	}
-	
+
 	public CObjectCollection<ProfileObject> getCapacityUnits() {
 		return this.myCapacityUnits;
 	}
-	
+
 	public CObjectCollection<ProfileObject> getAllCapacityUnits() {
 		return this.capacityUnits;
 	}
@@ -176,37 +176,37 @@ public class CapacityProfile extends ProfileObject{
 			this.setUpperBound(this.getUpperBound() + 1);
 		}
 	}
-	
+
 	private void setLowerBound(int lowerBound) {
 		this.lowerBound = lowerBound;
 		this.reduce();
 	}
-	
+
 	public int getLowerBound() {
 		return this.lowerBound;
 	}
-	
+
 	private void setLowerBoundType(final LowerBoundType type) {
 		this.lowerBoundType = type;
 	}
-	
+
 	public LowerBoundType getLowerBoundType() {
 		return this.lowerBoundType;
 	}
-		
+
 	private void setUpperBound(int upperBound) {
 		this.upperBound = upperBound;
 	}
-	
+
 	public int getUpperBound() {
 		return this.upperBound;
 	}
-	
+
 	private void setUpperBoundType(final UpperBoundType type) {
 		this.upperBoundType = type;
 		this.reduce();
 	}
-	
+
 	public UpperBoundType getUpperBoundType() {
 		return this.upperBoundType;
 	}
@@ -227,7 +227,7 @@ public class CapacityProfile extends ProfileObject{
 		rtn = rtn && (this.getUpperBoundType() == UpperBoundType.LESS_THAN);
 		return rtn;
 	}
-	
+
 
 	/*
 	 * HashCode

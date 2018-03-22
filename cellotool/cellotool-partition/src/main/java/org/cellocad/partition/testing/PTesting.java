@@ -29,12 +29,12 @@ import org.cellocad.partition.profile.PartitionerProfileParser;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
 public class PTesting {
-	
+
 	/**
 	 * @param args
 	 */
@@ -42,25 +42,25 @@ public class PTesting {
 		PTestingEnv testingEnv = new PTestingEnv(args);
 		String profileFilename = testingEnv.getOptionValue(PTestingEnv.PROFILEFILENAME);
 		if (profileFilename == null){
-	        System.err.println( PTestingEnv.PROFILEFILENAME + " not defined." );
-	        System.exit(-1);
+			System.err.println( PTestingEnv.PROFILEFILENAME + " not defined." );
+			System.exit(-1);
 		}
 		String profileName = testingEnv.getOptionValue(PTestingEnv.PROFILENAME);
 		if (profileName == null){
-	        System.err.println( PTestingEnv.PROFILENAME + " not defined." );
-	        System.exit(-1);
+			System.err.println( PTestingEnv.PROFILENAME + " not defined." );
+			System.exit(-1);
 		}
 		String graphFilename = testingEnv.getOptionValue(PTestingEnv.GRAPHFILENAME);
 		if (graphFilename == null){
-	        System.err.println( PTestingEnv.GRAPHFILENAME + " not defined." );
-	        System.exit(-1);
+			System.err.println( PTestingEnv.GRAPHFILENAME + " not defined." );
+			System.exit(-1);
 		}
 		// get Profile
 		PartitionerProfileParser PPP = new PartitionerProfileParser(profileFilename);
 		PartitionerProfile PP = PPP.getPartionerProfile(profileName);
 		if (PP == null){
-	        System.err.println( profileName + " not found." );
-	        System.exit(-1);
+			System.err.println( profileName + " not found." );
+			System.exit(-1);
 		}
 		// read graph
 		Graph g = GraphUtils.getGraph(graphFilename);

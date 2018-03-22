@@ -22,7 +22,7 @@ package org.cellocad.common.graph.hypergraph;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 15, 2017
  *
  */

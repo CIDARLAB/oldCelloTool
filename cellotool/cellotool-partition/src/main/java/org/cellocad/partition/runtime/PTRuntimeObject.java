@@ -45,7 +45,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 5, 2017
  *
  */
@@ -59,7 +59,7 @@ public class PTRuntimeObject extends RuntimeObject{
 			) {
 		super(stageConfiguration, targetData, netlist, runEnv);
 	}
-	
+
 	private PGraph convertNetlistToPGraph(final Map<PNode, NetlistNode> PGraphToNetlistNode, final Map<PEdge, NetlistEdge> PGraphToNetlistEdge){
 		PGraph rtn = new PGraph();
 		Map<NetlistNode, PNode> NetlistToPGraphVertex = new HashMap<NetlistNode, PNode>();
@@ -82,7 +82,7 @@ public class PTRuntimeObject extends RuntimeObject{
 			pedge.setType(edge.getType());
 			NetlistToPGraphEdge.put(edge, pedge);
 			PGraphToNetlistEdge.put(pedge, edge);
-			rtn.addEdge(pedge);	
+			rtn.addEdge(pedge);
 		}
 		// for each PNode:
 		for (int i = 0; i < this.getNetlist().getNumVertex(); i++){
@@ -101,8 +101,8 @@ public class PTRuntimeObject extends RuntimeObject{
 				NetlistEdge edge = node.getInEdgeAtIdx(j);
 				PEdge pedge = NetlistToPGraphEdge.get(edge);
 				assert (pedge != null);
-				pnode.addInEdge(pedge);				
-			}			
+				pnode.addInEdge(pedge);
+			}
 		}
 		// for each PEdge:
 		for (int i = 0; i < this.getNetlist().getNumEdge(); i++){
@@ -142,18 +142,18 @@ public class PTRuntimeObject extends RuntimeObject{
 		int pID = -1;
 		Iterator<Map.Entry<PNode, NetlistNode>> it = PGraphToNetlistNode.entrySet().iterator();
 		while (it.hasNext()) {
-		    Map.Entry<PNode, NetlistNode> pair = it.next();
-		    pnode = pair.getKey();
-		    node = pair.getValue();
-		    block = pnode.getMyBlock();
-		    pID = -1;
-		    if (block != null) {
-		    	pID = block.getIdx();
-		    }
-		    node.setPartitionID(pID);
+			Map.Entry<PNode, NetlistNode> pair = it.next();
+			pnode = pair.getKey();
+			node = pair.getValue();
+			block = pnode.getMyBlock();
+			pID = -1;
+			if (block != null) {
+				pID = block.getIdx();
+			}
+			node.setPartitionID(pID);
 		}
 	}
-	
+
 	protected PartitionProfile getPartitionProfile(TargetData td) {
 		PartitionProfile rtn = null;
 		JSONObject JObj = this.getTargetData().getJSONObjectAtIdx("PartitionProfile", 0);
@@ -166,7 +166,7 @@ public class PTRuntimeObject extends RuntimeObject{
 		}
 		return rtn;
 	}
-	
+
 	@Override
 	protected void run() {
 		// map for conversion
@@ -183,7 +183,7 @@ public class PTRuntimeObject extends RuntimeObject{
 		PTAlgorithmFactory PTAF = new PTAlgorithmFactory();
 		PTAlgorithm algo = PTAF.getAlgorithm(AProfile);
 		if (algo == null){
-	    	throw new RuntimeException("Algorithm not found!");
+			throw new RuntimeException("Algorithm not found!");
 		}
 		algo.execute(G, P, AProfile, this.getRuntimeEnv());
 		// write dot file for Partition

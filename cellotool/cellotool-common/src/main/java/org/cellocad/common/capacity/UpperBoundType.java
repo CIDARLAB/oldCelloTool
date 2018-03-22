@@ -22,13 +22,13 @@ package org.cellocad.common.capacity;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 7, 2017
  *
  */
 public enum UpperBoundType {
-    LESS_THAN, LESS_THAN_OR_EQUAL;//, EQUAL;
-	
+	LESS_THAN, LESS_THAN_OR_EQUAL;//, EQUAL;
+
 	static public UpperBoundType getBoundType(final String str) {
 		UpperBoundType rtn = null;
 		switch (str) {
@@ -51,7 +51,7 @@ public enum UpperBoundType {
 		}
 		return rtn;
 	}
-	
+
 	public String toString() {
 		String rtn = null;
 		switch (this) {

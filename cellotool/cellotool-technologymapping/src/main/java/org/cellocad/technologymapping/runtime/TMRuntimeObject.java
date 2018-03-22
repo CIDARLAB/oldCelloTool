@@ -31,7 +31,7 @@ import org.cellocad.technologymapping.algorithm.TMAlgorithmFactory;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 4, 2017
  *
  */
@@ -45,7 +45,7 @@ public class TMRuntimeObject extends RuntimeObject{
 			) {
 		super(stageConfiguration, targetData, netlist, runEnv);
 	}
-	
+
 	@Override
 	protected void run() {
 		// AlgorithmProfile
@@ -54,7 +54,7 @@ public class TMRuntimeObject extends RuntimeObject{
 		TMAlgorithmFactory TMAF = new TMAlgorithmFactory();
 		TMAlgorithm algo = TMAF.getAlgorithm(AProfile);
 		if (algo == null){
-	    	throw new RuntimeException("Algorithm not found!");
+			throw new RuntimeException("Algorithm not found!");
 		}
 		algo.execute(this.getNetlist(), this.getTargetData(), AProfile, this.getRuntimeEnv());
 	}

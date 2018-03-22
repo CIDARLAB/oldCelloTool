@@ -28,7 +28,7 @@ import org.cellocad.common.profile.DerivedProfile;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 7, 2017
  *
  */
@@ -37,7 +37,7 @@ public class CapacityCollection<T extends CapacityCollectionProfile> extends Der
 	private void init() {
 		myCapacity = new CObjectCollection<Capacity>();
 	}
-		
+
 	public CapacityCollection (T CCP, CObjectCollection<Capacity> capacities) {
 		super(CCP);
 		Utils.isNullRuntimeException(CCP, "CapacityCollectionProfile");
@@ -52,10 +52,10 @@ public class CapacityCollection<T extends CapacityCollectionProfile> extends Der
 			this.addCapacity(capacity);
 		}
 	}
-	
+
 	/*
 	 * Evaluate
-	 */	
+	 */
 	public boolean canFit (final Weight wObj) {
 		boolean rtn = false;
 		int size = this.getNumCapacity();
@@ -88,7 +88,7 @@ public class CapacityCollection<T extends CapacityCollectionProfile> extends Der
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * capacity
 	 */
@@ -97,17 +97,17 @@ public class CapacityCollection<T extends CapacityCollectionProfile> extends Der
 			this.myCapacity.add(c);
 		}
 	}
-	
+
 	private Capacity getCapacityAtIdx(int index) {
 		Capacity rtn = null;
 		if (
 				(0 <= index) &&
 				(index < this.getNumCapacity())) {
 			rtn = myCapacity.get(index);
-		}		
+		}
 		return rtn;
 	}
-	
+
 	private int getNumCapacity() {
 		return myCapacity.size();
 	}

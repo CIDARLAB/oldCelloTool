@@ -30,7 +30,7 @@ import org.cellocad.common.Utils;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 7, 2017
  *
  */
@@ -40,13 +40,13 @@ public class Weight extends CObject {
 		weightMap = new HashMap<String, Integer>();
 		myUnits = new Units();
 	}
-	
+
 	public Weight() {
 		super();
 		init();
 		this.setTotal(0);
 	}
-	
+
 	public Weight(final Weight other) {
 		super(other);
 		init();
@@ -54,55 +54,55 @@ public class Weight extends CObject {
 		myUnits = new Units(other.myUnits);
 		this.setTotal(other.getTotal());
 	}
-	
+
 	public Weight(final CObjectCollection<CObject> units, final CObjectCollection<CObject> allUnits) {
 		this();
 		init();
 		this.getUnits().resetWithCObject(units, allUnits);
 	}
-	
+
 	/*
 	 * units
 	 */
 	public Units getUnits() {
 		return this.myUnits;
 	}
-	
+
 	public void resetUnits(final CObjectCollection<CObject> allUnits) {
 		CObjectCollection<CObject> units = new CObjectCollection<CObject>();
 		Iterator<Map.Entry<String, Integer>> it = this.weightMap.entrySet().iterator();
 		CObject cObj = null;
 		while (it.hasNext()) {
-		    Map.Entry<String, Integer> pair = it.next();
-		    cObj = new CObject();
-		    cObj.setName(pair.getKey());
-		    units.add(cObj);
+			Map.Entry<String, Integer> pair = it.next();
+			cObj = new CObject();
+			cObj.setName(pair.getKey());
+			units.add(cObj);
 		}
 		this.getUnits().resetWithCObject(units, allUnits);
 	}
 
-	
+
 	/*
 	 * weights
 	 */
 	public void setWeight(final String Unit, int value) {
 		this.weightMap.put(Unit, new Integer(value));
 	}
-	
+
 	public void setWeight(final String Unit, Integer value) {
 		this.weightMap.put(Unit, new Integer(value));
 	}
-	
+
 	public Integer getWeight(final String Unit) {
 		Integer rtn = null;
 		rtn = this.weightMap.get(Unit);
 		return rtn;
 	}
-	
+
 	public void removeWeight(final String Unit) {
 		this.weightMap.remove(Unit);
 	}
-	
+
 	public void addWeight(final String Unit) {
 		this.setWeight(Unit, 0);
 	}
@@ -121,11 +121,11 @@ public class Weight extends CObject {
 		this.setWeight(Unit, amount);
 		this.incTotal(value);
 	}
-	
+
 	public void decWeight(final String Unit) {
 		this.decWeight(Unit, 1);
 	}
-	
+
 	public void decWeight(final String Unit, int value) {
 		Integer amount = this.getWeight(Unit);
 		if (amount == null) {
@@ -136,7 +136,7 @@ public class Weight extends CObject {
 		this.setWeight(Unit, amount);
 		this.decTotal(value);
 	}
-	
+
 	/*
 	 * total
 	 */
@@ -158,23 +158,23 @@ public class Weight extends CObject {
 			this.incTotal(wObj.getTotal());
 		}
 	}
-	
+
 	public int getTotal() {
 		return this.total;
 	}
-	
+
 	private void setTotal(int total) {
 		this.total = total;
 	}
-	
+
 	private void incTotal(int value) {
 		this.setTotal(this.getTotal() + value);
 	}
-	
+
 	private void decTotal(int value) {
 		this.setTotal(this.getTotal() - value);
 	}
-	
+
 	/*
 	 * isValid
 	 */
@@ -186,7 +186,7 @@ public class Weight extends CObject {
 		rtn = rtn && (this.getUnits().isValid());
 		return rtn;
 	}
-	
+
 	/*
 	 * HashCode
 	 */
@@ -234,17 +234,17 @@ public class Weight extends CObject {
 		String rtn = "";
 		Iterator<Map.Entry<String, Integer>> it = this.weightMap.entrySet().iterator();
 		while (it.hasNext()) {
-		    Map.Entry<String, Integer> pair = it.next();
-		    rtn = rtn + Utils.getTabCharacterRepeat(2);
-		    rtn = rtn + pair.getValue();
-		    rtn = rtn + " ";
+			Map.Entry<String, Integer> pair = it.next();
+			rtn = rtn + Utils.getTabCharacterRepeat(2);
+			rtn = rtn + pair.getValue();
+			rtn = rtn + " ";
 			rtn = rtn + pair.getKey();
 			rtn = rtn + ",";
 			rtn = rtn + Utils.getNewLine();
 		}
 		return rtn;
 	}
-	
+
 	@Override
 	public String toString() {
 		String rtn = "";

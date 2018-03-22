@@ -32,7 +32,7 @@ import org.cellocad.technologymapping.data.Gate;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 9, 2018
  *
  */
@@ -47,7 +47,7 @@ public class ActivitySimulator extends Simulator{
 
 	/**
 	 * Create a new ActivitySimulator.
-	 * 
+	 *
 	 * @param netlist the TMNetlist on which to operate.
 	 */
 	public ActivitySimulator(TMNetlist netlist) {
@@ -62,7 +62,7 @@ public class ActivitySimulator extends Simulator{
 
 	/**
 	 * Compute and assign promoter activities.
-	 * 
+	 *
 	 * @param netlist the TMNetlist on which to assign activities.
 	 */
 	private static void computeActivity(TMNetlist netlist) {
@@ -94,7 +94,7 @@ public class ActivitySimulator extends Simulator{
 
 	/**
 	 * Get the activity for a logic gate given some input.
-	 * 
+	 *
 	 * @param input the inputs to the gate.
 	 * @param gate the gate for which to compute input.
 	 */
@@ -113,7 +113,7 @@ public class ActivitySimulator extends Simulator{
 
 	/**
 	 * Get the activity for an output gate.
-	 * 
+	 *
 	 * @param input the inputs to the gate.
 	 * @param gate the gate for which to compute input.
 	 */
@@ -123,7 +123,7 @@ public class ActivitySimulator extends Simulator{
 
 	/**
 	 * Get a column of inputs from a matrix.
-	 * 
+	 *
 	 * @param input the set of inputs.
 	 * @param i the column to select.
 	 */
@@ -137,7 +137,7 @@ public class ActivitySimulator extends Simulator{
 
 	/**
 	 * Throw an exception if the input list is ragged.
-	 * 
+	 *
 	 * @param input the set of inputs to check.
 	 * @return false if the inputs are not ragged.
 	 */

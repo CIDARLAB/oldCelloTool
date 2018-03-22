@@ -26,7 +26,7 @@ import org.cellocad.technologymapping.common.PairTable;
 
 /**
  * @author: Timothy Jones
- * 
+ *
  * @date: Mar 15, 2018
  *
  */
@@ -35,5 +35,5 @@ public class Histogram extends PairTable<Double,Double>{
 	public Histogram(final List<Double> bins, final List<Double> counts) {
 		super(bins,counts);
 	}
-	
+
 }

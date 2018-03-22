@@ -22,7 +22,7 @@ package org.cellocad.common;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 26, 2017
  *
  */

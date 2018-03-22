@@ -22,12 +22,12 @@ package org.cellocad.common.runtime.environment;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 17, 2017
  *
  */
 public class ArgString {
-	
+
 	/*
 	 * General
 	 */
@@ -37,5 +37,5 @@ public class ArgString {
 	final static public String OPTIONS = "options";
 	final static public String OUTPUTDIR  = "outputDir";
 	final static public String PYTHONDIR = "pythonDir";
-	
+
 }

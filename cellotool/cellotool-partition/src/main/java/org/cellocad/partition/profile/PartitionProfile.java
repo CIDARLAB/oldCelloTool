@@ -29,7 +29,7 @@ import org.json.simple.JSONObject;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 27, 2017
  *
  */
@@ -43,14 +43,14 @@ public class PartitionProfile extends ProfileObject {
 		blocks = new CObjectCollection<BlockProfile>();
 		interBlocks = new CObjectCollection<InterBlockProfile>();
 	}
-	
+
 	public PartitionProfile(final JSONObject JObj){
 		super(JObj);
 		init();
 		this.parse(JObj);
 		assert(this.isValid());
 	}
-	
+
 	/*
 	 * Parse
 	 */
@@ -65,12 +65,12 @@ public class PartitionProfile extends ProfileObject {
 					ProfileObject unit = new ProfileObject();
 					unit.setName(name);
 					unit.setIdx(CapacityUnits.size());
-					CapacityUnits.add(unit);				
+					CapacityUnits.add(unit);
 				}
 			}
 		}
 	}
-	
+
 	private void parseCapacity(final JSONObject JObj,
 			final CObjectCollection<ProfileObject> CapacityUnits,
 			final CObjectCollection<CapacityProfile> Capacity){
@@ -121,7 +121,7 @@ public class PartitionProfile extends ProfileObject {
 		// blocks
 		this.parseBlocks(jsonObj);
 	}
-	
+
 	private void parseInterBlocksInformation(final JSONObject JObj){
 		// interBlocks
 		JSONObject jsonObj = (JSONObject) JObj.get("InterBlocks");
@@ -134,7 +134,7 @@ public class PartitionProfile extends ProfileObject {
 			this.parseInterBlocks(jsonObj);
 		}
 	}
-		
+
 	private void parse(final JSONObject JObj){
 		// name
 		// parseName(JObj);
@@ -152,12 +152,12 @@ public class PartitionProfile extends ProfileObject {
 		if (
 				(index >= 0) &&
 				(index < this.getCapacityUnitsSize(collection))
-			){
-			rtn = collection.get(index);	
-		} 
+				){
+			rtn = collection.get(index);
+		}
 		return rtn;
 	}
-	
+
 	private int getCapacityUnitsSize(final CObjectCollection<ProfileObject> collection) {
 		int rtn = 0;
 		if (collection != null) {
@@ -174,12 +174,12 @@ public class PartitionProfile extends ProfileObject {
 		if (
 				(index >= 0) &&
 				(index < this.getCapacitySize(collection))
-			){
-			rtn = collection.get(index);	
-		} 
+				){
+			rtn = collection.get(index);
+		}
 		return rtn;
 	}
-	
+
 	private int getCapacitySize(final CObjectCollection<CapacityProfile> collection) {
 		int rtn = 0;
 		if (collection != null) {
@@ -187,7 +187,7 @@ public class PartitionProfile extends ProfileObject {
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * Block
 	 */
@@ -196,29 +196,29 @@ public class PartitionProfile extends ProfileObject {
 		if (
 				(index >= 0) &&
 				(index < this.getNumBlockProfile())
-			){
-			rtn = blocks.get(index);	
+				){
+			rtn = blocks.get(index);
 		}
 		return rtn;
 	}
-	
+
 	public int getNumBlockProfile(){
 		int rtn = blocks.size();
 		return rtn;
 	}
-	
+
 	public CapacityProfile getBlockCapacityAtIdx(int index){
 		return this.getCapacityAtIdx(this.blockCapacity, index);
 	}
-	
+
 	public int getNumBlockCapacity(){
 		return this.getCapacitySize(this.blockCapacity);
 	}
-	
+
 	public ProfileObject getBlockCapacityUnitsAtIdx(int index){
 		return this.getCapacityUnitsAtIdx(this.blockCapacityUnits, index);
 	}
-	
+
 	public int getNumBlockCapacityUnits(){
 		return this.getCapacityUnitsSize(this.blockCapacityUnits);
 	}
@@ -226,49 +226,49 @@ public class PartitionProfile extends ProfileObject {
 	public CObjectCollection<ProfileObject> getBlockCapacityUnits(){
 		return this.blockCapacityUnits;
 	}
-	
+
 	/*
 	 * InterBlock
-	 */	
+	 */
 	public InterBlockProfile getInterBlockProfileAtIdx(int index){
 		InterBlockProfile rtn = null;
 		if (
 				(index >= 0) &&
 				(index < this.getNumBlockProfile())
-			){
-			rtn = interBlocks.get(index);	
+				){
+			rtn = interBlocks.get(index);
 		}
 		return rtn;
 	}
-	
+
 	public int getNumInterBlockProfile(){
 		int rtn = interBlocks.size();
 		return rtn;
 	}
-	
+
 	public CapacityProfile getInterBlockCapacityAtIdx(int index){
 		return this.getCapacityAtIdx(this.interBlockCapacity, index);
 	}
-	
+
 	public int getNumInterBlockCapacity(){
 		return this.getCapacitySize(this.interBlockCapacity);
 	}
-	
+
 	public ProfileObject getInterBlockCapacityUnitsAtIdx(int index){
 		return this.getCapacityUnitsAtIdx(this.interBlockCapacityUnits, index);
 	}
-	
+
 	public int getNumInterBlockCapacityUnits(){
 		return this.getCapacityUnitsSize(this.interBlockCapacityUnits);
 	}
-	
+
 	public CObjectCollection<ProfileObject> getInterBlockCapacityUnits(){
 		return this.interBlockCapacityUnits;
 	}
-	
+
 	/*
 	 * isValid
-	 */	
+	 */
 	@Override
 	public boolean isValid() {
 		boolean rtn = false;
@@ -287,7 +287,7 @@ public class PartitionProfile extends ProfileObject {
 		}
 		return rtn;
 	}
-	
+
 	/*
 	 * HashCode
 	 */

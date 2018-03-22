@@ -22,34 +22,34 @@ package org.cellocad.common;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Oct 28, 2017
  *
  */
 public class Pair<F, S> {
-    private F first; //first member of pair
-    private S second; //second member of pair
+	private F first; //first member of pair
+	private S second; //second member of pair
 
-    public Pair(final F first, final S second) {
-        this.setFirst(first);
-        this.setSecond(second);
-    }
+	public Pair(final F first, final S second) {
+		this.setFirst(first);
+		this.setSecond(second);
+	}
 
-    public void setFirst(final F first) {
-        this.first = first;
-    }
+	public void setFirst(final F first) {
+		this.first = first;
+	}
 
-    public void setSecond(final S second) {
-        this.second = second;
-    }
+	public void setSecond(final S second) {
+		this.second = second;
+	}
 
-    public F getFirst() {
-        return first;
-    }
+	public F getFirst() {
+		return first;
+	}
 
-    public S getSecond() {
-        return second;
-    }
+	public S getSecond() {
+		return second;
+	}
 
 	/*
 	 * HashCode

@@ -24,16 +24,16 @@ import org.cellocad.common.stage.runtime.environment.StageArgDescription;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Dec 4, 2017
  *
  */
 public class TMArgDescription extends StageArgDescription{
 
-    /*
-     * Technology Mapping (TM)
-     */
-    final static public String CONFIGFILETM_DESCRIPTION = "config file for Technology Mapping (TM)";
-    final static public String INPUTNETLISTTM_DESCRIPTION = "input netlist file for Technology Mapping (TM)";
-    final static public String OUTPUTNETLISTTM_DESCRIPTION = "output netlist file for Technology Mapping (TM)";
+	/*
+	 * Technology Mapping (TM)
+	 */
+	final static public String CONFIGFILETM_DESCRIPTION = "config file for Technology Mapping (TM)";
+	final static public String INPUTNETLISTTM_DESCRIPTION = "input netlist file for Technology Mapping (TM)";
+	final static public String OUTPUTNETLISTTM_DESCRIPTION = "output netlist file for Technology Mapping (TM)";
 }

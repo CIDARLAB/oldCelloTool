@@ -25,7 +25,7 @@ import org.cellocad.common.stage.runtime.environment.StageRuntimeEnv;
 
 /**
  * @author: Vincent Mirian
- * 
+ *
  * @date: Nov 20, 2017
  *
  */
@@ -43,13 +43,13 @@ public class SGRuntimeEnv extends StageRuntimeEnv{
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	protected Option getConfigFileOption(){
 		Option rtn = new Option( SGArgString.CONFIGFILE, true, SGArgDescription.CONFIGFILE_DESCRIPTION);
 		this.makeRequired(rtn);
 		return rtn;
 	}
-	
+
 	protected Option getOutputNetlistOption(){
 		Option rtn = new Option( SGArgString.OUTPUTNETLIST, true, SGArgDescription.OUTPUTNETLIST_DESCRIPTION);
 		this.makeRequired(rtn);
