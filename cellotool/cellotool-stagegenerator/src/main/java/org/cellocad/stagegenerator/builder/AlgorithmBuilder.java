@@ -24,6 +24,13 @@ import java.lang.reflect.Method;
 
 import javax.lang.model.element.Modifier;
 
+import org.cellocad.common.Utils;
+import org.cellocad.common.algorithm.Algorithm;
+import org.cellocad.common.netlist.Netlist;
+import org.cellocad.common.profile.AlgorithmProfile;
+import org.cellocad.common.runtime.environment.RuntimeEnv;
+import org.cellocad.common.target.data.TargetData;
+
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -53,65 +60,54 @@ public class AlgorithmBuilder extends Builder{
 	 * @see Builder#build()
 	 */
 	public JavaFile build() {
-		// get relevant classes
-		Class<?> algorithmClass = null;
-		Class<?> netlistClass = null;
-		Class<?> targetDataClass = null;
-		Class<?> algorithmProfileClass = null;
-		Class<?> runtimeEnvClass = null;
-		try {
-			algorithmClass = Class.forName("org.cellocad.common.algorithm.Algorithm");
-			netlistClass = Class.forName("org.cellocad.common.netlist.Netlist");
-			targetDataClass = Class.forName("org.cellocad.common.target.data.TargetData");
-			algorithmProfileClass = Class.forName("org.cellocad.common.profile.AlgorithmProfile");
-			runtimeEnvClass = Class.forName("org.cellocad.common.runtime.environment.RuntimeEnv");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
 		// class def
-		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + algorithmClass.getSimpleName());
+		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + Algorithm.class.getSimpleName());
 		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC,
 							 javax.lang.model.element.Modifier.ABSTRACT);
 
-		builder.superclass(algorithmClass);
+		builder.superclass(Algorithm.class);
+
+		String netlistVar = "netlist";
+		String targetDataVar = "targetData";
+		String AProfileVar = "AProfile";
+		String runtimeEnvVar = "runtimeEnv";
 		MethodSpec.Builder methodBuilder = MethodSpec
 			.methodBuilder("execute")
 			.returns(void.class)
 			.addModifiers(Modifier.PUBLIC)
-			.addParameter(netlistClass,"netlist",Modifier.FINAL)
-			.addParameter(targetDataClass,"targetData",Modifier.FINAL)
-			.addParameter(algorithmProfileClass,"AProfile",Modifier.FINAL)
-			.addParameter(runtimeEnvClass,"runtimeEnv",Modifier.FINAL)
-			.addStatement("Utils.isNullRuntimeException(netlist, \"netlist\")")
-			.addStatement("Utils.isNullRuntimeException(targetData, \"targetData\")")
-			.addStatement("Utils.isNullRuntimeException(AProfile, \"AProfile\")")
-			.addStatement("Utils.isNullRuntimeException(runtimeEnv, \"runtimeEnv\")")
+			.addParameter(Netlist.class,netlistVar,Modifier.FINAL)
+			.addParameter(TargetData.class,targetDataVar,Modifier.FINAL)
+			.addParameter(AlgorithmProfile.class,AProfileVar,Modifier.FINAL)
+			.addParameter(RuntimeEnv.class,runtimeEnvVar,Modifier.FINAL)
+			.addStatement("$T.isNullRuntimeException($L, $S)",Utils.class,netlistVar,netlistVar)
+			.addStatement("$T.isNullRuntimeException($L, $S)",Utils.class,targetDataVar,targetDataVar)
+			.addStatement("$T.isNullRuntimeException($L, $S)",Utils.class,AProfileVar,AProfileVar)
+			.addStatement("$T.isNullRuntimeException($L, $S)",Utils.class,runtimeEnvVar,runtimeEnvVar)
 			.addComment("init")
-			.addStatement("this.setNetlist(netlist)")
-			.addStatement("this.setTargetData(targetData)")
-			.addStatement("this.setAlgorithmProfile(AProfile)")
-			.addStatement("this.setRuntimeEnv(runtimeEnv)")
+			.addStatement("this.setNetlist($L)",netlistVar)
+			.addStatement("this.setTargetData($L)",targetDataVar)
+			.addStatement("this.setAlgorithmProfile($L)",AProfileVar)
+			.addStatement("this.setRuntimeEnv($L)",runtimeEnvVar)
 			.addComment("execute");
-		Method m[] = algorithmClass.getDeclaredMethods();
+		Method m[] = Algorithm.class.getDeclaredMethods();
 		for (int i = 0; i < m.length; i++) {
 			if (java.lang.reflect.Modifier.isAbstract(m[i].getModifiers())) {
-				methodBuilder.addStatement("this." + m[i].getName() + "()");
+				methodBuilder.addStatement("this.$L()",m[i].getName());
 			}
 		}
 		MethodSpec method = methodBuilder.build();
 		builder.addMethod(method);
 
 		// getter setter
-		addGetterSetter(builder,"netlist","Netlist",netlistClass);
-		addGetterSetter(builder,"targetData","TargetData",targetDataClass);
-		addGetterSetter(builder,"AProfile","AlgorithmProfile",algorithmProfileClass);
-		addGetterSetter(builder,"runtimeEnv","RuntimeEnv",runtimeEnvClass);
+		addGetterSetter(builder,"netlist","Netlist",Netlist.class);
+		addGetterSetter(builder,"targetData","TargetData",TargetData.class);
+		addGetterSetter(builder,"AProfile","AlgorithmProfile",AlgorithmProfile.class);
+		addGetterSetter(builder,"runtimeEnv","RuntimeEnv",RuntimeEnv.class);
 
-		builder.addField(netlistClass,"netlist",Modifier.PRIVATE);
-		builder.addField(targetDataClass,"targetData",Modifier.PRIVATE);
-		builder.addField(algorithmProfileClass,"AProfile",Modifier.PRIVATE);
-		builder.addField(runtimeEnvClass,"runtimeEnv",Modifier.PRIVATE);
+		builder.addField(Netlist.class,netlistVar,Modifier.PRIVATE);
+		builder.addField(TargetData.class,targetDataVar,Modifier.PRIVATE);
+		builder.addField(AlgorithmProfile.class,AProfileVar,Modifier.PRIVATE);
+		builder.addField(RuntimeEnv.class,runtimeEnvVar,Modifier.PRIVATE);
 
 		TypeSpec ts = builder.build();
 		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
@@ -150,7 +146,7 @@ public class AlgorithmBuilder extends Builder{
 			.methodBuilder("get" + name)
 			.addModifiers(Modifier.PROTECTED)
 			.returns(c)
-			.addStatement("return this." + var)
+			.addStatement("return this.$L",var)
 			.build();
 		return rtn;
 	}
@@ -169,7 +165,7 @@ public class AlgorithmBuilder extends Builder{
 			.addModifiers(Modifier.PRIVATE)
 			.returns(void.class)
 			.addParameter(c,var,Modifier.FINAL)
-			.addStatement("this." + var + " = " + var)
+			.addStatement("this.$L = $L",var,var)
 			.build();
 		return rtn;
 	}

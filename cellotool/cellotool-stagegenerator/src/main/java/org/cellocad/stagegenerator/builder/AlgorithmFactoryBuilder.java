@@ -28,9 +28,13 @@ import java.util.regex.Pattern;
 
 import javax.lang.model.element.Modifier;
 
+import org.cellocad.common.algorithm.Algorithm;
+import org.cellocad.common.algorithm.AlgorithmFactory;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
 /**
@@ -91,20 +95,16 @@ public class AlgorithmFactoryBuilder extends Builder{
 	 * @see Builder#build()
 	 */
 	public JavaFile build() {
-		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + "AlgorithmFactory");
-		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
-		Class<?> algorithmClass = null;
-		Class<?> algorithmFactoryClass = null;
-		try {
-			algorithmClass = Class.forName("org.cellocad.common.algorithm.Algorithm");
-			algorithmFactoryClass = Class.forName("org.cellocad.common.algorithm.AlgorithmFactory");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		Method m[] = algorithmClass.getDeclaredMethods();
-		ClassName stageAlgorithm = ClassName.get(this.getPackageName() + "."
-												 + this.getStageName() + ".algorithm",
-												 this.getAbbrev() + algorithmFactoryClass.getSimpleName());
+		// get relevant classes
+		Method m[] = AlgorithmFactory.class.getDeclaredMethods();
+		ClassName myAlgorithm = ClassName.get(this.getPackageName() + "."
+											  + this.getStageName() + ".algorithm",
+											  this.getAbbrev() + Algorithm.class.getSimpleName());
+
+		// class def
+		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + AlgorithmFactory.class.getSimpleName())
+			.addModifiers(javax.lang.model.element.Modifier.PUBLIC)
+			.superclass(ParameterizedTypeName.get(ClassName.get(AlgorithmFactory.class),myAlgorithm));
 		for (int i = 0; i < m.length; i++) {
 			if (java.lang.reflect.Modifier.isAbstract(m[i].getModifiers())
 				&& m[i].getName().equals("getAlgorithm")) {
@@ -113,8 +113,8 @@ public class AlgorithmFactoryBuilder extends Builder{
 					.addModifiers(Modifier.PROTECTED)
 					.addAnnotation(Override.class)
 					.addParameter(String.class,"name",Modifier.FINAL)
-					.returns(stageAlgorithm)
-					.addStatement("$T rtn = null",stageAlgorithm);
+					.returns(myAlgorithm)
+					.addStatement("$T rtn = null",myAlgorithm);
 				for (String alg : this.getAlgorithmNames()) {
 					ClassName algClass = ClassName.get(this.getPackageName() + "." + this.getStageName() + ".algorithm." + alg, alg);
 					methodBuilder.beginControlFlow("if (name.equals(\"$L\"))",alg)

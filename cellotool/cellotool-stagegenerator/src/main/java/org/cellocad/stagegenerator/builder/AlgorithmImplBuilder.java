@@ -24,6 +24,9 @@ import java.lang.reflect.Method;
 
 import javax.lang.model.element.Modifier;
 
+import org.cellocad.common.algorithm.Algorithm;
+
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -57,17 +60,16 @@ public class AlgorithmImplBuilder extends Builder{
 	 * @see Builder#build()
 	 */
 	public JavaFile build() {
-		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAlgorithm());
-		builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
+		// get relevant classes
+		ClassName myAlgorithm = ClassName.get(this.getPackageName() + "."
+												 + this.getStageName() + ".algorithm",
+												 this.getAbbrev() + Algorithm.class.getSimpleName());
 
-		// execution methods
-		Class<?> c = null;
-		try {
-			c = Class.forName("org.cellocad.common.algorithm.Algorithm");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		Method m[] = c.getDeclaredMethods();
+		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAlgorithm())
+			.addModifiers(javax.lang.model.element.Modifier.PUBLIC)
+			.superclass(myAlgorithm);
+
+		Method m[] = Algorithm.class.getDeclaredMethods();
 		for (int i = 0; i < m.length; i++) {
 			if (java.lang.reflect.Modifier.isAbstract(m[i].getModifiers())) {
 				MethodSpec method = MethodSpec

@@ -22,13 +22,22 @@ package org.cellocad.stagegenerator.builder;
 
 import javax.lang.model.element.Modifier;
 
+import org.cellocad.common.algorithm.Algorithm;
+import org.cellocad.common.algorithm.AlgorithmFactory;
+import org.cellocad.common.netlist.Netlist;
+import org.cellocad.common.profile.AlgorithmProfile;
+import org.cellocad.common.runtime.RuntimeObject;
+import org.cellocad.common.runtime.environment.RuntimeEnv;
+import org.cellocad.common.stage.StageConfiguration;
+import org.cellocad.common.target.data.TargetData;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 /**
- * Builder for the RuntimeObject class of a stage.
+ * Builder for the RuntimeObject of a stage.
  *
  * @author: Timothy Jones
  *
@@ -53,50 +62,28 @@ public class RuntimeObjectBuilder extends Builder{
 	 */
 	public JavaFile build() {
 		// get relevant classes
-		Class<?> stageConfigurationClass = null;
-		Class<?> targetDataClass = null;
-		Class<?> netlistClass = null;
-		Class<?> runtimeEnvClass = null;
-		Class<?> algorithmProfileClass = null;
-		Class<?> algorithmClass = null;
-		Class<?> algorithmFactoryClass = null;
-		Class<?> runtimeExceptionClass = null;
-		Class<?> runtimeObjectClass = null;
-		try {
-			stageConfigurationClass = Class.forName("org.cellocad.common.stage.StageConfiguration");
-			targetDataClass = Class.forName("org.cellocad.common.target.data.TargetData");
-			netlistClass = Class.forName("org.cellocad.common.netlist.Netlist");
-			runtimeEnvClass = Class.forName("org.cellocad.common.runtime.environment.RuntimeEnv");
-			algorithmProfileClass = Class.forName("org.cellocad.common.profile.AlgorithmProfile");
-			algorithmClass = Class.forName("org.cellocad.common.algorithm.Algorithm");
-			algorithmFactoryClass = Class.forName("org.cellocad.common.algorithm.AlgorithmFactory");
-			runtimeExceptionClass = Class.forName("java.lang.RuntimeException");
-			runtimeObjectClass = Class.forName("org.cellocad.common.runtime.RuntimeObject");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		ClassName stageAlgorithmFactoryClass = ClassName.get(this.getPackageName() + "."
-															 + this.getStageName() + ".algorithm",
-															 this.getAbbrev() + algorithmFactoryClass.getSimpleName());
-		ClassName stageAlgorithmClass = ClassName.get(this.getPackageName() + "."
-													  + this.getStageName() + ".algorithm",
-													  this.getAbbrev() + algorithmClass.getSimpleName());
+		ClassName myAlgorithmFactory = ClassName.get(this.getPackageName() + "."
+													 + this.getStageName() + ".algorithm",
+													 this.getAbbrev() + AlgorithmFactory.class.getSimpleName());
+		ClassName myAlgorithm = ClassName.get(this.getPackageName() + "."
+											  + this.getStageName() + ".algorithm",
+											  this.getAbbrev() + Algorithm.class.getSimpleName());
 
 		// class def
-		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + runtimeObjectClass.getSimpleName())
+		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + RuntimeObject.class.getSimpleName())
 			.addModifiers(javax.lang.model.element.Modifier.PUBLIC)
-			.superclass(runtimeObjectClass);
+			.superclass(RuntimeObject.class);
 
 		MethodSpec method = null;
 
 		// constructor
 		method = MethodSpec
-			.methodBuilder(this.getAbbrev() + "RuntimeObject")
+			.constructorBuilder()
 			.addModifiers(Modifier.PUBLIC)
-			.addParameter(stageConfigurationClass,"stageConfiguration",Modifier.FINAL)
-			.addParameter(targetDataClass,"targetData",Modifier.FINAL)
-			.addParameter(netlistClass,"netlist",Modifier.FINAL)
-			.addParameter(runtimeEnvClass,"runEnv",Modifier.FINAL)
+			.addParameter(StageConfiguration.class,"stageConfiguration",Modifier.FINAL)
+			.addParameter(TargetData.class,"targetData",Modifier.FINAL)
+			.addParameter(Netlist.class,"netlist",Modifier.FINAL)
+			.addParameter(RuntimeEnv.class,"runEnv",Modifier.FINAL)
 			.addStatement("super(stageConfiguration, targetData, netlist, runEnv)")
 			.build();
 		builder.addMethod(method);
@@ -107,41 +94,30 @@ public class RuntimeObjectBuilder extends Builder{
 			.addAnnotation(Override.class)
 			.addModifiers(Modifier.PROTECTED)
 			.returns(void.class)
-			.addComment(algorithmProfileClass.getSimpleName())
-			.addStatement(BuilderUtils.instantiateByCall(algorithmProfileClass.getSimpleName(),
-																"AProfile",
-																"this.get"
-																+ stageConfigurationClass.getSimpleName()
-																+ "().get"
-																+ algorithmProfileClass.getSimpleName()))
-			.addComment("run " + algorithmClass.getSimpleName())
-			.addStatement(BuilderUtils.instantiateByNew(stageAlgorithmFactoryClass.simpleName(),
-														 this.getStageName().substring(0,1) + "AF",
-														 stageAlgorithmFactoryClass.simpleName()))
-			.addStatement(BuilderUtils.instantiateByCall(stageAlgorithmClass.simpleName(),
-														 "algo",
-														 this.getStageName().substring(0,1)
-														 + "AF.get"
-														 + algorithmClass.getSimpleName(),
-														 "AProfile"))
+			.addComment(AlgorithmProfile.class.getSimpleName())
+			.addStatement("$T AProfile = this.get$L().get$L()",
+						  AlgorithmProfile.class,
+						  StageConfiguration.class.getSimpleName(),
+						  AlgorithmProfile.class.getSimpleName())
+			.addComment("run $L",Algorithm.class.getSimpleName())
+			.addStatement("$T $L = new $T()",
+						  myAlgorithmFactory,
+						  this.getStageName().substring(0,1) + "AF",
+						  myAlgorithmFactory)
+			.addStatement("$T algo = $L.get$L(AProfile)",
+						  myAlgorithm,
+						  this.getStageName().substring(0,1) + "AF",
+						  Algorithm.class.getSimpleName())
 			.beginControlFlow("if (algo == null)")
-			.addStatement("throw new "
-						  + runtimeExceptionClass.getSimpleName()
-						  + "(\""
-						  + algorithmClass.getSimpleName()
-						  + " not found!\")")
+			.addStatement("throw new $L(\"$L not found!\")",
+						  RuntimeException.class.getSimpleName(),
+						  Algorithm.class.getSimpleName())
 			.endControlFlow()
-			.addStatement(BuilderUtils.methodCall("algo.execute",
-												  "this.get"
-												  + netlistClass.getSimpleName()
-												  + "()",
-												  "this.get"
-												  + targetDataClass.getSimpleName()
-												  + "()",
-												  "AProfile",
-												  "this.get"
-												  + runtimeEnvClass.getSimpleName()
-												  + "())"))
+			.addStatement("algo.execute(this.get$L(), this.get$L(), $L, this.get$L())",
+						  Netlist.class.getSimpleName(),
+						  TargetData.class.getSimpleName(),
+						  "AProfile",
+						  RuntimeEnv.class.getSimpleName())
 			.build();
 		builder.addMethod(method);
 

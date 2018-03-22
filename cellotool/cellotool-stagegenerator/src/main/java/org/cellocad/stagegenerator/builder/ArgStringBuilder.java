@@ -20,6 +20,9 @@
  */
 package org.cellocad.stagegenerator.builder;
 
+import org.cellocad.common.runtime.environment.ArgString;
+import org.cellocad.common.stage.runtime.environment.StageArgString;
+
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
@@ -48,20 +51,10 @@ public class ArgStringBuilder extends Builder{
 	 * @see Builder#build()
 	 */
 	public JavaFile build() {
-		// get relevant classes
-		Class<?> argStringClass = null;
-		Class<?> stageArgStringClass = null;
-		try {
-			argStringClass = Class.forName("org.cellocad.common.runtime.environment.ArgString");
-			stageArgStringClass = Class.forName("org.cellocad.common.stage.runtime.environment.StageArgString");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
 		// class def
-		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + argStringClass.getSimpleName())
+		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + ArgString.class.getSimpleName())
 			.addModifiers(javax.lang.model.element.Modifier.PUBLIC)
-			.superclass(stageArgStringClass);
+			.superclass(StageArgString.class);
 
 		TypeSpec ts = builder.build();
 		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."

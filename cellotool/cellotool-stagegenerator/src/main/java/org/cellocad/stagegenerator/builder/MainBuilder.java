@@ -22,6 +22,16 @@ package org.cellocad.stagegenerator.builder;
 
 import javax.lang.model.element.Modifier;
 
+import org.cellocad.common.netlist.Netlist;
+import org.cellocad.common.netlist.NetlistUtils;
+import org.cellocad.common.runtime.RuntimeObject;
+import org.cellocad.common.runtime.environment.ArgString;
+import org.cellocad.common.runtime.environment.RuntimeEnv;
+import org.cellocad.common.stage.StageConfiguration;
+import org.cellocad.common.stage.StageUtils;
+import org.cellocad.common.target.data.TargetData;
+import org.cellocad.common.target.data.TargetDataUtils;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -53,37 +63,15 @@ public class MainBuilder extends Builder{
 	 */
 	public JavaFile build() {
 		// get relevant classes
-		Class<?> runtimeEnvClass = null;
-		Class<?> netlistClass = null;
-		Class<?> stageConfigurationClass = null;
-		Class<?> stageUtilsClass = null;
-		Class<?> targetDataClass = null;
-		Class<?> targetDataUtilsClass = null;
-		Class<?> argStringClass = null;
-		Class<?> runtimeObjectClass = null;
-		Class<?> netlistUtilsClass = null;
-		try {
-			runtimeEnvClass = Class.forName("org.cellocad.common.runtime.environment.RuntimeEnv");
-			netlistClass = Class.forName("org.cellocad.common.netlist.Netlist");
-			stageConfigurationClass = Class.forName("org.cellocad.common.stage.StageConfiguration");
-			stageUtilsClass = Class.forName("org.cellocad.common.stage.StageUtils");
-			targetDataClass = Class.forName("org.cellocad.common.target.data.TargetData");
-			targetDataUtilsClass = Class.forName("org.cellocad.common.target.data.TargetDataUtils");
-			argStringClass = Class.forName("org.cellocad.common.runtime.environment.ArgString");
-			runtimeObjectClass = Class.forName("org.cellocad.common.runtime.RuntimeObject");
-			netlistUtilsClass = Class.forName("org.cellocad.common.netlist.NetlistUtils");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		ClassName stageRuntimeEnvClass = ClassName.get(this.getPackageName() + "."
-													   + this.getStageName() + ".algorithm",
-													   this.getAbbrev() + runtimeEnvClass.getSimpleName());
-		ClassName stageArgStringClass = ClassName.get(this.getPackageName() + "."
-													  + this.getStageName() + ".runtime.environment.",
-													  this.getAbbrev() + argStringClass.getSimpleName());
-		ClassName stageRuntimeObjectClass = ClassName.get(this.getPackageName() + "."
-														  + this.getStageName() + ".runtime.environment.",
-														  this.getAbbrev() + runtimeObjectClass.getSimpleName());
+		ClassName myRuntimeEnv = ClassName.get(this.getPackageName() + "."
+											   + this.getStageName() + ".runtime.environment",
+											   this.getAbbrev() + RuntimeEnv.class.getSimpleName());
+		ClassName myArgString = ClassName.get(this.getPackageName() + "."
+											  + this.getStageName() + ".runtime.environment",
+											  this.getAbbrev() + ArgString.class.getSimpleName());
+		ClassName myRuntimeObject = ClassName.get(this.getPackageName() + "."
+												  + this.getStageName() + ".runtime",
+												  this.getAbbrev() + RuntimeObject.class.getSimpleName());
 
 		// class def
 		TypeSpec.Builder builder = TypeSpec.classBuilder("Main");
@@ -99,63 +87,57 @@ public class MainBuilder extends Builder{
 			.addModifiers(Modifier.PUBLIC,Modifier.STATIC)
 			.returns(void.class)
 			.addParameter(String[].class,"args")
-			.addStatement(BuilderUtils.instantiateByNew(runtimeEnvClass.getSimpleName(),
-															   runEnvVar,
-															   stageRuntimeEnvClass.simpleName(),
-															   "args"))
-			.addStatement(BuilderUtils.methodCall(runEnvVar + ".setName",
-												  "\"" + this.getStageName() + "\""))
-			.addComment("Read "
-						+ netlistClass.getSimpleName())
-			.addStatement(BuilderUtils.instantiateByCall(netlistClass.getSimpleName(),
-																netlistVar,
-																netlistUtilsClass.getSimpleName()
-																+ ".get"
-																+ netlistClass.getSimpleName(),
-																runEnvVar,
-																stageArgStringClass.simpleName()
-																+ ".INPUTNETLIST"))
-			.addComment("get "
-						+ stageConfigurationClass.getSimpleName())
-			.addStatement(BuilderUtils.instantiateByCall(stageConfigurationClass.getSimpleName(),
-																stageConfigurationVar,
-																stageUtilsClass.getSimpleName()
-																+ ".get"
-																+ stageConfigurationClass.getSimpleName(),
-																runEnvVar,
-																stageArgStringClass.simpleName()
-																+ ".CONFIGFILE)"))
-			.addComment("get " + targetDataClass.getSimpleName())
-			.addStatement(BuilderUtils.instantiateByCall(targetDataClass.getSimpleName(),
-																targetDataVar,
-																targetDataUtilsClass.getSimpleName()
-																+ ".getTarget"
-																+ targetDataClass.getSimpleName(),
-																runEnvVar,
-																stageArgStringClass.simpleName()
-																+ ".TARGETDATAFILE",
-																stageArgStringClass.simpleName()
-																+ ".TARGETDATADIR"))
+			.addStatement("$T $L = new $T(args)",
+						  RuntimeEnv.class,
+						  runEnvVar,
+						  myRuntimeEnv)
+			.addStatement("$L.setName($S)",runEnvVar,this.getStageName())
+			.addComment("Read $L",Netlist.class.getSimpleName())
+			.addStatement("$T $L = $T.get$L($L, $T.INPUTNETLIST)",
+						  Netlist.class,
+						  netlistVar,
+						  NetlistUtils.class,
+						  Netlist.class.getSimpleName(),
+						  runEnvVar,
+						  myArgString)
+			.addComment("get $L",StageConfiguration.class.getSimpleName())
+			.addStatement("$T $L = $T.get$L($L, $T.CONFIGFILE)",
+						  StageConfiguration.class,
+						  stageConfigurationVar,
+						  StageUtils.class,
+						  StageConfiguration.class.getSimpleName(),
+						  runEnvVar,
+						  myArgString)
+			.addComment("get $L",TargetData.class.getSimpleName())
+			.addStatement("$T $L = $T.getTarget$L($L, $T.TARGETDATAFILE, $T.TARGETDATADIR)",
+						  TargetData.class,
+						  targetDataVar,
+						  TargetDataUtils.class,
+						  TargetData.class.getSimpleName(),
+						  runEnvVar,
+						  myArgString,
+						  myArgString)
 			.addComment("Execute")
-			.addStatement(BuilderUtils.instantiateByNew(stageRuntimeObjectClass.simpleName(),
-															   this.getAbbrev(),
-															   stageRuntimeObjectClass.simpleName(),
-															   stageConfigurationVar,
-															   targetDataVar,
-															   netlistVar,
-															   runEnvVar))
-			.addStatement(BuilderUtils.methodCall(this.getAbbrev() + ".setName","\"" + this.getStageName() + "\""))
-			.addStatement(BuilderUtils.methodCall(this.getAbbrev() + ".execute"))
-			.addComment("Write " + netlistClass.getSimpleName())
-			.addStatement(BuilderUtils.instantiateByCall(String.class.getSimpleName(),
-																outputFilenameVar,
-																runEnvVar
-																+ ".getOptionalValue",
-																stageArgStringClass.simpleName()
-																+ ".OUTPUTNETLIST"))
-			.addStatement(BuilderUtils.methodCall(netlistUtilsClass.getSimpleName() + ".writeJSONForNetlist",
-												  netlistVar,
-												  outputFilenameVar))
+			.addStatement("$T $L = new $T($L, $L, $L, $L)",
+						  myRuntimeObject,
+						  this.getAbbrev(),
+						  myRuntimeObject,
+						  stageConfigurationVar,
+						  targetDataVar,
+						  netlistVar,
+						  runEnvVar)
+			.addStatement("$L.setName($S)",this.getAbbrev(),this.getStageName())
+			.addStatement("$L.execute()",this.getAbbrev())
+			.addComment("Write $L",Netlist.class.getSimpleName())
+			.addStatement("$T $L = $L.getOptionValue($T.OUTPUTNETLIST)",
+						  String.class,
+						  outputFilenameVar,
+						  runEnvVar,
+						  myArgString)
+			.addStatement("$T.writeJSONForNetlist($L,$L)",
+						  NetlistUtils.class,
+						  netlistVar,
+						  outputFilenameVar)
 			.build();
 
 		builder.addMethod(method);

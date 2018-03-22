@@ -22,6 +22,12 @@ package org.cellocad.stagegenerator.builder;
 
 import javax.lang.model.element.Modifier;
 
+import org.apache.commons.cli.Option;
+import org.cellocad.common.runtime.environment.ArgDescription;
+import org.cellocad.common.runtime.environment.ArgString;
+import org.cellocad.common.runtime.environment.RuntimeEnv;
+import org.cellocad.common.stage.runtime.environment.StageRuntimeEnv;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -53,48 +59,35 @@ public class RuntimeEnvBuilder extends Builder{
 	 */
 	public JavaFile build() {
 		// get relevant classes
-		Class<?> runtimeEnvClass = null;
-		Class<?> stageRuntimeEnvClass = null;
-		Class<?> optionClass = null;
-		Class<?> argStringClass = null;
-		Class<?> argDescriptionClass = null;
-		try {
-			runtimeEnvClass = Class.forName("org.cellocad.common.runtime.environment.RuntimeEnv");
-			stageRuntimeEnvClass = Class.forName("org.cellocad.common.stage.runtime.environment.StageRuntimeEnv");
-			optionClass = Class.forName("org.apache.commons.cli.Option");
-			argStringClass = Class.forName("org.cellocad.common.runtime.environment.ArgString");
-			argDescriptionClass = Class.forName("org.cellocad.common.runtime.environment.ArgDescription");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		ClassName stageArgStringClass = ClassName.get(this.getPackageName() + "."
+		ClassName myArgString = ClassName.get(this.getPackageName() + "."
 													  + this.getStageName() + ".runtime.environment",
-													  this.getAbbrev() + argStringClass.getSimpleName());
-		ClassName stageArgDescriptionClass = ClassName.get(this.getPackageName() + "."
+													  this.getAbbrev() + ArgString.class.getSimpleName());
+		ClassName myArgDescription = ClassName.get(this.getPackageName() + "."
 														   + this.getStageName() + ".runtime.environment",
-														   this.getAbbrev() + argDescriptionClass.getSimpleName());
+														   this.getAbbrev() + ArgDescription.class.getSimpleName());
 
 		// class def
-		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + runtimeEnvClass.getSimpleName())
+		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + RuntimeEnv.class.getSimpleName())
 			.addModifiers(javax.lang.model.element.Modifier.PUBLIC)
-			.superclass(stageRuntimeEnvClass);
+			.superclass(StageRuntimeEnv.class);
 
+		// constructor
 		MethodSpec method = null;
 		method = MethodSpec
-			.methodBuilder(this.getAbbrev() + runtimeEnvClass.getSimpleName())
+			.constructorBuilder()
 			.addModifiers(Modifier.PUBLIC)
 			.addParameter(String[].class,"args")
 			.addStatement("super(args)")
 			.build();
 		builder.addMethod(method);
 
-		method = getOptionGetter("InputNetlist", optionClass,stageArgStringClass.simpleName(),stageArgDescriptionClass.simpleName());
+		method = getOptionGetter("InputNetlist",Option.class,myArgString,myArgDescription);
 		builder.addMethod(method);
 
-		method = getOptionGetter("ConfigFile", optionClass,stageArgStringClass.simpleName(),stageArgDescriptionClass.simpleName());
+		method = getOptionGetter("ConfigFile",Option.class,myArgString,myArgDescription);
 		builder.addMethod(method);
 
-		method = getOptionGetter("OutputNetlist", optionClass,stageArgStringClass.simpleName(),stageArgDescriptionClass.simpleName());
+		method = getOptionGetter("OutputNetlist",Option.class,myArgString,myArgDescription);
 		builder.addMethod(method);
 
 		TypeSpec ts = builder.build();
@@ -114,19 +107,20 @@ public class RuntimeEnvBuilder extends Builder{
 	 * @param argDescription the name of the ArgDescription class for this stage.
 	 * @return the MethodSpec for the getter.
 	 */
-	private MethodSpec getOptionGetter(String name, Class<?> option, String argString, String argDescription) {
+	private MethodSpec getOptionGetter(String name, Class<?> option, ClassName argString, ClassName argDescription) {
 		MethodSpec rtn = MethodSpec
-			.methodBuilder("get" + name + "Option")
+			.methodBuilder("get" + name + option.getSimpleName())
 			.addModifiers(Modifier.PROTECTED)
 			.returns(option)
-			.addStatement(BuilderUtils.instantiateByNew(option.getSimpleName(),
-															   "rtn",
-															   option.getSimpleName(),
-															   argString + "." + name.toUpperCase(),
-															   "true",
-															   argDescription + "." + name.toUpperCase() + "_DESCRIPTION"))
-			.addStatement(BuilderUtils.methodCall("this.makeRequired",
-												  "true"))
+			.addStatement("$T rtn = new $T($T.$L, $L, $T.$L_DESCRIPTION)",
+						  option,
+						  option,
+						  argString,
+						  name.toUpperCase(),
+						  "true",
+						  argDescription,
+						  name.toUpperCase())
+			.addStatement("this.makeRequired(rtn)")
 			.addStatement("return rtn")
 			.build();
 		return rtn;
