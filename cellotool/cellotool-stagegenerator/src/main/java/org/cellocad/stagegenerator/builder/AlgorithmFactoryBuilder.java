@@ -96,15 +96,16 @@ public class AlgorithmFactoryBuilder extends Builder{
 	 */
 	public JavaFile build() {
 		// get relevant classes
-		Method m[] = AlgorithmFactory.class.getDeclaredMethods();
-		ClassName myAlgorithm = ClassName.get(this.getPackageName() + "."
-											  + this.getStageName() + ".algorithm",
-											  this.getAbbrev() + Algorithm.class.getSimpleName());
+		String name = "";
+		name = this.getPackageName() + "." + this.getStageName() + ".algorithm";
+		ClassName myAlgorithm = ClassName.get(name,this.getAbbrev() + Algorithm.class.getSimpleName());
 
 		// class def
 		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + AlgorithmFactory.class.getSimpleName())
 			.addModifiers(javax.lang.model.element.Modifier.PUBLIC)
 			.superclass(ParameterizedTypeName.get(ClassName.get(AlgorithmFactory.class),myAlgorithm));
+
+		Method m[] = AlgorithmFactory.class.getDeclaredMethods();
 		for (int i = 0; i < m.length; i++) {
 			if (java.lang.reflect.Modifier.isAbstract(m[i].getModifiers())
 				&& m[i].getName().equals("getAlgorithm")) {
@@ -127,9 +128,8 @@ public class AlgorithmFactoryBuilder extends Builder{
 			}
 		}
 		TypeSpec ts = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
-											 + this.getStageName() + ".algorithm",
-											 ts).build();
+		name = this.getPackageName() + "." + this.getStageName() + ".algorithm";
+		JavaFile javaFile = JavaFile.builder(name,ts).build();
 
 		return javaFile;
 	}

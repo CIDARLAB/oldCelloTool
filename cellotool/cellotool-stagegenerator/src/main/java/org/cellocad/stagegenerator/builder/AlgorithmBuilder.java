@@ -110,9 +110,8 @@ public class AlgorithmBuilder extends Builder{
 		builder.addField(RuntimeEnv.class,runtimeEnvVar,Modifier.PRIVATE);
 
 		TypeSpec ts = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
-											 + this.getStageName() + ".algorithm",
-											 ts).build();
+		String name = this.getPackageName() + "." + this.getStageName() + ".algorithm";
+		JavaFile javaFile = JavaFile.builder(name,ts).build();
 
 		return javaFile;
 	}

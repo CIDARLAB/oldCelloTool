@@ -77,10 +77,8 @@ public class ArgDescriptionBuilder extends Builder{
 		builder.addField(f);
 
 		TypeSpec ts = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
-											 + this.getStageName() + "."
-											 + "runtime.environment",
-											 ts).build();
+		String name = this.getPackageName() + "." + this.getStageName() + "." + "runtime.environment";
+		JavaFile javaFile = JavaFile.builder(name,ts).build();
 		return javaFile;
 	}
 }

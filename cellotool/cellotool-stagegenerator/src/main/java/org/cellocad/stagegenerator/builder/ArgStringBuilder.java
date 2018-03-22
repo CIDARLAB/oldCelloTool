@@ -57,10 +57,8 @@ public class ArgStringBuilder extends Builder{
 			.superclass(StageArgString.class);
 
 		TypeSpec ts = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
-											 + this.getStageName() + "."
-											 + "runtime.environment",
-											 ts).build();
+		String name = this.getPackageName() + "." + this.getStageName() + "." + "runtime.environment";
+		JavaFile javaFile = JavaFile.builder(name,ts).build();
 		return javaFile;
 	}
 }

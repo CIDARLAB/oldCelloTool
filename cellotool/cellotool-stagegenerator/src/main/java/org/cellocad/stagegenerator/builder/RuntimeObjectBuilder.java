@@ -62,12 +62,11 @@ public class RuntimeObjectBuilder extends Builder{
 	 */
 	public JavaFile build() {
 		// get relevant classes
-		ClassName myAlgorithmFactory = ClassName.get(this.getPackageName() + "."
-													 + this.getStageName() + ".algorithm",
-													 this.getAbbrev() + AlgorithmFactory.class.getSimpleName());
-		ClassName myAlgorithm = ClassName.get(this.getPackageName() + "."
-											  + this.getStageName() + ".algorithm",
-											  this.getAbbrev() + Algorithm.class.getSimpleName());
+		String name = "";
+		name = this.getPackageName() + "." + this.getStageName() + ".algorithm";
+		ClassName myAlgorithmFactory = ClassName.get(name,this.getAbbrev() + AlgorithmFactory.class.getSimpleName());
+		name = this.getPackageName() + "." + this.getStageName() + ".algorithm";
+		ClassName myAlgorithm = ClassName.get(name,this.getAbbrev() + Algorithm.class.getSimpleName());
 
 		// class def
 		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAbbrev() + RuntimeObject.class.getSimpleName())
@@ -121,10 +120,10 @@ public class RuntimeObjectBuilder extends Builder{
 			.build();
 		builder.addMethod(method);
 
-		TypeSpec factory = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
-											 + this.getStageName() + ".runtime",
-											 factory).build();
+		TypeSpec ts = builder.build();
+		name = this.getPackageName() + "." + this.getStageName() + ".runtime";
+		JavaFile javaFile = JavaFile.builder(name,ts).build();
+
 		return javaFile;
 	}
 

@@ -61,9 +61,9 @@ public class AlgorithmImplBuilder extends Builder{
 	 */
 	public JavaFile build() {
 		// get relevant classes
-		ClassName myAlgorithm = ClassName.get(this.getPackageName() + "."
-												 + this.getStageName() + ".algorithm",
-												 this.getAbbrev() + Algorithm.class.getSimpleName());
+		String name = "";
+		name = this.getPackageName() + "." + this.getStageName() + ".algorithm";
+		ClassName myAlgorithm = ClassName.get(name,this.getAbbrev() + Algorithm.class.getSimpleName());
 
 		TypeSpec.Builder builder = TypeSpec.classBuilder(this.getAlgorithm())
 			.addModifiers(javax.lang.model.element.Modifier.PUBLIC)
@@ -82,10 +82,8 @@ public class AlgorithmImplBuilder extends Builder{
 			}
 		}
 		TypeSpec ts = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
-											 + this.getStageName() + ".algorithm."
-											 + this.getAlgorithm(),
-											 ts).build();
+		name = this.getPackageName() + "." + this.getStageName() + ".algorithm." + this.getAlgorithm();
+		JavaFile javaFile = JavaFile.builder(name,ts).build();
 
 		return javaFile;
 	}

@@ -63,15 +63,13 @@ public class MainBuilder extends Builder{
 	 */
 	public JavaFile build() {
 		// get relevant classes
-		ClassName myRuntimeEnv = ClassName.get(this.getPackageName() + "."
-											   + this.getStageName() + ".runtime.environment",
-											   this.getAbbrev() + RuntimeEnv.class.getSimpleName());
-		ClassName myArgString = ClassName.get(this.getPackageName() + "."
-											  + this.getStageName() + ".runtime.environment",
-											  this.getAbbrev() + ArgString.class.getSimpleName());
-		ClassName myRuntimeObject = ClassName.get(this.getPackageName() + "."
-												  + this.getStageName() + ".runtime",
-												  this.getAbbrev() + RuntimeObject.class.getSimpleName());
+		String name = "";
+		name = this.getPackageName() + "." + this.getStageName() + ".runtime.environment";
+		ClassName myRuntimeEnv = ClassName.get(name,this.getAbbrev() + RuntimeEnv.class.getSimpleName());
+		name = this.getPackageName() + "." + this.getStageName() + ".runtime.environment";
+		ClassName myArgString = ClassName.get(name,this.getAbbrev() + ArgString.class.getSimpleName());
+		name = this.getPackageName() + "."+ this.getStageName() + ".runtime";
+		ClassName myRuntimeObject = ClassName.get(name,this.getAbbrev() + RuntimeObject.class.getSimpleName());
 
 		// class def
 		TypeSpec.Builder builder = TypeSpec.classBuilder("Main")
@@ -142,10 +140,8 @@ public class MainBuilder extends Builder{
 
 		builder.addMethod(method);
 		TypeSpec ts = builder.build();
-		JavaFile javaFile = JavaFile.builder(this.getPackageName() + "."
-											 + this.getStageName() + "."
-											 + "runtime",
-											 ts).build();
+		name = this.getPackageName() + "." + this.getStageName() + "." + "runtime";
+		JavaFile javaFile = JavaFile.builder(name,ts).build();
 		return javaFile;
 	}
 
