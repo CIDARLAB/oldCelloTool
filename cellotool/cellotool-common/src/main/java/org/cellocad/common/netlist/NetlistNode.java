@@ -218,7 +218,9 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		// partitionID
 		rtn += JSONUtils.getEntryToString("partitionID", this.getPartitionID());
 		// gate
-		rtn += JSONUtils.getEntryToString("gate", this.getGate());
+		if (this.getGate() != null) {
+			rtn += JSONUtils.getEntryToString("gate", this.getGate());
+		}
 		// parts
 		if (this.getParts() != null
 				&&
