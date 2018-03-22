@@ -1,5 +1,8 @@
 # CelloTool
 
+## dependencies
+You must have >=readline-7.0 installed for the bundled yosys binaries to run.
+
 ## run
 ```
 cd cellotool
@@ -20,6 +23,3 @@ java -cp "./target/*" org.cellocad.stagegenerator.runtime.Main -pkgName org.cell
                                                                -stageAbbrev MS \
                                                                -outputDir cellotool-mystage/src/main/java
 ```
-
-## dependencies
-You must have >=readline-7.0 installed for the bundled yosys binaries to run.
