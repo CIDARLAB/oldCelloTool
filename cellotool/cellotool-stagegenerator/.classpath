@@ -4,7 +4,7 @@
   <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="var" path="M2_REPO/org/cellocad/cellotool-common/0.1.1-SNAPSHOT/cellotool-common-0.1.1-SNAPSHOT.jar"/>
+  <classpathentry kind="src" path="/cellotool-common"/>
   <classpathentry kind="var" path="M2_REPO/commons-cli/commons-cli/1.4/commons-cli-1.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-csv/1.5/commons-csv-1.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar"/>
