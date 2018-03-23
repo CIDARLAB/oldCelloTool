@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.cellocad.common.Utils;
-import org.cellocad.technologymapping.common.TMUtils;
 import org.cellocad.technologymapping.common.graph.algorithm.UpstreamDFS;
 import org.cellocad.technologymapping.common.netlist.TMEdge;
 import org.cellocad.technologymapping.common.netlist.TMNetlist;
@@ -40,7 +39,9 @@ import org.cellocad.technologymapping.common.netlist.TMNode;
 public class LogicSimulator extends Simulator{
 
 	/**
-	 * Create a new LogicSimulator.
+	 * {@inheritDoc}
+	 *
+	 * @see org.cellocad.common.CObject#LogicSimulator()
 	 */
 	public LogicSimulator() {
 		super();
@@ -57,12 +58,17 @@ public class LogicSimulator extends Simulator{
 		this.setTMNetlist(netlist);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Simulator#run()
+	 */
 	public void run() {
 		computeBooleanLogic(this.getTMNetlist());
 	}
 
 	private static void computeBooleanLogic(TMNetlist netlist) {
-		List<List<Boolean>> inputLogic = getInputLogic(TMUtils.getInputNodes(netlist).size());
+		List<List<Boolean>> inputLogic = getInputLogic(netlist.getInputNodes().size());
 
 		UpstreamDFS<TMNode,TMEdge,TMNetlist> dfs = new UpstreamDFS<>(netlist);
 		Iterator<List<Boolean>> it = inputLogic.iterator();

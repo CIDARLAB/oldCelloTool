@@ -22,7 +22,9 @@ package org.cellocad.technologymapping.common.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.cellocad.common.Pair;
 import org.cellocad.common.Utils;
 import org.cellocad.technologymapping.common.graph.algorithm.UpstreamDFS;
 import org.cellocad.technologymapping.common.netlist.TMEdge;
@@ -56,8 +58,47 @@ public class ActivitySimulator extends Simulator{
 		this.setTMNetlist(netlist);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Simulator#run()
+	 */
 	public void run() {
 		computeActivity(this.getTMNetlist());
+	}
+
+	/**
+	 * Set activities to all input nodes based on their boolean logic values.
+	 *
+	 * @param reference the map from input name to reference low-high activity pair.
+	 */
+	public void initInputActivities(Map<String,Pair<Double,Double>> reference) {
+		List<TMNode> nodes = this.getTMNetlist().getInputNodes();
+		for (TMNode node : nodes) {
+			Pair<Double,Double> inputRef = reference.get(node.getGate().getName());
+			Utils.isNullRuntimeException(inputRef, "Input activity reference for " + node.getGate().getName());
+			List<Boolean> logic = node.getLogic();
+			node.setActivity(getInputActivity(logic,inputRef));
+		}
+	}
+
+	/**
+	 * Get input promoter activities from a logic stream and a low-high reference pair.
+	 *
+	 * @param logic the boolean list from which to derive input activities.
+	 * @param reference the activity values for false and true boolean states.
+	 * @return the list of promoter activities.
+	 */
+	private List<Double> getInputActivity(List<Boolean> logic, Pair<Double,Double> reference) {
+		List<Double> activity = new ArrayList<>();
+		for (Boolean b : logic) {
+			if (b) {
+				activity.add(reference.getSecond());
+			} else {
+				activity.add(reference.getFirst());
+			}
+		}
+		return activity;
 	}
 
 	/**

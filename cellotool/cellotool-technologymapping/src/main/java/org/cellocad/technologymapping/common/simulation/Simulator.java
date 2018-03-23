@@ -30,6 +30,9 @@ import org.cellocad.common.CObject;
  */
 public abstract class Simulator extends CObject{
 
+	/**
+	 * Run the simulation.
+	 */
 	public abstract void run();
 
 }

@@ -20,7 +20,9 @@
  */
 package org.cellocad.technologymapping.common.netlist;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.cellocad.common.CObjectCollection;
@@ -219,6 +221,59 @@ public class TMNetlist extends GraphTemplate<TMNode,TMEdge>{
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Get all the input nodes in the netlist.
+	 *
+	 * @return the input nodes in the netlist.
+	 */
+	public List<TMNode> getInputNodes() {
+		List<TMNode> rtn = new ArrayList<>();
+		int num = this.getNumVertex();
+		for (int i = 0; i < num; i++) {
+			TMNode node = this.getVertexAtIdx(i);
+			if (node.getNodeType().equals("TopInput")) {
+				rtn.add(node);
+			}
+		}
+		return rtn;
+	}
+
+	/**
+	 * Get all the output nodes in a netlist.
+	 *
+	 * @return the output nodes in the netlist.
+	 */
+	public List<TMNode> getOutputNodes() {
+		List<TMNode> rtn = new ArrayList<>();
+		int num = this.getNumVertex();
+		for (int i = 0; i < num; i++) {
+			TMNode node = this.getVertexAtIdx(i);
+			if (node.getNodeType().equals("TopOutput")) {
+				rtn.add(node);
+			}
+		}
+		return rtn;
+	}
+
+	/**
+	 * Get all the logic nodes in the netlist.
+	 *
+	 * @return the logic nodes in the netlist.
+	 */
+	public List<TMNode> getLogicNodes() {
+		List<TMNode> rtn = new ArrayList<>();
+		int num = this.getNumVertex();
+		for (int i = 0; i < num; i++) {
+			TMNode node = this.getVertexAtIdx(i);
+			if (!node.getNodeType().equals("TopOutput")
+					&&
+					!node.getNodeType().equals("TopInput")) {
+				rtn.add(node);
+			}
+		}
+		return rtn;
 	}
 
 }

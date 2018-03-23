@@ -23,7 +23,6 @@ package org.cellocad.technologymapping.algorithm.SimulatedAnnealing;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Pair;
@@ -31,6 +30,7 @@ import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.technologymapping.algorithm.TMAlgorithm;
 import org.cellocad.technologymapping.common.TMUtils;
 import org.cellocad.technologymapping.common.TargetDataReader;
+import org.cellocad.technologymapping.common.assignment.Assigner;
 import org.cellocad.technologymapping.common.netlist.TMNetlist;
 import org.cellocad.technologymapping.common.netlist.TMNode;
 import org.cellocad.technologymapping.common.score.Scorer;
@@ -137,18 +137,20 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		ls.run();
 
 		// assign input and output components
-		TMUtils.assignInputSensors(this.getTMNetlist(),this.getInputLibrary());
-		TMUtils.assignOutputReporters(this.getTMNetlist(),this.getOutputLibrary());
+		Assigner assigner = new Assigner(this.getTMNetlist());
+		assigner.assignInputSensors(this.getInputLibrary());
+		assigner.assignOutputReporters(this.getOutputLibrary());
 
 		// initialize promoter activity and toxicity
-		TMUtils.initInputActivities(this.getTMNetlist(),TargetDataReader.getInputPromoterActivities(this.getTargetData()));
-		TMUtils.initOutputToxicity(this.getTMNetlist());
+		ActivitySimulator as = new ActivitySimulator(this.getTMNetlist());
+		ToxicitySimulator ts = new ToxicitySimulator(this.getTMNetlist());
+		as.initInputActivities(TargetDataReader.getInputPromoterActivities(this.getTargetData()));
+		ts.initOutputToxicity();
 	}
 
 	@Override
 	protected void run() {
 		logInfo("begin simulated annealing");
-		Random rand = new Random();
 
 		Double logMaxTemp = Math.log10(this.getMaxTemp());
 		Double logMinTemp = Math.log10(this.getMinTemp());
@@ -163,11 +165,15 @@ public class SimulatedAnnealing extends TMAlgorithm{
 
 		Scorer scorer = new Scorer();
 
+		Assigner assigner = new Assigner();
+		assigner.setGateLibrary(this.getGateLibrary());
+
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
 			logInfo("trajectory " + String.valueOf(k+1) + " of " + this.getNumTrajectories().toString());
 
 			netlist = new TMNetlist(this.getTMNetlist());
-			TMUtils.doRandomAssignment(netlist,this.getGateLibrary());
+			assigner.setTMNetlist(netlist);
+			assigner.doRandomAssignment();
 
 			as.setTMNetlist(netlist);
 			as.run();
@@ -177,7 +183,6 @@ public class SimulatedAnnealing extends TMAlgorithm{
 
 			for (int j = 0; j < (this.getNumSteps() + this.getNumT0Steps()); j++) {
 				TMNetlist tmpNetlist = new TMNetlist(netlist);
-				List<TMNode> logicNodes = TMUtils.getLogicNodes(tmpNetlist);
 
 				Double logTemp = logMaxTemp - j * logInc;
 				Double temperature = Math.pow(10, logTemp);
@@ -185,31 +190,8 @@ public class SimulatedAnnealing extends TMAlgorithm{
 					temperature = 0.0;
 				}
 
-				// get a random gate
-				Integer aIdx = rand.nextInt(logicNodes.size());
-				Gate aGate = logicNodes.get(aIdx).getGate();
-				// get a second gate, either used or unused
-				Gate bGate = TMUtils.getAssignableGate(aGate,tmpNetlist,this.getGateLibrary());
-
-				// 1. if second gate is used, swap
-				if (tmpNetlist.hasGate(bGate)) {
-					Integer bIdx = 0; // need to know the second gate index
-					for(int i = 0; i < logicNodes.size(); i++) {
-						if (logicNodes.get(i).getGate().getName()
-								.equals(bGate.getName())) {
-							bIdx = i;
-							break;
-						}
-					}
-					// swap
-					logicNodes.get(aIdx).setGate(bGate);
-					logicNodes.get(bIdx).setGate(aGate);
-
-				}
-				// 2. if second gate is unused, substitute
-				else {
-					logicNodes.get(aIdx).setGate(bGate);
-				}
+				assigner.setTMNetlist(tmpNetlist);
+				assigner.assignRandomGate();
 
 				as.setTMNetlist(tmpNetlist);
 				as.run();

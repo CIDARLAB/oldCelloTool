@@ -21,10 +21,10 @@
 package org.cellocad.technologymapping.common.simulation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.cellocad.common.Utils;
-import org.cellocad.technologymapping.common.TMUtils;
 import org.cellocad.technologymapping.common.netlist.TMEdge;
 import org.cellocad.technologymapping.common.netlist.TMNetlist;
 import org.cellocad.technologymapping.common.netlist.TMNode;
@@ -74,8 +74,27 @@ public class ToxicitySimulator extends Simulator{
 		this.setTMNetlist(netlist);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Simulator#run()
+	 */
 	public void run() {
 		assignToxicity(this.getTMNetlist());
+	}
+
+	/**
+	 * Initialize toxicity at the output nodes.
+	 *
+	 * @param netlist the TMNetlist on which to assign output toxicity.
+	 */
+	public void initOutputToxicity() {
+		List<TMNode> nodes = this.getTMNetlist().getOutputNodes();
+		for (TMNode node : nodes) {
+			List<Boolean> logic = node.getLogic();
+			List<Double> toxicity = Collections.nCopies(logic.size(),1.0);
+			node.setToxicity(toxicity);
+		}
 	}
 
 	/**
@@ -87,7 +106,7 @@ public class ToxicitySimulator extends Simulator{
 	private static void assignToxicity(TMNetlist netlist) {
 		List<Double> toxicity = computeToxicity(netlist);
 
-		List<TMNode> nodes = TMUtils.getOutputNodes(netlist);
+		List<TMNode> nodes = netlist.getOutputNodes();
 		for (TMNode node : nodes) {
 			node.setToxicity(toxicity);
 		}
@@ -102,7 +121,7 @@ public class ToxicitySimulator extends Simulator{
 		List<Double> rtn = new ArrayList<Double>();
 
 		// TechNode out = techMap.findTechNodeByName(TMUtils.getOutputNodes(netlist).get(0).getName());
-		List<TMNode> nodes = TMUtils.getLogicNodes(netlist);
+		List<TMNode> nodes = netlist.getLogicNodes();
 
 		List<List<Double>> nodeToxicities = new ArrayList<>();
 		for (TMNode node : nodes) {
