@@ -33,7 +33,7 @@ import org.cellocad.technologymapping.common.TMUtils;
 import org.cellocad.technologymapping.common.TargetDataReader;
 import org.cellocad.technologymapping.common.netlist.TMNetlist;
 import org.cellocad.technologymapping.common.netlist.TMNode;
-import org.cellocad.technologymapping.common.score.ScoreUtils;
+import org.cellocad.technologymapping.common.score.Scorer;
 import org.cellocad.technologymapping.common.simulation.ActivitySimulator;
 import org.cellocad.technologymapping.common.simulation.LogicSimulator;
 import org.cellocad.technologymapping.common.simulation.ToxicitySimulator;
@@ -161,6 +161,8 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		ActivitySimulator as = new ActivitySimulator();
 		ToxicitySimulator ts = new ToxicitySimulator();
 
+		Scorer scorer = new Scorer();
+
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
 			logInfo("trajectory " + String.valueOf(k+1) + " of " + this.getNumTrajectories().toString());
 
@@ -249,9 +251,9 @@ public class SimulatedAnnealing extends TMAlgorithm{
 				}
 
 				// simulated annealing accept or reject
-				Double probability = Math.exp( (ScoreUtils.getScore(tmpNetlist)
+				Double probability = Math.exp( (scorer.getScore(tmpNetlist)
 						-
-						ScoreUtils.getScore(netlist))
+						scorer.getScore(netlist))
 						/ temperature ); // e^b
 						Double ep = Math.random();
 
@@ -272,18 +274,17 @@ public class SimulatedAnnealing extends TMAlgorithm{
 
 		// pick highest scoring assignment from all trajectories
 		for (TMNetlist l : bestAssignments) {
-			if (ScoreUtils.getScore(l) > ScoreUtils.getScore(netlist)) {
+			if (scorer.getScore(l) > scorer.getScore(netlist)) {
 				netlist = l;
 			}
 		}
 
 		this.setTMNetlist(netlist);
+		logInfo("top score: " + scorer.getScore(this.getTMNetlist()));
 	}
 
 	@Override
 	protected void postprocessing() {
-		logInfo("top score: " + ScoreUtils.getScore(this.getTMNetlist()));
-
 		for (int i = 0; i < this.getTMNetlist().getNumVertex(); i++) {
 			TMNode node = this.getTMNetlist().getVertexAtIdx(i);
 			String msg = "";

@@ -22,6 +22,7 @@ package org.cellocad.technologymapping.common.score;
 
 import java.util.List;
 
+import org.cellocad.common.CObject;
 import org.cellocad.common.Utils;
 import org.cellocad.technologymapping.common.netlist.TMNetlist;
 import org.cellocad.technologymapping.common.netlist.TMNode;
@@ -29,29 +30,37 @@ import org.cellocad.technologymapping.common.netlist.TMNode;
 /**
  * @author: Timothy Jones
  *
- * @date: Mar 14, 2018
+ * @date: Mar 23, 2018
  *
  */
-public class ScoreUtils{
+public class Scorer extends CObject{
 
 	/**
-	 * Evaluate the score for a given assignment.
+	 * {@inheritDoc}
 	 *
-	 * @param netlist the TMNetlist to score.
+	 * @see CObject#Scorer()
+	 */
+	public Scorer() {
+		super();
+	}
+
+	/**
+	 * Evaluate the score of a TMNetlist.
+	 *
 	 * @return the score.
 	 */
-	public static Double getScore(TMNetlist netlist) {
-		Double worst = Double.MAX_VALUE;
+	public Double getScore(final TMNetlist netlist) {
+		Double rtn = Double.MAX_VALUE;
 		for (int i = 0; i < netlist.getNumVertex(); i++) {
 			TMNode v = netlist.getVertexAtIdx(i);
 			if (v.getNodeType().equals("TopOutput")) {
-				Double score = ScoreUtils.getOnOffRatio(v);
-				if(score < worst) {
-					worst = score;
+				Double score = getOnOffRatio(v);
+				if(score < rtn) {
+					rtn = score;
 				}
 			}
 		}
-		return worst;
+		return rtn;
 	}
 
 	/**
@@ -60,7 +69,7 @@ public class ScoreUtils{
 	 * @param node the TechNode to score.
 	 * @return the on off ratio.
 	 */
-	public static Double getOnOffRatio(TMNode node) {
+	private static Double getOnOffRatio(TMNode node) {
 		Utils.isNullRuntimeException(node,"TMNode");
 
 		List<Boolean> logic = node.getLogic();
