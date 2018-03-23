@@ -62,7 +62,7 @@ public class UpstreamDFS<V extends AbstractVertex<E>, E extends AbstractEdge<V>,
 		// doDFS
 		while(!stack.isEmpty()) {
 			V v = stack.pop();
-			// skip if SINK
+			// skip if SOURCE
 			if (v.getVertexType() == VertexType.SOURCE) {
 				v.setVertexDiscovery(VertexDiscovery.VISITED);
 			}
