@@ -64,10 +64,14 @@ public class LogicSimulator extends Simulator{
 	 * @see Simulator#run()
 	 */
 	public void run() {
-		computeBooleanLogic(this.getTMNetlist());
+		computeBooleanLogic();
 	}
 
-	private static void computeBooleanLogic(TMNetlist netlist) {
+	/**
+	 * Compute the boolean logic over the whole netlist. Input logic must have been initialized.
+	 */
+	private void computeBooleanLogic() {
+		TMNetlist netlist = this.getTMNetlist();
 		List<List<Boolean>> inputLogic = getInputLogic(netlist.getInputNodes().size());
 
 		UpstreamDFS<TMNode,TMEdge,TMNetlist> dfs = new UpstreamDFS<>(netlist);
@@ -96,6 +100,13 @@ public class LogicSimulator extends Simulator{
 		}
 	}
 
+	/**
+	 * Get the logic for a gate of the given type, with the given list of inputs.
+	 *
+	 * @param inputs the inputs to the gate.
+	 * @param gateType the type of the gate, e.g. NOT, NOR.
+	 * @return the logic output of the gate.
+	 */
 	private static List<Boolean> getGateLogic(List<List<Boolean>> inputs, String gateType) {
 		List<Boolean> rtn = null;
 		switch (gateType) {
@@ -141,6 +152,12 @@ public class LogicSimulator extends Simulator{
 		return rtn;
 	}
 
+	/**
+	 * Compute NOT.
+	 *
+	 * @param input input.
+	 * @return NOT(input).
+	 */
 	private static List<Boolean> computeLogicalNot(List<Boolean> input) {
 		List<Boolean> rtn = new ArrayList<>();
 		for (Boolean b : input) {
@@ -149,6 +166,12 @@ public class LogicSimulator extends Simulator{
 		return rtn;
 	}
 
+	/**
+	 * Compute AND.
+	 *
+	 * @param input input.
+	 * @return AND(input).
+	 */
 	private static List<Boolean> computeLogicalAnd(List<List<Boolean>> input) {
 		isRaggedInputListException(input);
 		List<Boolean> rtn = new ArrayList<>();
@@ -159,6 +182,12 @@ public class LogicSimulator extends Simulator{
 		return rtn;
 	}
 
+	/**
+	 * Compute OR.
+	 *
+	 * @param input input.
+	 * @return OR(input).
+	 */
 	private static List<Boolean> computeLogicalOr(List<List<Boolean>> input) {
 		isRaggedInputListException(input);
 		List<Boolean> rtn = new ArrayList<>();
@@ -169,6 +198,12 @@ public class LogicSimulator extends Simulator{
 		return rtn;
 	}
 
+	/**
+	 * Compute XOR.
+	 *
+	 * @param input input.
+	 * @return XOR(input).
+	 */
 	private static List<Boolean> computeLogicalXor(List<List<Boolean>> input) {
 		isRaggedInputListException(input);
 		List<Boolean> rtn = new ArrayList<>();
@@ -179,6 +214,13 @@ public class LogicSimulator extends Simulator{
 		return rtn;
 	}
 
+	/**
+	 * Get a column from a List of Lists.
+	 *
+	 * @param input the list-of-lists matrix.
+	 * @param i the column number.
+	 * @return the column.
+	 */
 	private static List<Boolean> getInputColumn(List<List<Boolean>> input, int i) {
 		List<Boolean> rtn = new ArrayList<>();
 		for (int j = 0; j < input.size(); j++) {
@@ -187,11 +229,23 @@ public class LogicSimulator extends Simulator{
 		return rtn;
 	}
 
+	/**
+	 * Get the logic of an output gate.
+	 *
+	 * @param input input.
+	 * @return output logic.
+	 */
 	private static List<Boolean> getOutputLogic(List<List<Boolean>> input) {
 		// 'output or', though this should probably get an explicit or gate in the logic synthesis stage
 		return computeLogicalOr(input);
 	}
 
+	/**
+	 * Get the logic of n input gates.
+	 *
+	 * @param num the number of input gates.
+	 * @return 2^{0,1}^n
+	 */
 	private static List<List<Boolean>> getInputLogic(int num) {
 		List<List<Boolean>> rtn = new ArrayList<>();
 		for (int i = 0; i < num; i++) {
@@ -209,6 +263,14 @@ public class LogicSimulator extends Simulator{
 		return rtn;
 	}
 
+	/**
+	 * Throw an exception if a does not match b, specify the gate type in the message.
+	 *
+	 * @param a the provided number of inputs.
+	 * @param b the required number of inputs.
+	 * @param type the gate type, for the exception message.
+	 * @return false if the correct number of inputs were specified.
+	 */
 	private static boolean isWrongInputNumberException(int a, int b, String type) {
 		boolean rtn = false;
 		rtn = (a != b);
@@ -218,6 +280,12 @@ public class LogicSimulator extends Simulator{
 		return rtn;
 	}
 
+	/**
+	 * Check if the list of lists is ragged, i.e. if sub-lists are not of equal length.
+	 *
+	 * @param input
+	 * @return
+	 */
 	private static boolean isRaggedInputListException(List<List<Boolean>> input) {
 		boolean rtn = false;
 		for (int i = 0; i < input.size(); i++) {

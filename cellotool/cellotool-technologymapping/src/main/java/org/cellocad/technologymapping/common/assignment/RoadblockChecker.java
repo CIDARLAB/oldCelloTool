@@ -37,10 +37,20 @@ import org.cellocad.technologymapping.data.Gate;
  */
 public class RoadblockChecker extends CObject{
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see CObject#RoadblockChecker()
+	 */
 	public RoadblockChecker() {
 		super();
 	}
 
+	/**
+	 * Create a new RoadblockChecker to act upon the given netlist.
+	 *
+	 * @param netlist the netlist to check.
+	 */
 	public RoadblockChecker(TMNetlist netlist) {
 		this();
 		this.setTMNetlist(netlist);

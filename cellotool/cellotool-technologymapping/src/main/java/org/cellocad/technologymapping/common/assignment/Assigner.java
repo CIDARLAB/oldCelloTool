@@ -41,10 +41,20 @@ import org.cellocad.technologymapping.data.Gate;
  */
 public class Assigner extends CObject{
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see CObject#Assigner()
+	 */
 	public Assigner() {
 		super();
 	}
 
+	/**
+	 * Create a new Assigner to act upon the given netlist.
+	 *
+	 * @param netlist the netlist on which to make assignments.
+	 */
 	public Assigner(TMNetlist netlist) {
 		this();
 		this.setTMNetlist(netlist);
@@ -124,6 +134,9 @@ public class Assigner extends CObject{
 		}
 	}
 
+	/**
+	 * Make a random assignment of one gate on the netlist.
+	 */
 	public void assignRandomGate() {
 		Random rand = new Random();
 		List<TMNode> logicNodes = this.getTMNetlist().getLogicNodes();
@@ -154,12 +167,10 @@ public class Assigner extends CObject{
 		}
 	}
 
-		/**
+	/**
 	 * Get a candidate gate for assignment.
 	 *
 	 * @param gate the Gate to be swapped or subsituted.
-	 * @param netlist the TMNetlist to use when checking for gate validity.
-	 * @param gateLibrary the gate library from which to pull candidates.
 	 */
 	private Gate getAssignableGate(Gate gate) {
 		List<Gate> options = new ArrayList<>();
