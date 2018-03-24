@@ -153,9 +153,9 @@ public class SimulatedAnnealing extends TMAlgorithm{
 	protected void run() {
 		logInfo("begin simulated annealing");
 
-		Double logMaxTemp = Math.log10(this.getMaxTemp());
-		Double logMinTemp = Math.log10(this.getMinTemp());
-		Double logInc = (logMaxTemp - logMinTemp) / this.getNumSteps();
+		final Double logMaxTemp = Math.log10(this.getMaxTemp());
+		final Double logMinTemp = Math.log10(this.getMinTemp());
+		final Double logInc = (logMaxTemp - logMinTemp) / this.getNumSteps();
 
 		List<TMNetlist> bestAssignments = new ArrayList<>();
 
