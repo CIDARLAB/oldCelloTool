@@ -31,7 +31,6 @@ import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistNode;
-import org.cellocad.technologymapping.common.netlist.TMEdge;
 import org.cellocad.technologymapping.common.netlist.TMNetlist;
 import org.cellocad.technologymapping.common.netlist.TMNode;
 import org.cellocad.technologymapping.data.Gate;
@@ -89,56 +88,6 @@ public class TMUtils{
 			map.get(type).add(g);
 		}
 		return map;
-	}
-
-	/**
-	 * Get the total number of roadblocks for the assignment.
-	 *
-	 * @return the number of roadblocks.
-	 */
-	public static Integer getNumRoadblocks(TMNetlist netlist,
-			Collection<String> logicRoadblocks,
-			Collection<String> inputRoadblocks) {
-		int rtn = 0;
-		int num = netlist.getNumVertex();
-		for (int i = 0; i < num; i++) {
-			TMNode node = netlist.getVertexAtIdx(i);
-			if (getNumRoadblocks(node,logicRoadblocks,inputRoadblocks) > 0) {
-				rtn++;
-			}
-		}
-		return rtn;
-	}
-
-	/**
-	 * Get the number of roadblocks for a particular TMNode.
-	 *
-	 * @return the number of roadblocks.
-	 */
-	private static Integer getNumRoadblocks(TMNode node,
-			Collection<String> logicRoadblocks,
-			Collection<String> inputRoadblocks) {
-		int rtn = 0;
-		Integer numInputRoadblocks = 0;
-		Integer numLogicRoadblocks = 0;
-		for (int i = 0; i < node.getNumInEdge(); i++) {
-			TMEdge e = node.getInEdgeAtIdx(i);
-			TMNode src = e.getSrc();
-
-			if (inputRoadblocks.contains(src.getGate().getName())) {
-				numInputRoadblocks++;
-			}
-			if (logicRoadblocks.contains(src.getGate().getPromoter())) {
-				numLogicRoadblocks++;
-			}
-		}
-		int total = numInputRoadblocks + numLogicRoadblocks;
-
-		if(numLogicRoadblocks > 0 && total > 1) {
-			rtn++;
-		}
-
-		return rtn;
 	}
 
 	/**

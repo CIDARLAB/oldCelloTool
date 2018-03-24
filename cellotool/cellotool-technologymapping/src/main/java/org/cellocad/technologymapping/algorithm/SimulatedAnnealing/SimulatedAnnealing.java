@@ -31,6 +31,7 @@ import org.cellocad.technologymapping.algorithm.TMAlgorithm;
 import org.cellocad.technologymapping.common.TMUtils;
 import org.cellocad.technologymapping.common.TargetDataReader;
 import org.cellocad.technologymapping.common.assignment.Assigner;
+import org.cellocad.technologymapping.common.assignment.RoadblockChecker;
 import org.cellocad.technologymapping.common.netlist.TMNetlist;
 import org.cellocad.technologymapping.common.netlist.TMNode;
 import org.cellocad.technologymapping.common.score.Scorer;
@@ -163,10 +164,14 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		ActivitySimulator as = new ActivitySimulator();
 		ToxicitySimulator ts = new ToxicitySimulator();
 
-		Scorer scorer = new Scorer();
-
 		Assigner assigner = new Assigner();
 		assigner.setGateLibrary(this.getGateLibrary());
+
+		Scorer scorer = new Scorer();
+
+		RoadblockChecker rbc = new RoadblockChecker();
+		rbc.setInputRoadblocks(this.getInputRoadblocks());
+		rbc.setLogicRoadblocks(this.getLogicRoadblocks());
 
 		for(int k = 0; k < this.getNumTrajectories(); k++) {
 			logInfo("trajectory " + String.valueOf(k+1) + " of " + this.getNumTrajectories().toString());
@@ -201,8 +206,10 @@ public class SimulatedAnnealing extends TMAlgorithm{
 
 				// roadblock check
 				if (this.getCheckRoadblocks()) {
-					Integer tmpRb = TMUtils.getNumRoadblocks(tmpNetlist,this.getLogicRoadblocks(),this.getInputRoadblocks());
-					Integer rb = TMUtils.getNumRoadblocks(netlist,this.getLogicRoadblocks(),this.getInputRoadblocks());
+					rbc.setTMNetlist(tmpNetlist);
+					Integer tmpRb = rbc.getNumRoadblocks();
+					rbc.setTMNetlist(netlist);
+					Integer rb = rbc.getNumRoadblocks();
 
 					if(tmpRb > rb) {
 						continue;
@@ -242,9 +249,8 @@ public class SimulatedAnnealing extends TMAlgorithm{
 						Double ep = Math.random();
 
 						if (ep < probability) {
-							Integer finalBlocks = TMUtils.getNumRoadblocks(tmpNetlist,
-									this.getLogicRoadblocks(),
-									this.getInputRoadblocks());
+							rbc.setTMNetlist(tmpNetlist);
+							Integer finalBlocks = rbc.getNumRoadblocks();
 							if ((!this.getCheckRoadblocks() || finalBlocks == 0)
 									&&
 									(!this.getCheckToxicity() || ts.minGrowth() > this.getToxicityThreshold()))
