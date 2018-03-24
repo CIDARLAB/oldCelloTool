@@ -21,7 +21,6 @@
 package org.cellocad.technologymapping.common;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -111,36 +110,6 @@ public class TMUtils{
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Find the minimum growth (highest toxicity) for a TMNode.
-	 *
-	 * @param techNode the TechNode to search.
-	 */
-	public static Double minGrowth(TMNode node) {
-		Double rtn = null;
-		List<Double> toxicity = node.getToxicity();
-		if (toxicity != null)
-			rtn = Collections.min(toxicity);
-		return rtn;
-	}
-
-	/**
-	 * Find the minimum growth (highest toxicity) for a TMNetlist.
-	 *
-	 * @param netlist the TMNetlist to search.
-	 */
-	public static Double minGrowth(TMNetlist netlist) {
-		Double rtn = 1.0;
-
-		List<TMNode> nodes = netlist.getOutputNodes();
-		for (TMNode node : nodes) {
-			Double growth = minGrowth(node);
-			if (growth < rtn)
-				rtn = growth;
-		}
-		return rtn;
 	}
 
 	/**

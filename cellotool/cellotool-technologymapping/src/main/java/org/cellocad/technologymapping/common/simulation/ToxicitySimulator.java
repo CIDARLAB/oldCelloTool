@@ -113,6 +113,34 @@ public class ToxicitySimulator extends Simulator{
 	}
 
 	/**
+	 * Find the minimum growth (highest toxicity) for a TMNode.
+	 *
+	 * @param techNode the TMNode to search.
+	 */
+	private static Double minGrowth(TMNode node) {
+		Double rtn = null;
+		List<Double> toxicity = node.getToxicity();
+		if (toxicity != null)
+			rtn = Collections.min(toxicity);
+		return rtn;
+	}
+
+	/**
+	 * Find the minimum growth (highest toxicity) for a TMNetlist.
+	 */
+	public Double minGrowth() {
+		Double rtn = 1.0;
+
+		List<TMNode> nodes = this.getTMNetlist().getOutputNodes();
+		for (TMNode node : nodes) {
+			Double growth = minGrowth(node);
+			if (growth < rtn)
+				rtn = growth;
+		}
+		return rtn;
+	}
+
+	/**
 	 * Compute toxicities for a TMNetlist.
 	 *
 	 * @param netlist the TMNetlist for which to compute toxicities.

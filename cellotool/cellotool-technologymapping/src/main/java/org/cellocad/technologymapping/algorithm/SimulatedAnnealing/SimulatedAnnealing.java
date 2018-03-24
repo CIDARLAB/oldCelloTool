@@ -214,8 +214,10 @@ public class SimulatedAnnealing extends TMAlgorithm{
 				}
 
 				// toxicity check
-				Double growth = TMUtils.minGrowth(netlist);
-				Double tempGrowth = TMUtils.minGrowth(tmpNetlist);
+				ts.setTMNetlist(netlist);
+				Double growth = ts.minGrowth();
+				ts.setTMNetlist(tmpNetlist);
+				Double tempGrowth = ts.minGrowth();
 
 				if (this.getCheckToxicity()) {
 					if (growth < this.getToxicityThreshold()) {
@@ -245,7 +247,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 									this.getInputRoadblocks());
 							if ((!this.getCheckRoadblocks() || finalBlocks == 0)
 									&&
-									(!this.getCheckToxicity() || TMUtils.minGrowth(tmpNetlist) > this.getToxicityThreshold()))
+									(!this.getCheckToxicity() || ts.minGrowth() > this.getToxicityThreshold()))
 							{
 								netlist = tmpNetlist;
 							}
