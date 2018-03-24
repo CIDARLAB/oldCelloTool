@@ -92,27 +92,6 @@ public class TMUtils{
 	}
 
 	/**
-	 * Check if there are nodes in the netlist without a gate assignment.
-	 *
-	 * @param netlist the netlist to check for assignments.
-	 * @return true if there are nodes without an assignment.
-	 */
-	public static Boolean hasUnassignedNodes(Netlist netlist) {
-		int num = netlist.getNumVertex();
-		for (int i = 0; i < num; i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			String gate = node.getGate();
-			if (gate == null) {
-				return true;
-			}
-			if (gate.equals("")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Get the total number of roadblocks for the assignment.
 	 *
 	 * @return the number of roadblocks.
