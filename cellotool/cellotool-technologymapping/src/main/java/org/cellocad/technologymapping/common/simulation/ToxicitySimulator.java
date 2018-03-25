@@ -66,7 +66,7 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Create a new ToxicitySimulator.
 	 *
-	 * @param netlist the TMetlist corresponding to the TechMap.
+	 * @param netlist The TMetlist to assign to this simulator.
 	 */
 	public ToxicitySimulator(TMNetlist netlist) {
 		super();
@@ -86,7 +86,7 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Initialize toxicity at the output nodes.
 	 *
-	 * @param netlist the TMNetlist on which to assign output toxicity.
+	 * @param netlist The TMNetlist on which to assign output toxicity.
 	 */
 	public void initOutputToxicity() {
 		List<TMNode> nodes = this.getTMNetlist().getOutputNodes();
@@ -100,8 +100,7 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Assign toxicities for a TMNetlist.
 	 *
-	 * @param techMap the TechMap on which to assign toxicities.
-	 * @param netlist the netlist corresponding to the TechMap.
+	 * @param netlist The netlist to assign.
 	 */
 	private static void assignToxicity(TMNetlist netlist) {
 		List<Double> toxicity = computeToxicity(netlist);
@@ -115,7 +114,8 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Find the minimum growth (highest toxicity) for a TMNode.
 	 *
-	 * @param techNode the TMNode to search.
+	 * @param node The TMNode to measure.
+	 * @return The minimum growth.
 	 */
 	private static Double minGrowth(TMNode node) {
 		Double rtn = null;
@@ -127,6 +127,8 @@ public class ToxicitySimulator extends Simulator{
 
 	/**
 	 * Find the minimum growth (highest toxicity) for a TMNetlist.
+	 *
+	 * @return The minimum growth of the netlist assigned to this simulator.
 	 */
 	public Double minGrowth() {
 		Double rtn = 1.0;
@@ -143,7 +145,7 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Compute toxicities for a TMNetlist.
 	 *
-	 * @param netlist the TMNetlist for which to compute toxicities.
+	 * @param netlist The TMNetlist for which to compute toxicities.
 	 */
 	private static List<Double> computeToxicity(TMNetlist netlist) {
 		List<Double> rtn = new ArrayList<Double>();
@@ -188,7 +190,7 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Compute and assign toxicity for an individual TMNode.
 	 *
-	 * @param techNode the TMNode to which to assign toxicity.
+	 * @param techNode The TMNode to which to assign toxicity.
 	 */
 	private static List<Double> computeNodeToxicity(final TMNode node) {
 		List<Double> rtn = new ArrayList<>();
@@ -240,7 +242,7 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Collect the input activities for a TMNode.
 	 *
-	 * @param node the TMNode from which to collect.
+	 * @param node The TMNode from which to collect.
 	 */
 	private static List<Double> collectInputActivities(final TMNode node) {
 		List<Double> rtn = new ArrayList<>();
@@ -264,8 +266,8 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Get a column from a matrix (List of Lists).
 	 *
-	 * @param input the set of inputs.
-	 * @param i the column to select.
+	 * @param input The set of inputs.
+	 * @param i The column to select.
 	 */
 	private static List<Double> getColumn(List<List<Double>> input, int i) {
 		List<Double> rtn = new ArrayList<>();
@@ -278,8 +280,8 @@ public class ToxicitySimulator extends Simulator{
 	/**
 	 * Throw an exception if the toxicity list is ragged.
 	 *
-	 * @param input the set of inputs to check.
-	 * @return false if the inputs are not ragged.
+	 * @param input The set of inputs to check.
+	 * @return false If the inputs are not ragged.
 	 */
 	private static boolean isRaggedListException(List<List<Double>> input) {
 		boolean rtn = false;
