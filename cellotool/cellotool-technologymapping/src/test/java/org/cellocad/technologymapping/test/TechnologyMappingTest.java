@@ -49,6 +49,11 @@ public class TechnologyMappingTest{
 
 	@Test
 	public void test() {
+		runDnacompiler(generateTestNetlist());
+		runDnacompiler(generateTestSequentialNetlist());
+	}
+
+	private void runDnacompiler(Netlist netlist) {
 		String resourcesFilepath = TestUtils.getResourcesFilepath()	+ Utils.getFileSeparator();
 
 		String tempDir = TestUtils.createTempDirectory().toString();
@@ -64,8 +69,6 @@ public class TechnologyMappingTest{
 		// RuntimeEnv
 		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
 		runEnv.setName("dnaCompiler");
-		// Netlist
-		Netlist netlist = generateTestNetlist();
 		// TargetConfiguration
 		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
 		// get TargetData
@@ -146,6 +149,85 @@ public class TechnologyMappingTest{
 		netlist.addEdge(e3);
 		netlist.addEdge(e4);
 		netlist.addEdge(e5);
+
+		return netlist;
+	}
+
+	public Netlist generateTestSequentialNetlist() {
+		Netlist netlist = new Netlist();
+
+		netlist.setName("technologyMapping");
+
+		NetlistNode in1 = new NetlistNode();
+		NetlistNode in2 = new NetlistNode();
+		NetlistNode A = new NetlistNode();
+		NetlistNode B = new NetlistNode();
+		NetlistNode C = new NetlistNode();
+		NetlistNode out1 = new NetlistNode();
+		NetlistNode out2 = new NetlistNode();
+
+		NetlistEdge e1 = new NetlistEdge(in1, A);
+		NetlistEdge e2 = new NetlistEdge(in2, B);
+		NetlistEdge e3 = new NetlistEdge(A, C);
+		NetlistEdge e4 = new NetlistEdge(B, C);
+		NetlistEdge e5 = new NetlistEdge(C, out1);
+		NetlistEdge e6 = new NetlistEdge(C, out2);
+
+		e1.setName("e1");
+		e2.setName("e2");
+		e3.setName("Y:e3:S");
+		e4.setName("Y:e4:R");
+		e5.setName("Q:e5");
+		e6.setName("P:e6");
+
+		in1.addOutEdge(e1);
+		in2.addOutEdge(e2);
+		A.addInEdge(e1);
+		A.addOutEdge(e3);
+		B.addInEdge(e2);
+		B.addOutEdge(e4);
+		C.addInEdge(e3);
+		C.addInEdge(e4);
+		C.addOutEdge(e5);
+		C.addOutEdge(e6);
+		out1.addInEdge(e5);
+		out2.addInEdge(e6);
+
+		in1.setNodeType("TopInput");
+		in2.setNodeType("TopInput");
+		A.setNodeType("NOT");
+		B.setNodeType("NOT");
+		C.setNodeType("SR");
+		out1.setNodeType("TopOutput");
+		out2.setNodeType("TopOutput");
+
+		in1.setName("in1");
+		in2.setName("in2");
+		A.setName("A");
+		B.setName("B");
+		C.setName("C");
+		out1.setName("out1");
+		out2.setName("out2");
+
+		in1.setVertexType(VertexType.SOURCE);
+		in2.setVertexType(VertexType.SOURCE);
+		out1.setVertexType(VertexType.SINK);
+		out2.setVertexType(VertexType.SINK);
+
+		netlist.addVertex(in1);
+		netlist.addVertex(in2);
+		netlist.addVertex(A);
+		netlist.addVertex(B);
+		netlist.addVertex(C);
+		netlist.addVertex(out1);
+		netlist.addVertex(out2);
+
+		netlist.addEdge(e1);
+		netlist.addEdge(e2);
+		netlist.addEdge(e3);
+		netlist.addEdge(e4);
+		netlist.addEdge(e5);
+		netlist.addEdge(e6);
 
 		return netlist;
 	}

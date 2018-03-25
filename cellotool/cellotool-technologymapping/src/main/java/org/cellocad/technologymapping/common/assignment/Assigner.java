@@ -80,7 +80,9 @@ public class Assigner extends CObject{
 		for (int j = 0; j < num; j++) {
 			TMNode node = this.getTMNetlist().getVertexAtIdx(j);
 			String type = node.getNodeType();
-			if (!type.equals("TopInput") && !type.equals("TopOutput")) {
+			if (type.equals("DummyOutput")) {
+				node.setGate(new Gate());
+			} else if (!type.equals("TopInput") && !type.equals("TopOutput")) {
 				// if (!gatesByType.keySet().contains(type)) {
 				// 	throw new RuntimeException("No gates of type " + type
 				// 							   + " (node '" + node.getName() + "') exist in the library.");

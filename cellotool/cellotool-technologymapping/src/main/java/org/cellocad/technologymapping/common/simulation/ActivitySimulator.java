@@ -77,7 +77,7 @@ public class ActivitySimulator extends Simulator{
 		for (TMNode node : nodes) {
 			Pair<Double,Double> inputRef = reference.get(node.getGate().getName());
 			Utils.isNullRuntimeException(inputRef, "Input activity reference for " + node.getGate().getName());
-			List<Boolean> logic = node.getLogic();
+			List<Boolean> logic = node.getOutEdgeAtIdx(0).getLogic();
 			node.setActivity(getInputActivity(logic,inputRef));
 		}
 	}

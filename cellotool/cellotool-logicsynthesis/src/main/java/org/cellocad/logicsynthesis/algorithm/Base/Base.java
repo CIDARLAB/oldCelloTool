@@ -29,9 +29,10 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-import org.cellocad.common.Pair;
+// import org.cellocad.common.Pair;
 import org.cellocad.common.Utils;
 import org.cellocad.common.graph.AbstractVertex.VertexType;
 import org.cellocad.common.netlist.NetlistEdge;
@@ -57,35 +58,35 @@ public class Base extends LSAlgorithm{
 
 	@Override
 	protected void setDefaultParameterValues() {
-		this.setLibParam("");
+		// this.setLibParam("");
 		this.setDir(LSUtils.createTempDirectory().getAbsolutePath());
 	}
 
 	@Override
 	protected void setParameterValues() {
-		try {
-			Pair<Boolean,String> param = this.getAlgorithmProfile().getStringParameter("cell_library");
-			if (param.getFirst()) {this.setLibParam(param.getSecond());}
-		} catch (NullPointerException e) {}
+		// try {
+		// 	Pair<Boolean,String> param = this.getAlgorithmProfile().getStringParameter("cell_library");
+		// 	if (param.getFirst()) {this.setLibParam(param.getSecond());}
+		// } catch (NullPointerException e) {}
 	}
 
 	@Override
 	protected void validateParameterValues() {
-		if (this.getLibParam().equals("notnor")) {
-			this.setLibVerilog(LSUtils.getResourceAsFile("libraries/notnor.v",this.getDir()));
-			this.setLibLiberty(LSUtils.getResourceAsFile("libraries/notnor.lib",this.getDir()));
-		} else if (this.getLibParam().substring(0,Math.min(this.getLibParam().length(),5)).equals("file:")) {
-			this.setLibVerilog(new File(this.getLibParam().substring(5,this.getLibParam().length()) + ".v"));
-			if (!this.getLibVerilog().isFile()) {
-				throw new RuntimeException("'" + this.getLibVerilog() + " is not a file!");
-			}
-			this.setLibLiberty(new File(this.getLibParam().substring(5,this.getLibParam().length()) + ".lib"));
-			if (!this.getLibLiberty().isFile()) {
-				throw new RuntimeException("'" + this.getLibLiberty() + " is not a file!");
-			}
-		} else if (!this.getLibParam().equals("")) {
-			logWarn("Unknown cell_library specification. Ignoring.");
-		}
+		// if (this.getLibParam().equals("notnor")) {
+		// 	this.setLibVerilog(LSUtils.getResourceAsFile("libraries/notnor.v",this.getDir()));
+		// 	this.setLibLiberty(LSUtils.getResourceAsFile("libraries/notnor.lib",this.getDir()));
+		// } else if (this.getLibParam().substring(0,Math.min(this.getLibParam().length(),5)).equals("file:")) {
+		// 	this.setLibVerilog(new File(this.getLibParam().substring(5,this.getLibParam().length()) + ".v"));
+		// 	if (!this.getLibVerilog().isFile()) {
+		// 		throw new RuntimeException("'" + this.getLibVerilog() + " is not a file!");
+		// 	}
+		// 	this.setLibLiberty(new File(this.getLibParam().substring(5,this.getLibParam().length()) + ".lib"));
+		// 	if (!this.getLibLiberty().isFile()) {
+		// 		throw new RuntimeException("'" + this.getLibLiberty() + " is not a file!");
+		// 	}
+		// } else if (!this.getLibParam().equals("")) {
+		// 	logWarn("Unknown cell_library specification. Ignoring.");
+		// }
 	}
 
 	@Override
@@ -111,16 +112,20 @@ public class Base extends LSAlgorithm{
 		File yosysabc = LSUtils.getResourceAsFile("external_tools/Linux/yosys/yosys-abc",dir);
 		yosysabc.setExecutable(true);
 
+        File unmap = LSUtils.getResourceAsFile("libraries/seq_unmap.v",dir);
+        File remap = LSUtils.getResourceAsFile("libraries/seq_remap.v",dir);
+        File dispMap = LSUtils.getResourceAsFile("libraries/seq_disp.v",dir);
+
 		exec += yosys.toString();
 		exec += " -s ";
 		this.setYosysExec(exec);
 		// create Yosys script
 		String script = "";
-		if (this.getLibVerilog().isFile()) {
-			script += "read_verilog -lib ";
-			script += libVerilog;
-			script += Utils.getNewLine();
-		}
+		// if (this.getLibVerilog().isFile()) {
+		// 	script += "read_verilog -lib ";
+		// 	script += libVerilog;
+		// 	script += Utils.getNewLine();
+		// }
 		script += "read_verilog ";
 		script += this.getVerilogFile();
 		script += Utils.getNewLine();
@@ -130,13 +135,23 @@ public class Base extends LSAlgorithm{
 		script += Utils.getNewLine();
 		script += "techmap; opt";
 		script += Utils.getNewLine();
-		script += "dfflibmap";
-		if (this.getLibLiberty().isFile()) { script += " -liberty " + this.getLibLiberty();}
+		// script += "dfflibmap";
+		// if (this.getLibLiberty().isFile()) { script += " -liberty " + this.getLibLiberty();}
 		script += Utils.getNewLine();
-		script += "abc";
-		if (this.getLibLiberty().isFile()) { script += " -liberty " + this.getLibLiberty();}
+		script += "abc -g NOR";
+		// if (this.getLibLiberty().isFile()) { script += " -liberty " + this.getLibLiberty();}
 		script += Utils.getNewLine();
 		script += "clean";
+		script += Utils.getNewLine();
+        script += "extract -map ";
+        script += unmap.getPath();
+        script += " -swap $_NOR_ A,B";
+		script += Utils.getNewLine();
+        script += "read_verilog -lib ";
+        script += dispMap.getPath();
+		script += Utils.getNewLine();
+        script += "techmap -map ";
+        script += remap.getPath();
 		script += Utils.getNewLine();
 		script += "show -format ps -prefix ";
 		script += this.getRuntimeEnv().getOptionValue("outputDir");
@@ -270,9 +285,27 @@ public class Base extends LSAlgorithm{
 		}
 	}
 
+	String getEdgeName(EdifNet net) {
+		String rtn = ":" + net.getOldName() + ":";
+
+		Iterator<EdifPortRef> refs = null;
+
+		refs = net.getOutputPortRefs().iterator();
+		if (refs.hasNext()) {
+			rtn = rtn + refs.next().getPort().getName();
+		}
+
+		refs = net.getInputPortRefs().iterator();
+		if (refs.hasNext()) {
+			rtn = refs.next().getPort().getName() + rtn;
+		}
+
+		return rtn;
+	}
+
 	void setEdge(NetlistNode src, NetlistNode dst, EdifNet net) {
 		NetlistEdge edge = new NetlistEdge(src, dst);
-		edge.setName(net.getOldName());
+		edge.setName(getEdgeName(net));
 		src.addOutEdge(edge);
 		dst.addInEdge(edge);
 		this.getNetlist().addEdge(edge);
@@ -342,36 +375,36 @@ public class Base extends LSAlgorithm{
 		return dir;
 	}
 
-	protected void setLibParam(final String libPrefix) {
-		this.libParam = libPrefix;
-	}
+	// protected void setLibParam(final String libPrefix) {
+	// 	this.libParam = libPrefix;
+	// }
 
-	protected String getLibParam() {
-		return libParam;
-	}
+	// protected String getLibParam() {
+	// 	return libParam;
+	// }
 
-	protected void setLibVerilog(final File libVerilog) {
-		this.libVerilog = libVerilog;
-	}
+	// protected void setLibVerilog(final File libVerilog) {
+	// 	this.libVerilog = libVerilog;
+	// }
 
-	protected File getLibVerilog() {
-		return libVerilog;
-	}
+	// protected File getLibVerilog() {
+	// 	return libVerilog;
+	// }
 
-	protected void setLibLiberty(final File libLiberty) {
-		this.libLiberty = libLiberty;
-	}
+	// protected void setLibLiberty(final File libLiberty) {
+	// 	this.libLiberty = libLiberty;
+	// }
 
-	protected File getLibLiberty() {
-		return libLiberty;
-	}
+	// protected File getLibLiberty() {
+	// 	return libLiberty;
+	// }
 
 	private String yosysScriptFilename;
 	private String yosysEdifFilename;
 	private String yosysExec;
 	private String dir;
-	private String libParam;
-	private File libVerilog;
-	private File libLiberty;
+	// private String libParam;
+	// private File libVerilog;
+	// private File libLiberty;
 
 }

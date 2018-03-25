@@ -20,6 +20,9 @@
  */
 package org.cellocad.technologymapping.common.netlist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cellocad.common.graph.graph.EdgeTemplate;
 import org.cellocad.common.netlist.NetlistEdge;
 
@@ -32,6 +35,7 @@ import org.cellocad.common.netlist.NetlistEdge;
 public class TMEdge extends EdgeTemplate<TMNode>{
 
 	private void setDefault() {
+		this.setLogic(new ArrayList<>());
 	}
 
 	public TMEdge(){
@@ -49,6 +53,7 @@ public class TMEdge extends EdgeTemplate<TMNode>{
 		super(other);
 		this.setSrc(other.getSrc());
 		this.setDst(other.getDst());
+		this.setLogic(other.getLogic());
 	}
 
 	public TMEdge(final NetlistEdge edge) {
@@ -57,5 +62,21 @@ public class TMEdge extends EdgeTemplate<TMNode>{
 		this.setType(edge.getType());
 		this.setIdx(edge.getIdx());
 	}
+
+/**
+	 * @return the logic
+	 */
+	public List<Boolean> getLogic() {
+		return logic;
+	}
+
+	/**
+	 * @param logic the logic to set
+	 */
+	public void setLogic(List<Boolean> logic) {
+		this.logic = logic;
+	}
+
+	private List<Boolean> logic;
 
 }

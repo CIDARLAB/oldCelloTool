@@ -39,7 +39,6 @@ public class TMNode extends VertexTemplate<TMEdge>{
 		this.setPartitionID(-1);
 		this.setNodeType("");
 		this.setGate(null);
-		this.setLogic(new ArrayList<>());
 		this.setToxicity(new ArrayList<>());
 		this.setActivity(new ArrayList<>());
 	}
@@ -56,7 +55,6 @@ public class TMNode extends VertexTemplate<TMEdge>{
 		if (other.getGate() != null) {
 			this.setGate(other.getGate());
 		}
-		this.setLogic(other.getLogic());
 		this.setToxicity(new ArrayList<>(other.getToxicity()));
 		this.setActivity(new ArrayList<>(other.getActivity()));
 		this.setVertexType(other.getVertexType());
@@ -133,20 +131,6 @@ public class TMNode extends VertexTemplate<TMEdge>{
 	}
 
 	/**
-	 * @return the logic
-	 */
-	public List<Boolean> getLogic() {
-		return logic;
-	}
-
-	/**
-	 * @param logic the logic to set
-	 */
-	public void setLogic(List<Boolean> logic) {
-		this.logic = logic;
-	}
-
-	/**
 	 * @return the toxicity
 	 */
 	public List<Double> getToxicity() {
@@ -177,7 +161,6 @@ public class TMNode extends VertexTemplate<TMEdge>{
 	private Integer partitionID;
 	private String nodeType;
 	private Gate gate;
-	private List<Boolean> logic;
 	private List<Double> toxicity;
 	private List<Double> activity;
 

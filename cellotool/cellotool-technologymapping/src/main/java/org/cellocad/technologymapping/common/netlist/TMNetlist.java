@@ -100,6 +100,15 @@ public class TMNetlist extends GraphTemplate<TMNode,TMEdge>{
 				//vertex.addInEdge(edge);
 				addEdgeToInEdge(vertex, edge);
 			}
+			if (vertex.getNodeType() == "TopOutput") {
+				TMNode node = new TMNode();
+				node.setNodeType("DummyOutput");
+				TMEdge edge = new TMEdge(vertex,node);
+				addEdgeToInEdge(node, edge);
+				addEdgeToOutEdge(vertex, edge);
+				this.addVertex(node);
+				this.addEdge(edge);
+			}
 		}
 		// for each Edge:
 		for (int i = 0; i < netlist.getNumEdge(); i++){
@@ -268,8 +277,10 @@ public class TMNetlist extends GraphTemplate<TMNode,TMEdge>{
 		for (int i = 0; i < num; i++) {
 			TMNode node = this.getVertexAtIdx(i);
 			if (!node.getNodeType().equals("TopOutput")
-					&&
-					!node.getNodeType().equals("TopInput")) {
+				&&
+				!node.getNodeType().equals("DummyOutput")
+				&&
+				!node.getNodeType().equals("TopInput")) {
 				rtn.add(node);
 			}
 		}

@@ -72,7 +72,12 @@ public class Scorer extends CObject{
 	private static Double getOnOffRatio(TMNode node) {
 		Utils.isNullRuntimeException(node,"TMNode");
 
-		List<Boolean> logic = node.getLogic();
+		List<Boolean> logic = null;
+		if (node.getNodeType().equals("TopOutput")) {
+			logic = node.getInEdgeAtIdx(0).getLogic();
+		} else {
+			logic = node.getOutEdgeAtIdx(0).getLogic();
+		}
 		List<Double> activity = node.getActivity();
 		Utils.isNullRuntimeException(logic,"TMNode logic");
 		Utils.isNullRuntimeException(activity,"TMNode activity");

@@ -278,6 +278,9 @@ public class SimulatedAnnealing extends TMAlgorithm{
 		for (int i = 0; i < this.getTMNetlist().getNumVertex(); i++) {
 			TMNode node = this.getTMNetlist().getVertexAtIdx(i);
 			String msg = "";
+			if (node.getNodeType().equals("DummyOutput")) {
+				continue;
+			}
 			msg += "NetlistNode ";
 			msg += node.getName();
 			msg += " (" + node.getNodeType() + ")";
@@ -285,7 +288,7 @@ public class SimulatedAnnealing extends TMAlgorithm{
 			msg += node.getGate().getName();
 			logInfo(msg);
 			msg  = "  logic output: ";
-			msg += node.getLogic();
+			msg += node.getOutEdgeAtIdx(0).getLogic();
 			logInfo(msg);
 			msg  = "  promoter activity: ";
 			msg += node.getActivity();

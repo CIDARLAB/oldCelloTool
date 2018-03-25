@@ -21,8 +21,10 @@
 package org.cellocad.technologymapping.common.simulation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.cellocad.common.Utils;
 import org.cellocad.technologymapping.common.graph.algorithm.UpstreamDFS;
@@ -79,23 +81,129 @@ public class LogicSimulator extends Simulator{
 		TMNode node = null;
 		while ((node = dfs.getNextVertex()) != null) {
 			if (node.getNodeType().equals("TopInput")) {
-				node.setLogic(it.next());
+				List<Boolean> logic = it.next();
+				for (int i = 0; i < node.getNumOutEdge(); i++) {
+					TMEdge e = node.getOutEdgeAtIdx(i);
+					e.setLogic(logic);
+				}
 			} else {
-				List<List<Boolean>> inputs = new ArrayList<>();
+				Map<String,List<Boolean>> inputs = new HashMap<>();
 				for (int i = 0; i < node.getNumInEdge(); i++) {
 					TMEdge e = node.getInEdgeAtIdx(i);
-					TMNode src = e.getSrc();
-					inputs.add(src.getLogic());
+					inputs.put(e.getName(),e.getLogic());
 				}
 
 				List<Boolean> logic = null;
 
-				if (node.getNodeType().equals("TopOutput")) {
+				if (node.getNodeType().equals("SR")
+					||
+					node.getNodeType().equals("DLATCH")) {
+					setSequentialLogic(inputs,node);
+					continue;
+				} else if (node.getNodeType().equals("TopOutput")) {
 					logic = getOutputLogic(inputs);
 				} else {
-					logic = getGateLogic(inputs,node.getNodeType());
+					logic = getGateLogic(new ArrayList<>(inputs.values()),node);
 				}
-				node.setLogic(logic);
+
+				for (int i = 0; i < node.getNumOutEdge(); i++) {
+					TMEdge e = node.getOutEdgeAtIdx(i);
+					e.setLogic(logic);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Compute and set logic for a latch.
+	 */
+	private static void setSequentialLogic(Map<String,List<Boolean>> inputs, TMNode node) {
+		isRaggedInputListException(new ArrayList<>(inputs.values()));
+		if (node.getNodeType().equals("SR")) {
+			List<Boolean> s = null;
+			List<Boolean> r = null;
+			for (int i = 0; i < node.getNumInEdge(); i++) {
+				TMEdge e = node.getInEdgeAtIdx(i);
+				if (e.getName().endsWith(":R")) {
+					r = e.getLogic();
+				}
+				if (e.getName().endsWith(":S")) {
+					s = e.getLogic();
+				}
+			}
+			Utils.isNullRuntimeException(s,"Set input to SR latch");
+			Utils.isNullRuntimeException(r,"Reset input to SR latch");
+
+			List<Boolean> q = new ArrayList<>();
+			List<Boolean> p = new ArrayList<>();
+
+			// initial state
+			p.add(true);
+			q.add(false);
+
+			for (int i = 0; i < r.size() - 1; i++) {
+				if ( s.get(i) == true ) {
+					q.add(true);
+					p.add(false);
+				} else if ( r.get(i) == true ) {
+					q.add(false);
+					p.add(true);
+				}
+			}
+
+			for (int i = 0; i < node.getNumOutEdge(); i++) {
+				TMEdge e = node.getOutEdgeAtIdx(i);
+				if (e.getName().startsWith("Q:")) {
+					e.setLogic(q);
+				}
+				if (e.getName().startsWith("P:")) {
+					e.setLogic(p);
+				}
+			}
+			System.out.println(s);
+			System.out.println(r);
+			System.out.println(q);
+			System.out.println(p);
+		} else if (node.getNodeType().equals("DLATCH")) {
+			List<Boolean> d = null;
+			List<Boolean> e = null;
+			for (int i = 0; i < node.getNumInEdge(); i++) {
+				TMEdge edge = node.getInEdgeAtIdx(i);
+				if (edge.getName().endsWith(":D")) {
+					d = edge.getLogic();
+				}
+				if (edge.getName().endsWith(":E")) {
+					e = edge.getLogic();
+				}
+			}
+			Utils.isNullRuntimeException(d,"Data input to D latch");
+			Utils.isNullRuntimeException(e,"Enable input to D latch");
+
+			List<Boolean> q = new ArrayList<>();
+			List<Boolean> p = new ArrayList<>();
+
+			// initial state
+			p.add(true);
+			q.add(false);
+
+			for (int i = 0; i < d.size() - 1; i++) {
+				if ( e.get(i) == true ) {
+					q.add(d.get(i));
+					p.add(!d.get(i));
+				} else {
+					q.add(q.get(i));
+					p.add(p.get(i));
+				}
+			}
+
+			for (int i = 0; i < node.getNumOutEdge(); i++) {
+				TMEdge edge = node.getOutEdgeAtIdx(i);
+				if (edge.getName().startsWith("Q:")) {
+					edge.setLogic(q);
+				}
+				if (edge.getName().startsWith("P:")) {
+					edge.setLogic(p);
+				}
 			}
 		}
 	}
@@ -104,11 +212,12 @@ public class LogicSimulator extends Simulator{
 	 * Get the logic for a gate of the given type, with the given list of inputs.
 	 *
 	 * @param inputs the inputs to the gate.
-	 * @param gateType the type of the gate, e.g. NOT, NOR.
+	 * @param node the node to compute for.
 	 * @return the logic output of the gate.
 	 */
-	private static List<Boolean> getGateLogic(List<List<Boolean>> inputs, String gateType) {
+	private static List<Boolean> getGateLogic(List<List<Boolean>> inputs, TMNode node) {
 		List<Boolean> rtn = null;
+		String gateType = node.getNodeType();
 		switch (gateType) {
 		case "NOT": {
 			isWrongInputNumberException(inputs.size(),1,"NOT");
@@ -141,6 +250,11 @@ public class LogicSimulator extends Simulator{
 			break;
 		}
 		case "XNOR": {
+			isWrongInputNumberException(inputs.size(),2,"XNOR");
+			rtn = computeLogicalNot(computeLogicalXor(inputs));
+			break;
+		}
+		case "SR": {
 			isWrongInputNumberException(inputs.size(),2,"XNOR");
 			rtn = computeLogicalNot(computeLogicalXor(inputs));
 			break;
@@ -235,9 +349,9 @@ public class LogicSimulator extends Simulator{
 	 * @param input input.
 	 * @return output logic.
 	 */
-	private static List<Boolean> getOutputLogic(List<List<Boolean>> input) {
+	private static List<Boolean> getOutputLogic(Map<String,List<Boolean>> input) {
 		// 'output or', though this should probably get an explicit or gate in the logic synthesis stage
-		return computeLogicalOr(input);
+		return computeLogicalOr(new ArrayList<>(input.values()));
 	}
 
 	/**

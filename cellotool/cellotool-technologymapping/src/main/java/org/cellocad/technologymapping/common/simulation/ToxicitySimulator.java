@@ -91,7 +91,7 @@ public class ToxicitySimulator extends Simulator{
 	public void initOutputToxicity() {
 		List<TMNode> nodes = this.getTMNetlist().getOutputNodes();
 		for (TMNode node : nodes) {
-			List<Boolean> logic = node.getLogic();
+			List<Boolean> logic = node.getOutEdgeAtIdx(0).getLogic();
 			List<Double> toxicity = Collections.nCopies(logic.size(),1.0);
 			node.setToxicity(toxicity);
 		}
