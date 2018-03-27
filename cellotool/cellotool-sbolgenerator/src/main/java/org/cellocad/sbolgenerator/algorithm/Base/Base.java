@@ -32,6 +32,7 @@ import java.util.Set;
 
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
+import org.cellocad.common.Pair;
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistNode;
@@ -82,18 +83,30 @@ public class Base extends SGAlgorithm{
 
 	@Override
 	protected void setParameterValues() {
-		String repositoryUrlParameter = this.getAlgorithmProfile().getStringParameter("repository_url").getSecond();
-		String repositoryTypeParameter = this.getAlgorithmProfile().getStringParameter("repository_type").getSecond();
-		if (repositoryTypeParameter.equals("synbiohub")) {
+		String url = null;
+		String type = null;
+
+		try {
+			Pair<Boolean,String> param = this.getAlgorithmProfile().getStringParameter("repository_url");
+			if (param.getFirst()) {url = param.getSecond();}
+		} catch (NullPointerException e) {}
+		try {
+			Pair<Boolean,String> param = this.getAlgorithmProfile().getStringParameter("repository_type");
+			if (param.getFirst()) {type = param.getSecond();}
+		} catch (NullPointerException e) {}
+
+		if (url != null) {
+			try {
+				this.setRepositoryUrl(new URL(url));
+			} catch (MalformedURLException e) {
+				throw new RuntimeException("Malformed repository url.");
+			}
+		}
+
+		if (type != null && type.equals("synbiohub")) {
 			this.setRepositoryType(RepositoryType.SYNBIOHUB);
 		} else {
 			throw new RuntimeException("Unknown repository type.");
-		}
-		try {
-			URL repositoryUrl = new URL(repositoryUrlParameter);
-			this.setRepositoryUrl(repositoryUrl);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException("Malformed repository url.");
 		}
 
 		this.setPartLibrary(TargetDataReader.getParts(this.getTargetData()));
