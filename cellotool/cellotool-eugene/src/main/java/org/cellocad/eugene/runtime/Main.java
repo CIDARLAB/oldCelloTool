@@ -45,7 +45,7 @@ public class Main {
 		RuntimeEnv runEnv = new EURuntimeEnv(args);
 		runEnv.setName("Eugene");
 		// Read Netlist
-		Netlist netlist = new Netlist();
+		Netlist netlist = NetlistUtils.getNetlist(runEnv, EUArgString.INPUTNETLIST);
 		// get StageConfiguration
 		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, EUArgString.CONFIGFILE);
 		// get TargetData
