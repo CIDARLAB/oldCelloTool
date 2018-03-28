@@ -81,10 +81,12 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	private void parseVertexType(final JSONObject JObj){
 		String value = ProfileUtils.getString(JObj, "vertexType");
 		if (value != null) {
-			if (value.equals("SOURCE")) {
+			if (value.equals(AbstractVertex.VertexType.SOURCE.name())) {
 				this.setVertexType(AbstractVertex.VertexType.SOURCE);
-			} else if (value.equals("SINK")) {
+			} else if (value.equals(AbstractVertex.VertexType.SINK.name())) {
 				this.setVertexType(AbstractVertex.VertexType.SINK);
+			} else {
+				this.setVertexType(AbstractVertex.VertexType.NONE);
 			}
 		}
 	}
