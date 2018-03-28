@@ -276,14 +276,6 @@ public class Base extends EUAlgorithm{
 			int idx = 0;
 
 			for (NamedElement el : ((Device) circuit).getComponentList()) {
-				// if (el instanceof org.cidarlab.eugene.dom.Part) {
-				// 	Part p = new Part();
-				// 	p.setName(el.getName());
-				// 	p.setDirection(Direction.UP);
-				// 	p.setIdx(idx);
-				// 	module.add(p);
-				// 	idx++;
-				// } else
 				if (el instanceof org.cidarlab.eugene.dom.Device) {
 					String name = el.getName();
 					name = name.substring(5,name.length());
@@ -352,32 +344,6 @@ public class Base extends EUAlgorithm{
 				}
 			}
 		}
-		// for (int i = 0; i<netlist.getNumVertex(); i++) {
-		// 	NetlistNode node = netlist.getVertexAtIdx(i);
-		// 	if (node.getNodeType().equals("TopOutput")) {
-		// 		for (int j = 0; j < node.getNumInEdge(); j++) {
-		// 			NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
-		// 			for (CObject part : upstreamNode.getParts()) {
-		// 				if ((part.getType() == PartType.PROMOTER.ordinal()) &&
-		// 						(part.getIdx() != UNASSIGNED)){
-		// 					part.setIdx(UNASSIGNED); // unassigned -- part of an output plasmid
-		// 					break;
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// }
-		// for (int i = 0; i<netlist.getNumVertex(); i++) {
-		// 	NetlistNode node = netlist.getVertexAtIdx(i);
-		// 	if (!node.getNodeType().equals("TopOutput")) {
-		// 		for (CObject part : node.getParts()) {
-		// 			if (part.getIdx() != UNASSIGNED) {
-		// 				Part modulePart = module.findCObjectByName(part.getName());
-		// 				part.setIdx(modulePart.getIdx());
-		// 			}
-		// 		}
-		// 	}
-		// }
 	}
 
 	private Set<String> getDeviceNamesFromRule(String rule) {
