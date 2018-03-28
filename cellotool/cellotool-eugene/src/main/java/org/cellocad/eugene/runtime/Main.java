@@ -51,9 +51,9 @@ public class Main {
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, EUArgString.TARGETDATAFILE, EUArgString.TARGETDATADIR);
 		// Execute
-		EURuntimeObject eugene = new EURuntimeObject(sc, td, netlist, runEnv);
-		eugene.setName("Eugene");
-		eugene.execute();
+		EURuntimeObject EU = new EURuntimeObject(sc, td, netlist, runEnv);
+		EU.setName("Eugene");
+		EU.execute();
 		// Write Netlist
 		String outputFilename = runEnv.getOptionValue(EUArgString.OUTPUTNETLIST);
 		NetlistUtils.writeJSONForNetlist(netlist, outputFilename);

@@ -36,7 +36,7 @@ public class Gate extends CObject{
 	private CObjectCollection<Part> parts;
 	private ResponseFunction<?> responseFunction;
 	private String group;
-	private String promoter;
+	private Part promoter;
 	private Toxicity toxicity;
 	private Cytometry cytometry;
 
@@ -95,14 +95,14 @@ public class Gate extends CObject{
 	/**
 	 * @return the promoter
 	 */
-	public String getPromoter() {
+	public Part getPromoter() {
 		return promoter;
 	}
 
 	/**
 	 * @param promoter the promoter to set
 	 */
-	public void setPromoter(String promoter) {
+	public void setPromoter(Part promoter) {
 		this.promoter = promoter;
 	}
 

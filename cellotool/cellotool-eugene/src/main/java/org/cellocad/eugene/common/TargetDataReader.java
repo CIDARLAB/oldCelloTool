@@ -82,15 +82,70 @@ public class TargetDataReader {
 		return parts;
 	}
 
-	public static final Map< String, Part > getGatePromoters(TargetData td) {
+public static final CObjectCollection<Gate> getInputSensors(TargetData td) {
+		CObjectCollection<Gate> gates = new CObjectCollection<>();
+		Integer num = td.getNumJSONObject("input_sensors");
 		CObjectCollection<Part> parts = getParts(td);
-		Map< String, Part > gatePromoterMap = new HashMap<>();
-		Integer num = td.getNumJSONObject("gate_parts");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("gate_parts",i);
-			gatePromoterMap.put(json.get("gate_name").toString(),parts.findCObjectByName(json.get("promoter").toString()));
+			JSONObject json = td.getJSONObjectAtIdx("input_sensors",i);
+
+			Gate g = new Gate();
+
+			// name
+			String name = (String)json.get("promoter");
+			if (name != null)
+				g.setName(name);
+
+			// promoter
+			Part promoter = parts.findCObjectByName(name);
+			if (promoter != null) {
+				g.setPromoter(promoter);
+			}
+
+			// parts
+			JSONArray array = (JSONArray)json.get("parts");
+			CObjectCollection<Part> inputParts = new CObjectCollection<>();
+			for (Object obj : array) {
+				Part part = parts.findCObjectByName((String)obj);
+				if (part != null) {
+					inputParts.add(part);
+				}
+			}
+			g.setParts(inputParts);
+
+			gates.add(g);
 		}
-		return gatePromoterMap;
+		return gates;
+	}
+
+	public static final CObjectCollection<Gate> getOutputReporters(TargetData td) {
+		CObjectCollection<Gate> gates = new CObjectCollection<>();
+		Integer num = td.getNumJSONObject("output_reporters");
+		CObjectCollection<Part> parts = getParts(td);
+		for (int i = 0; i < num; i++) {
+			JSONObject json = td.getJSONObjectAtIdx("output_reporters",i);
+
+			Gate g = new Gate();
+
+			// name
+			String name = (String)json.get("name");
+			if (name != null)
+				g.setName(name);
+
+			// parts
+			JSONArray jsonParts = (JSONArray)json.get("parts");
+			CObjectCollection<Part> outputParts = new CObjectCollection<>();
+			for (Object obj : jsonParts) {
+				Part part = parts.findCObjectByName((String)obj);
+				if (part != null) {
+					outputParts.add(part);
+				}
+			}
+			g.setParts(outputParts);
+
+			gates.add(g);
+		}
+		return gates;
 	}
 
 	public static final Map< String, CObjectCollection<Part> > getGateParts(TargetData td) {
@@ -120,6 +175,12 @@ public class TargetDataReader {
 			String name = json.get("gate_name").toString();
 			g.setName(name);
 			g.setParts(gateParts.get(name));
+			gates.add(g);
+		}
+		for (Gate g : getInputSensors(td)) {
+			gates.add(g);
+		}
+		for (Gate g : getOutputReporters(td)) {
 			gates.add(g);
 		}
 		return gates;

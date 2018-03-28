@@ -165,11 +165,11 @@ public class Base extends SGAlgorithm{
 
 		for (int i = 0; i < netlist.getNumVertex(); i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (!node.getNodeType().equals("TopOutput")) {
+			// if (!node.getNodeType().equals("TopOutput")) {
 				for (CObject part : node.getParts()) {
 					uniquePartNames.add(part.getName());
 				}
-			}
+			// }
 		}
 
 		SynBioHubFrontend frontend = null;
@@ -189,17 +189,14 @@ public class Base extends SGAlgorithm{
 			if ((partUri != null) && (this.getRepositoryType() == RepositoryType.SYNBIOHUB)) {
 				SBOLDocument partSbol = frontend.getSBOL(partUri);
 				cd = partSbol.getComponentDefinition(partUri);
-				if (cd != null) {
-					sbolDocument.createCopy(cd);
-					Set<Sequence> sequences = cd.getSequences();
-					if (sequences != null) {
-						for (Sequence s : sequences) {
-							sbolDocument.createCopy(s);
-						}
+			}
+			if (cd != null) {
+				sbolDocument.createCopy(cd);
+				Set<Sequence> sequences = cd.getSequences();
+				if (sequences != null) {
+					for (Sequence s : sequences) {
+						sbolDocument.createCopy(s);
 					}
-				} else {
-					cd = sbolDocument.createComponentDefinition(partName,ComponentDefinition.DNA);
-					p.setUri(cd.getIdentity());
 				}
 			} else {
 				cd = sbolDocument.createComponentDefinition(partName,ComponentDefinition.DNA);
@@ -207,55 +204,48 @@ public class Base extends SGAlgorithm{
 			}
 		}
 
+		String name = netlist.getName();
+		if (name.equals(""))
+			name = "circuit";
+
 		// create transcriptional unit component definitions and sequences
 		for (int i = 0; i < netlist.getNumVertex(); i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (!node.getNodeType().equals("TopInput") && !node.getNodeType().equals("TopOutput")) {
-				// build transcriptional unit
-				List<String> txnUnit = new ArrayList<>();
-				String unitNamePrefix = "";
-				for (int j = 0; j < node.getNumInEdge(); j++) {
-					NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
-					for (CObject part : upstreamNode.getParts()) {
-						if (part.getType() == PartType.PROMOTER.ordinal()) {
-							txnUnit.add(part.getName());
-							unitNamePrefix += part.getName() + "_";
-						}
-					}
-				}
-				for (CObject part : node.getParts()) {
-					if (part.getType() != PartType.PROMOTER.ordinal()) {
-						txnUnit.add(part.getName());
-					}
-				}
-				ComponentDefinition cd = null;
-				cd = sbolDocument.createComponentDefinition(unitNamePrefix + node.getGate(),ComponentDefinition.DNA);
-				cd.addRole(SequenceOntology.ENGINEERED_REGION);
-				// for (String partName : txnUnit) {
-				int seqCounter = 1;
-				String sequence = "";
-				for (int j = 0; j < txnUnit.size(); j++) {
-					String partName = txnUnit.get(j);
-					Part p = this.getPartLibrary().findCObjectByName(partName);
-					Component c = cd.createComponent(partName,AccessType.PUBLIC,p.getUri());
-					SequenceAnnotation sa =
-							cd.createSequenceAnnotation("SequenceAnnotation" + String.valueOf(j),
-									"SequenceAnnotation" + String.valueOf(j) + "_Range",
-									seqCounter,
-									seqCounter + p.getSequence().length());
-					sa.setComponent(c.getIdentity());
-					seqCounter += p.getSequence().length() + 1;
-					sequence += p.getSequence();
-					if (j != 0) {
-						cd.createSequenceConstraint(cd.getDisplayId() + "Constraint" + String.valueOf(j),
-								RestrictionType.PRECEDES,
-								cd.getComponent(txnUnit.get(j-1)).getIdentity(),
-								cd.getComponent(partName).getIdentity());
-					}
-				}
-				Sequence s = sbolDocument.createSequence(cd.getDisplayId() + "_sequence",sequence,Sequence.IUPAC_DNA);
-				cd.addSequence(s);
+
+			// build transcriptional unit
+			List<String> txnUnit = new ArrayList<>();
+			String moduleName = name + String.valueOf(i);
+			for (CObject part : node.getParts()) {
+				txnUnit.add(part.getName());
 			}
+
+			ComponentDefinition cd = null;
+			cd = sbolDocument.createComponentDefinition(moduleName + "_" + node.getGate(),ComponentDefinition.DNA);
+			cd.addRole(SequenceOntology.ENGINEERED_REGION);
+
+			int pos = 1;
+			String sequence = "";
+			for (int j = 0; j < txnUnit.size(); j++) {
+				String partName = txnUnit.get(j);
+				Part p = this.getPartLibrary().findCObjectByName(partName);
+				Component c = cd.createComponent(partName,AccessType.PUBLIC,p.getUri());
+				SequenceAnnotation sa =
+					cd.createSequenceAnnotation("SequenceAnnotation" + String.valueOf(j),
+												"SequenceAnnotation" + String.valueOf(j) + "_Range",
+												pos,
+												pos + p.getSequence().length());
+				sa.setComponent(c.getIdentity());
+				pos += p.getSequence().length() + 1;
+				sequence += p.getSequence();
+				if (j != 0) {
+					cd.createSequenceConstraint(cd.getDisplayId() + "Constraint" + String.valueOf(j),
+												RestrictionType.PRECEDES,
+												cd.getComponent(txnUnit.get(j-1)).getIdentity(),
+												cd.getComponent(partName).getIdentity());
+				}
+			}
+			Sequence s = sbolDocument.createSequence(cd.getDisplayId() + "_sequence",sequence,Sequence.IUPAC_DNA);
+			cd.addSequence(s);
 		}
 		return sbolDocument;
 	}

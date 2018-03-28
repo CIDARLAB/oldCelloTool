@@ -29,8 +29,10 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -62,7 +64,6 @@ import org.cidarlab.eugene.util.DeviceUtils;
 public class Base extends EUAlgorithm{
 	// TODO: generate circuit and output plasmids separately
 	// TODO: support partitions
-	// TODO: netlist nodes should be transcriptional units (promoter...terminator), not cds...promoter "gates"
 
 	@Override
 	protected void setDefaultParameterValues() {
@@ -118,76 +119,66 @@ public class Base extends EUAlgorithm{
 		Integer i = 1;
 		for (int k = 0; k < netlist.getNumVertex(); k++) {
 			NetlistNode node = netlist.getVertexAtIdx(k);
-			if (!node.getNodeType().equals("TopInput") && !node.getNodeType().equals("TopOutput")) {
-				Gate g = gateLibrary.findCObjectByName(node.getGate());
-				gateNames.add(g.getName());
+			Gate g = gateLibrary.findCObjectByName(node.getGate());
+			gateNames.add(g.getName());
 
-				eugeneForLoops.add("for(num i" + i + "=0;  i" + i + "<sizeof(" + g.getName() + "_devices);	i" + i + "=i" + i + "+1) {");
-				eugeneGateNames.add(String.format("%-12s", "gate_" + g.getName()));
-				eugeneArrays.add(String.format("%-12s", "gate_" + g.getName()) + " = " + g.getName() + "_devices[i" + i + "];");
-				i++;
+			eugeneForLoops.add("for(num i" + i + "=0;  i" + i + "<sizeof(" + g.getName() + "_devices);	i" + i + "=i" + i + "+1) {");
+			eugeneGateNames.add(String.format("%-12s", "gate_" + g.getName()));
+			eugeneArrays.add(String.format("%-12s", "gate_" + g.getName()) + " = " + g.getName() + "_devices[i" + i + "];");
+			i++;
 
-				String devDef = "Device ";
-				devDef += g.getName() + "_device(" + Utils.getNewLine();
+			String devDef = "Device ";
+			devDef += g.getName() + "_device(" + Utils.getNewLine();
 
-				String partRule = "Rule ";
-				partRule += g.getName() + "_rules ( ON ";
-				partRule += g.getName() + "_device:" + Utils.getNewLine();
+			String partRule = "Rule ";
+			partRule += g.getName() + "_rules ( ON ";
+			partRule += g.getName() + "_device:" + Utils.getNewLine();
 
-				String product = String.format("%-15s", g.getName() + "_devices");
-				product += " = product(" + g.getName() + "_device" + ");";
-				eugeneProductDefinitions.add(product);
+			String product = String.format("%-15s", g.getName() + "_devices");
+			product += " = product(" + g.getName() + "_device" + ");";
+			eugeneProductDefinitions.add(product);
 
-				eugeneGateDeclarations.add("Device gate_" + g.getName() + "();");
-				eugeneCircuitRules.add("   " + String.format("%-12s", "gate_" + g.getName()) + " EXACTLY 1 AND");
+			eugeneGateDeclarations.add("Device gate_" + g.getName() + "();");
+			eugeneCircuitRules.add("   " + String.format("%-12s", "gate_" + g.getName()) + " EXACTLY 1 AND");
 
-				CObjectCollection<Part> txnUnitParts = new CObjectCollection<>();
-				for (int j = 0; j < node.getNumInEdge(); j++) {
-					NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
-					for (CObject part : upstreamNode.getParts()) {
-						Part p = this.getPartLibrary().findCObjectByName(part.getName());
-						if (part.getType() == PartType.PROMOTER.ordinal()) {
-							txnUnitParts.add(p);
-							devDef += "	  " + p.getPartType() + "," + Utils.getNewLine();
-							partRule += "	CONTAINS " + p.getName() + " AND" + Utils.getNewLine();
-						}
-					}
+			CObjectCollection<Part> txnUnitParts = new CObjectCollection<>();
+			for (CObject part : node.getParts()) {
+				Part p = this.getPartLibrary().findCObjectByName(part.getName());
+				txnUnitParts.add(p);
+				if (part.getType() == PartType.PROMOTER.ordinal()) {
+					devDef += "	  " + p.getPartType() + "," + Utils.getNewLine();
+					partRule += "	CONTAINS " + p.getName() + " AND" + Utils.getNewLine();
 				}
-				for (Part p : g.getParts()){
-					if (p.getType() != PartType.PROMOTER.ordinal()) {
-						txnUnitParts.add(p);
-					}
-				}
-				for (Part p : txnUnitParts){
-					eugenePartTypes.add("PartType " + p.getPartType() + ";");
-
-					String partSequence = p.getPartType().toString();
-					partSequence += " " + p.getName();
-					partSequence += "(.SEQUENCE(\"" + p.getSequence();
-					partSequence += "\"));";
-					eugenePartSequences.add(partSequence);
-
-					if (p.getType() != PartType.PROMOTER.ordinal()) {
-						devDef += "	  " + p.getName() + "," + Utils.getNewLine();
-					}
-
-					for (String r : this.getPartRules()) {
-						if (r.contains(" " + p.getName())) {
-							if (!partRule.toLowerCase().contains("startswith")) {
-								partRule += "	" + r + " AND" + Utils.getNewLine();
-							} else {
-								// TODO log something about duplicate startswith
-							}
-						}
-					}
-				}
-				devDef = devDef.substring(0, devDef.length() - 2);
-				devDef += Utils.getNewLine() + ");" + Utils.getNewLine();
-				eugeneDeviceDefinitions.add(devDef);
-
-				partRule += "	ALL_FORWARD"  + Utils.getNewLine() + ");" + Utils.getNewLine();
-				eugenePartRules.add(partRule);
 			}
+			for (Part p : txnUnitParts){
+				eugenePartTypes.add("PartType " + p.getPartType() + ";");
+
+				String partSequence = p.getPartType().toString();
+				partSequence += " " + p.getName();
+				partSequence += "(.SEQUENCE(\"" + p.getSequence();
+				partSequence += "\"));";
+				eugenePartSequences.add(partSequence);
+
+				if (p.getType() != PartType.PROMOTER.ordinal()) {
+					devDef += "	  " + p.getName() + "," + Utils.getNewLine();
+				}
+
+				for (String r : this.getPartRules()) {
+					if (r.contains(" " + p.getName())) {
+						if (!partRule.toLowerCase().contains("startswith")) {
+							partRule += "	" + r + " AND" + Utils.getNewLine();
+						} else {
+							// TODO log something about duplicate startswith
+						}
+					}
+				}
+			}
+			devDef = devDef.substring(0, devDef.length() - 2);
+			devDef += Utils.getNewLine() + ");" + Utils.getNewLine();
+			eugeneDeviceDefinitions.add(devDef);
+
+			partRule += "	ALL_FORWARD"  + Utils.getNewLine() + ");" + Utils.getNewLine();
+			eugenePartRules.add(partRule);
 		}
 
 		for (String r : this.getGateRules()) {
@@ -278,22 +269,24 @@ public class Base extends EUAlgorithm{
 			e.printStackTrace();
 		}
 
-		CObjectCollection<Part> module = new CObjectCollection<>();
+		Map<String,CObjectCollection<Part>> module = new HashMap<>();
 		if (circuit instanceof org.cidarlab.eugene.dom.Device) {
 
 			int gIndex = 0;
 			int idx = 0;
 
 			for (NamedElement el : ((Device) circuit).getComponentList()) {
-
-				if (el instanceof org.cidarlab.eugene.dom.Part) {
-					Part p = new Part();
-					p.setName(el.getName());
-					p.setDirection(Direction.UP);
-					p.setIdx(idx);
-					module.add(p);
-					idx++;
-				} else if (el instanceof org.cidarlab.eugene.dom.Device) {
+				// if (el instanceof org.cidarlab.eugene.dom.Part) {
+				// 	Part p = new Part();
+				// 	p.setName(el.getName());
+				// 	p.setDirection(Direction.UP);
+				// 	p.setIdx(idx);
+				// 	module.add(p);
+				// 	idx++;
+				// } else
+				if (el instanceof org.cidarlab.eugene.dom.Device) {
+					String name = el.getName();
+					name = name.substring(5,name.length());
 					// String gateName = el.getName();
 					// Direction gateDirection = Direction.UP;
 
@@ -314,7 +307,7 @@ public class Base extends EUAlgorithm{
 						}
 					}
 
-					List<Part> txnUnit = new ArrayList<Part>();
+					CObjectCollection<Part> txnUnit = new CObjectCollection<Part>();
 					int pIndex = 0;
 					for (NamedElement part : ((Device) el).getComponentList()) {
 						// String partName = part.getName();
@@ -338,7 +331,8 @@ public class Base extends EUAlgorithm{
 						idx++;
 						pIndex++;
 					}
-					module.addAll(txnUnit);
+					module.put(name,txnUnit);
+					// module.addAll(txnUnit);
 				}
 				gIndex++;
 			}
@@ -350,30 +344,40 @@ public class Base extends EUAlgorithm{
 		Netlist netlist = this.getNetlist();
 		for (int i = 0; i<netlist.getNumVertex(); i++) {
 			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (node.getNodeType().equals("TopOutput")) {
-				for (int j = 0; j < node.getNumInEdge(); j++) {
-					NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
-					for (CObject part : upstreamNode.getParts()) {
-						if ((part.getType() == PartType.PROMOTER.ordinal()) &&
-								(part.getIdx() != UNASSIGNED)){
-							part.setIdx(UNASSIGNED); // unassigned -- part of an output plasmid
-							break;
-						}
-					}
+			for (CObject part : node.getParts()) {
+				if (part.getIdx() != UNASSIGNED) {
+					Part modulePart = module.get(node.getGate()).findCObjectByName(part.getName());
+					modulePart.setName("");
+					part.setIdx(modulePart.getIdx());
 				}
 			}
 		}
-		for (int i = 0; i<netlist.getNumVertex(); i++) {
-			NetlistNode node = netlist.getVertexAtIdx(i);
-			if (!node.getNodeType().equals("TopOutput")) {
-				for (CObject part : node.getParts()) {
-					if (part.getIdx() != UNASSIGNED) {
-						Part modulePart = module.findCObjectByName(part.getName());
-						part.setIdx(modulePart.getIdx());
-					}
-				}
-			}
-		}
+		// for (int i = 0; i<netlist.getNumVertex(); i++) {
+		// 	NetlistNode node = netlist.getVertexAtIdx(i);
+		// 	if (node.getNodeType().equals("TopOutput")) {
+		// 		for (int j = 0; j < node.getNumInEdge(); j++) {
+		// 			NetlistNode upstreamNode = node.getInEdgeAtIdx(j).getSrc();
+		// 			for (CObject part : upstreamNode.getParts()) {
+		// 				if ((part.getType() == PartType.PROMOTER.ordinal()) &&
+		// 						(part.getIdx() != UNASSIGNED)){
+		// 					part.setIdx(UNASSIGNED); // unassigned -- part of an output plasmid
+		// 					break;
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// for (int i = 0; i<netlist.getNumVertex(); i++) {
+		// 	NetlistNode node = netlist.getVertexAtIdx(i);
+		// 	if (!node.getNodeType().equals("TopOutput")) {
+		// 		for (CObject part : node.getParts()) {
+		// 			if (part.getIdx() != UNASSIGNED) {
+		// 				Part modulePart = module.findCObjectByName(part.getName());
+		// 				part.setIdx(modulePart.getIdx());
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
 	private Set<String> getDeviceNamesFromRule(String rule) {
@@ -540,14 +544,14 @@ public class Base extends EUAlgorithm{
 	/**
 	 * @return the module
 	 */
-	protected CObjectCollection<Part> getModule() {
+	protected Map<String,CObjectCollection<Part>> getModule() {
 		return module;
 	}
 
 	/**
 	 * @param module the module to set
 	 */
-	protected void setModule(final CObjectCollection<Part> module) {
+	protected void setModule(final Map<String,CObjectCollection<Part>> module) {
 		this.module = module;
 	}
 
@@ -559,5 +563,5 @@ public class Base extends EUAlgorithm{
 	private Collection<String> gateRules;
 	private CObjectCollection<Part> partLibrary;
 	private CObjectCollection<Gate> gateLibrary;
-	private CObjectCollection<Part> module;
+	private Map<String,CObjectCollection<Part>> module;
 }

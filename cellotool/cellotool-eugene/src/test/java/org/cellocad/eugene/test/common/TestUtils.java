@@ -21,7 +21,12 @@
 package org.cellocad.eugene.test.common;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
+
+import org.cellocad.common.Utils;
 
 /**
  * @author: Vincent Mirian
@@ -41,6 +46,43 @@ public class TestUtils {
 		String rtn = "";
 		rtn += TestUtils.getFilepath();
 		return rtn;
+	}
+
+	static public String getResource(String resource){
+		String rtn = "";
+		rtn += TestUtils.class.getClassLoader().getResource(resource).getPath();
+		return rtn;
+	}
+
+	public static File getResourceAsFile(String resource) {
+		File dir = createTempDirectory();
+		return getResourceAsFile(resource,dir.getAbsolutePath());
+	}
+
+	public static File getResourceAsFile(String resource, String path) {
+		try {
+			InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resource);
+			if (in == null) {
+				return null;
+			}
+
+			File file = new File(path
+					+ Utils.getFileSeparator()
+					+ Paths.get(resource).getFileName().toString());
+
+			try (FileOutputStream out = new FileOutputStream(file)) {
+				//copy stream
+				byte[] buffer = new byte[1024];
+				int bytesRead;
+				while ((bytesRead = in.read(buffer)) != -1) {
+					out.write(buffer, 0, bytesRead);
+				}
+			}
+			return file;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	static public File createTempDirectory(){
