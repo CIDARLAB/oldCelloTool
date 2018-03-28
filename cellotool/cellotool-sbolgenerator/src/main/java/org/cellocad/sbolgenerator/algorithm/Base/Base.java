@@ -213,7 +213,7 @@ public class Base extends SGAlgorithm{
 
 			// build transcriptional unit
 			List<String> txnUnit = new ArrayList<>();
-			String moduleName = name + String.valueOf(i);
+			String moduleName = name + "_" + String.valueOf(i);
 			for (CObject part : node.getParts()) {
 				txnUnit.add(part.getName());
 			}
