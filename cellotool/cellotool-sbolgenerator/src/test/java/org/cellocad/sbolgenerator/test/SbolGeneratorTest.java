@@ -22,20 +22,14 @@ package org.cellocad.sbolgenerator.test;
 
 import java.io.File;
 
-import org.cellocad.common.CObject;
-import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
-import org.cellocad.common.graph.AbstractVertex.VertexType;
 import org.cellocad.common.netlist.Netlist;
-import org.cellocad.common.netlist.NetlistEdge;
-import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.common.netlist.NetlistUtils;
 import org.cellocad.common.runtime.environment.RuntimeEnv;
 import org.cellocad.common.stage.StageConfiguration;
 import org.cellocad.common.stage.StageUtils;
 import org.cellocad.common.target.data.TargetData;
 import org.cellocad.common.target.data.TargetDataUtils;
-import org.cellocad.sbolgenerator.data.PartType;
 import org.cellocad.sbolgenerator.runtime.SGRuntimeObject;
 import org.cellocad.sbolgenerator.runtime.environment.SGArgString;
 import org.cellocad.sbolgenerator.runtime.environment.SGRuntimeEnv;

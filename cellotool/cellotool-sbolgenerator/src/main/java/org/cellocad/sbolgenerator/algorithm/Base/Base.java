@@ -40,7 +40,6 @@ import org.cellocad.sbolgenerator.algorithm.SGAlgorithm;
 import org.cellocad.sbolgenerator.common.TargetDataReader;
 import org.cellocad.sbolgenerator.data.Gate;
 import org.cellocad.sbolgenerator.data.Part;
-import org.cellocad.sbolgenerator.data.PartType;
 import org.cellocad.sbolgenerator.data.RepositoryType;
 import org.sbolstandard.core2.AccessType;
 import org.sbolstandard.core2.Component;
