@@ -26,6 +26,7 @@ import java.io.Writer;
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.JSON.JSONUtils;
+import org.cellocad.common.graph.AbstractVertex;
 import org.cellocad.common.graph.graph.VertexTemplate;
 import org.cellocad.common.profile.ProfileUtils;
 import org.json.simple.JSONArray;
@@ -77,6 +78,17 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		}
 	}
 
+	private void parseVertexType(final JSONObject JObj){
+		String value = ProfileUtils.getString(JObj, "vertexType");
+		if (value != null) {
+			if (value.equals("SOURCE")) {
+				this.setVertexType(AbstractVertex.VertexType.SOURCE);
+			} else if (value.equals("SINK")) {
+				this.setVertexType(AbstractVertex.VertexType.SINK);
+			}
+		}
+	}
+
 	private void parsePartitionID(final JSONObject JObj){
 		Integer value = ProfileUtils.getInteger(JObj, "partitionID");
 		if (value != null) {
@@ -123,6 +135,7 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	private void parse(final JSONObject JObj){
 		this.parseName(JObj);
 		this.parseNodeType(JObj);
+		this.parseVertexType(JObj);
 		this.parsePartitionID(JObj);
 		this.parseGate(JObj);
 		this.parseParts(JObj);
@@ -215,6 +228,8 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		rtn += JSONUtils.getEntryToString("name", this.getName());
 		// NodeType
 		rtn += JSONUtils.getEntryToString("nodeType", this.getNodeType());
+		// NodeType
+		rtn += JSONUtils.getEntryToString("vertexType", this.getVertexType().name());
 		// partitionID
 		rtn += JSONUtils.getEntryToString("partitionID", this.getPartitionID());
 		// gate

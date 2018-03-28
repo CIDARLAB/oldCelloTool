@@ -25,14 +25,14 @@ import java.io.File;
 import org.cellocad.common.Utils;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistUtils;
-import org.cellocad.common.stage.Stage;
-import org.cellocad.common.target.TargetConfiguration;
-import org.cellocad.common.target.TargetUtils;
+import org.cellocad.common.runtime.environment.RuntimeEnv;
+import org.cellocad.common.stage.StageConfiguration;
+import org.cellocad.common.stage.StageUtils;
 import org.cellocad.common.target.data.TargetData;
 import org.cellocad.common.target.data.TargetDataUtils;
-import org.cellocad.common.target.runtime.environment.TargetArgString;
-import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
 import org.cellocad.logicsynthesis.runtime.LSRuntimeObject;
+import org.cellocad.logicsynthesis.runtime.environment.LSArgString;
+import org.cellocad.logicsynthesis.runtime.environment.LSRuntimeEnv;
 import org.cellocad.logicsynthesis.test.common.TestUtils;
 import org.junit.Test;
 
@@ -57,29 +57,28 @@ public class LogicSynthesisTest{
 
 		String tempDir = TestUtils.createTempDirectory().toString();
 
-		String[] args = new String[] {"-verilogFile",resourcesFilepath + verilogFilePrefix + ".v",
-				"-targetDataDir",resourcesFilepath,
-				"-targetDataFile","Eco1C1G1T1.UCF.json",
-				"-configDir",resourcesFilepath,
-				"-configFile","config.json",
-				"-outputDir",tempDir};
+		String[] args = new String[] {
+			"-inputNetlist",resourcesFilepath + Utils.getFileSeparator() + verilogFilePrefix + ".v",
+			"-outputNetlist",tempDir + Utils.getFileSeparator() + "logicsynthesis_netlist.json",
+			"-targetDataDir",resourcesFilepath,
+			"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
+			"-configFile",resourcesFilepath + Utils.getFileSeparator() + "logicsynthesis.json",
+			"-outputDir",tempDir
+		};
 
-		Stage currentStage = null;
-		// RuntimeEnv
-		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
-		runEnv.setName("dnaCompiler");
-		// VerilogFile
-		String verilogFile = runEnv.getOptionValue(TargetArgString.VERILOG);
+		RuntimeEnv runEnv = new LSRuntimeEnv(args);
+		runEnv.setName("LogicSynthesis");
+		// verilogFile
+		String verilogFile = runEnv.getOptionValue(LSArgString.INPUTNETLIST);
 		// Netlist
 		Netlist netlist = new Netlist();
-		// TargetConfiguration
-		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		// get StageConfiguration
+		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, LSArgString.CONFIGFILE);
 		// get TargetData
-		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
-		// Stages
-		// LogicSynthesis
-		currentStage = targetCfg.getStageByName("LogicSynthesis");
-		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, currentStage.getStageConfiguration(), td, netlist, runEnv);
+		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, LSArgString.TARGETDATAFILE, LSArgString.TARGETDATADIR);
+		// Execute
+		LSRuntimeObject LS = new LSRuntimeObject(verilogFile, sc, td, netlist, runEnv);
+		LS.setName("LogicSynthesis");
 		LS.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
 				+ Utils.getFileSeparator()
