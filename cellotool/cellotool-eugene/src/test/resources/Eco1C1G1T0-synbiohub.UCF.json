@@ -4924,7 +4924,7 @@
     "rpu_high": 2.8,
     "parts": [
       "pCONST",
-      "LacI",
+      "LacI"
     ]
   },
   {
@@ -4951,7 +4951,7 @@
     "collection": "input_sensors",
     "promoter": "pLuxStar",
     "rpu_low": 0.025,
-    "rpu_high": 0.31
+    "rpu_high": 0.31,
     "parts": [
       "pCONST",
       "LuxR"
