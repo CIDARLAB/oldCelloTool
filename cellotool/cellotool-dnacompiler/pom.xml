@@ -34,12 +34,6 @@
       <groupId>org.cellocad</groupId>
       <artifactId>cellotool-eugene</artifactId>
       <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-simple</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.cellocad</groupId>
