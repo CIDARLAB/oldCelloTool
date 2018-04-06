@@ -9,7 +9,7 @@
 		"name" : "cell_library",
 		"type" : "string",
 		"value": "notnor"
-	    },
+	    }
 	]
     }
 }

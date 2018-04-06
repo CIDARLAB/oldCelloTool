@@ -12,14 +12,14 @@
 				{
 					"name": "pCONST",
 					"type": 0,
-					"idx": 23,
+					"idx": 23
 				},
 				{
 					"name": "LacI",
 					"type": 1,
-					"idx": 24,
-				},
-			],
+					"idx": 24
+				}
+			]
 		},
 		{
 			"name": "in2",
@@ -31,14 +31,14 @@
 				{
 					"name": "pCONST",
 					"type": 0,
-					"idx": 10,
+					"idx": 10
 				},
 				{
 					"name": "TetR",
 					"type": 1,
-					"idx": 11,
-				},
-			],
+					"idx": 11
+				}
+			]
 		},
 		{
 			"name": "A",
@@ -50,29 +50,29 @@
 				{
 					"name": "pTac",
 					"type": 0,
-					"idx": 0,
+					"idx": 0
 				},
 				{
 					"name": "BydvJ",
 					"type": 4,
-					"idx": 1,
+					"idx": 1
 				},
 				{
 					"name": "A1",
 					"type": 3,
-					"idx": 2,
+					"idx": 2
 				},
 				{
 					"name": "AmtR",
 					"type": 1,
-					"idx": 3,
+					"idx": 3
 				},
 				{
 					"name": "L3S2P55",
 					"type": 2,
-					"idx": 4,
-				},
-			],
+					"idx": 4
+				}
+			]
 		},
 		{
 			"name": "B",
@@ -84,29 +84,29 @@
 				{
 					"name": "pTet",
 					"type": 0,
-					"idx": 5,
+					"idx": 5
 				},
 				{
 					"name": "RiboJ10",
 					"type": 4,
-					"idx": 6,
+					"idx": 6
 				},
 				{
 					"name": "S2",
 					"type": 3,
-					"idx": 7,
+					"idx": 7
 				},
 				{
 					"name": "SrpR",
 					"type": 1,
-					"idx": 8,
+					"idx": 8
 				},
 				{
 					"name": "ECK120029600",
 					"type": 2,
-					"idx": 9,
-				},
-			],
+					"idx": 9
+				}
+			]
 		},
 		{
 			"name": "C",
@@ -118,34 +118,34 @@
 				{
 					"name": "pAmtR",
 					"type": 0,
-					"idx": 18,
+					"idx": 18
 				},
 				{
 					"name": "pSrpR",
 					"type": 0,
-					"idx": 17,
+					"idx": 17
 				},
 				{
 					"name": "RiboJ53",
 					"type": 4,
-					"idx": 19,
+					"idx": 19
 				},
 				{
 					"name": "P3",
 					"type": 3,
-					"idx": 20,
+					"idx": 20
 				},
 				{
 					"name": "PhlF",
 					"type": 1,
-					"idx": 21,
+					"idx": 21
 				},
 				{
 					"name": "ECK120033737",
 					"type": 2,
-					"idx": 22,
-				},
-			],
+					"idx": 22
+				}
+			]
 		},
 		{
 			"name": "out",
@@ -157,57 +157,57 @@
 				{
 					"name": "pPhlF",
 					"type": 0,
-					"idx": 12,
+					"idx": 12
 				},
 				{
 					"name": "RiboJ",
 					"type": 4,
-					"idx": 13,
+					"idx": 13
 				},
 				{
 					"name": "BBa_B0064",
 					"type": 3,
-					"idx": 14,
+					"idx": 14
 				},
 				{
 					"name": "YFP",
 					"type": 1,
-					"idx": 15,
+					"idx": 15
 				},
 				{
 					"name": "L3S2P21",
 					"type": 2,
-					"idx": 16,
-				},
-			],
-		},
+					"idx": 16
+				}
+			]
+		}
 	],
 	"edges": 
 	[
 		{
 			"name": "e1",
 			"src": "in1",
-			"dst": "A",
+			"dst": "A"
 		},
 		{
 			"name": "e2",
 			"src": "in2",
-			"dst": "B",
+			"dst": "B"
 		},
 		{
 			"name": "e3",
 			"src": "A",
-			"dst": "C",
+			"dst": "C"
 		},
 		{
 			"name": "e4",
 			"src": "B",
-			"dst": "C",
+			"dst": "C"
 		},
 		{
 			"name": "e5",
 			"src": "C",
-			"dst": "out",
-		},
-	],
+			"dst": "out"
+		}
+	]
 }

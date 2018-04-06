@@ -25,6 +25,6 @@
             "algorithm_name": "Base",
             "configuration_type": "file",
             "configuration_data": "sbolgenerator.json"
-        },
+        }
     ]
 }

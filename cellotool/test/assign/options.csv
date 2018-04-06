@@ -1,9 +1,0 @@
-,
-LogicSynthesis,Base
-LogicSynthesis.arg,value
-Partition,Hmetis
-Partition.arg,value
-TechnologyMapping,Base
-TechnologyMapping.arg,value
-Eugene,Base
-Eugene.arg,value
