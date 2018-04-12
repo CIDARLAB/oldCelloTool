@@ -1,0 +1,213 @@
+{
+	"name": "TM",
+	"nodes": 
+	[
+		{
+			"name": "in1",
+			"nodeType": "TopInput",
+			"partitionID": -1,
+			"gate": "pTac",
+			"parts": 
+			[
+				{
+					"name": "pCONST",
+					"type": 0,
+					"idx": 0
+				},
+				{
+					"name": "LacI",
+					"type": 1,
+					"idx": 0
+				}
+			]
+		},
+		{
+			"name": "in2",
+			"nodeType": "TopInput",
+			"partitionID": -1,
+			"gate": "pTet",
+			"parts": 
+			[
+				{
+					"name": "pCONST",
+					"type": 0,
+					"idx": 0
+				},
+				{
+					"name": "TetR",
+					"type": 1,
+					"idx": 0
+				}
+			]
+		},
+		{
+			"name": "A",
+			"nodeType": "NOT",
+			"partitionID": -1,
+			"gate": "A1_AmtR",
+			"parts": 
+			[
+				{
+					"name": "pTac",
+					"type": 0,
+					"idx": 0
+				},
+				{
+					"name": "BydvJ",
+					"type": 4,
+					"idx": 0
+				},
+				{
+					"name": "A1",
+					"type": 3,
+					"idx": 0
+				},
+				{
+					"name": "AmtR",
+					"type": 1,
+					"idx": 0
+				},
+				{
+					"name": "L3S2P55",
+					"type": 2,
+					"idx": 0
+				}
+			]
+		},
+		{
+			"name": "B",
+			"nodeType": "NOT",
+			"partitionID": -1,
+			"gate": "S2_SrpR",
+			"parts": 
+			[
+				{
+					"name": "pTet",
+					"type": 0,
+					"idx": 0
+				},
+				{
+					"name": "RiboJ10",
+					"type": 4,
+					"idx": 0
+				},
+				{
+					"name": "S2",
+					"type": 3,
+					"idx": 0
+				},
+				{
+					"name": "SrpR",
+					"type": 1,
+					"idx": 0
+				},
+				{
+					"name": "ECK120029600",
+					"type": 2,
+					"idx": 0
+				}
+			]
+		},
+		{
+			"name": "C",
+			"nodeType": "NOR",
+			"partitionID": -1,
+			"gate": "P3_PhlF",
+			"parts": 
+			[
+				{
+					"name": "pAmtR",
+					"type": 0,
+					"idx": 0
+				},
+				{
+					"name": "pSrpR",
+					"type": 0,
+					"idx": 0
+				},
+				{
+					"name": "RiboJ53",
+					"type": 4,
+					"idx": 0
+				},
+				{
+					"name": "P3",
+					"type": 3,
+					"idx": 0
+				},
+				{
+					"name": "PhlF",
+					"type": 1,
+					"idx": 0
+				},
+				{
+					"name": "ECK120033737",
+					"type": 2,
+					"idx": 0
+				}
+			]
+		},
+		{
+			"name": "out",
+			"nodeType": "TopOutput",
+			"partitionID": -1,
+			"gate": "YFP",
+			"parts": 
+			[
+				{
+					"name": "pPhlF",
+					"type": 0,
+					"idx": 0
+				},
+				{
+					"name": "RiboJ",
+					"type": 4,
+					"idx": 0
+				},
+				{
+					"name": "BBa_B0064",
+					"type": 3,
+					"idx": 0
+				},
+				{
+					"name": "YFP",
+					"type": 1,
+					"idx": 0
+				},
+				{
+					"name": "L3S2P21",
+					"type": 2,
+					"idx": 0
+				}
+			]
+		}
+	],
+	"edges": 
+	[
+		{
+			"name": "e1",
+			"src": "in1",
+			"dst": "A"
+		},
+		{
+			"name": "e2",
+			"src": "in2",
+			"dst": "B"
+		},
+		{
+			"name": "e3",
+			"src": "A",
+			"dst": "C"
+		},
+		{
+			"name": "e4",
+			"src": "B",
+			"dst": "C"
+		},
+		{
+			"name": "e5",
+			"src": "C",
+			"dst": "out"
+		}
+	]
+}

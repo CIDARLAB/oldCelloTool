@@ -89,7 +89,7 @@ public class RoadblockChecker extends CObject{
 			if (this.getInputRoadblocks().contains(src.getGate().getName())) {
 				numInputRoadblocks++;
 			}
-			if (this.getLogicRoadblocks().contains(src.getGate().getPromoter())) {
+			if (this.getLogicRoadblocks().contains(src.getGate().getPromoter().getName())) {
 				numLogicRoadblocks++;
 			}
 		}

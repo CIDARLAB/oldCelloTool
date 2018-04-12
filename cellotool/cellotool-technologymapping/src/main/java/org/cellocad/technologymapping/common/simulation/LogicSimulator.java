@@ -76,8 +76,12 @@ public class LogicSimulator extends Simulator{
 		TMNetlist netlist = this.getTMNetlist();
 		List<List<Boolean>> inputLogic = getInputLogic(netlist.getInputNodes().size());
 
-		UpstreamDFS<TMNode,TMEdge,TMNetlist> dfs = new UpstreamDFS<>(netlist);
 		Iterator<List<Boolean>> it = inputLogic.iterator();
+		for (TMNode node : netlist.getInputNodes()) {
+			node.setLogic(it.next());
+		}
+
+		UpstreamDFS<TMNode,TMEdge,TMNetlist> dfs = new UpstreamDFS<>(netlist);
 		TMNode node = null;
 		while ((node = dfs.getNextVertex()) != null) {
 			if (node.getNodeType().equals("TopInput")) {
@@ -94,6 +98,7 @@ public class LogicSimulator extends Simulator{
 				}
 
 				List<Boolean> logic = null;
+				System.out.println(inputs);
 
 				if (node.getNodeType().equals("SR")
 					||

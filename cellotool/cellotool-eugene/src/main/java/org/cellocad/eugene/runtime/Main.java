@@ -45,15 +45,15 @@ public class Main {
 		RuntimeEnv runEnv = new EURuntimeEnv(args);
 		runEnv.setName("Eugene");
 		// Read Netlist
-		Netlist netlist = new Netlist();
+		Netlist netlist = NetlistUtils.getNetlist(runEnv, EUArgString.INPUTNETLIST);
 		// get StageConfiguration
 		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, EUArgString.CONFIGFILE);
 		// get TargetData
 		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, EUArgString.TARGETDATAFILE, EUArgString.TARGETDATADIR);
 		// Execute
-		EURuntimeObject eugene = new EURuntimeObject(sc, td, netlist, runEnv);
-		eugene.setName("Eugene");
-		eugene.execute();
+		EURuntimeObject EU = new EURuntimeObject(sc, td, netlist, runEnv);
+		EU.setName("Eugene");
+		EU.execute();
 		// Write Netlist
 		String outputFilename = runEnv.getOptionValue(EUArgString.OUTPUTNETLIST);
 		NetlistUtils.writeJSONForNetlist(netlist, outputFilename);

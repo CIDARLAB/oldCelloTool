@@ -1,0 +1,70 @@
+{
+	"name": "LS",
+	"nodes": 
+	[
+		{
+			"name": "id00002",
+			"nodeType": "NOT",
+			"vertexType": "NONE",
+			"partitionID": -1
+		},
+		{
+			"name": "id00003",
+			"nodeType": "NOR",
+			"vertexType": "NONE",
+			"partitionID": -1
+		},
+		{
+			"name": "a",
+			"nodeType": "TopInput",
+			"vertexType": "SOURCE",
+			"partitionID": -1
+		},
+		{
+			"name": "id00001",
+			"nodeType": "NOT",
+			"vertexType": "NONE",
+			"partitionID": -1
+		},
+		{
+			"name": "out1",
+			"nodeType": "TopOutput",
+			"vertexType": "SINK",
+			"partitionID": -1
+		},
+		{
+			"name": "b",
+			"nodeType": "TopInput",
+			"vertexType": "SOURCE",
+			"partitionID": -1
+		}
+	],
+	"edges": 
+	[
+		{
+			"name": "$abc$53$n5_1",
+			"src": "id00002",
+			"dst": "id00003"
+		},
+		{
+			"name": "a",
+			"src": "a",
+			"dst": "id00001"
+		},
+		{
+			"name": "out1",
+			"src": "id00003",
+			"dst": "out1"
+		},
+		{
+			"name": "b",
+			"src": "b",
+			"dst": "id00002"
+		},
+		{
+			"name": "$abc$53$n4",
+			"src": "id00001",
+			"dst": "id00003"
+		}
+	]
+}

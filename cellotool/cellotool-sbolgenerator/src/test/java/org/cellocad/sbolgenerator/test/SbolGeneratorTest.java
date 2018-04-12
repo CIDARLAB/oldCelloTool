@@ -22,23 +22,17 @@ package org.cellocad.sbolgenerator.test;
 
 import java.io.File;
 
-import org.cellocad.common.CObject;
-import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
-import org.cellocad.common.graph.AbstractVertex.VertexType;
 import org.cellocad.common.netlist.Netlist;
-import org.cellocad.common.netlist.NetlistEdge;
-import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.common.netlist.NetlistUtils;
-import org.cellocad.common.stage.Stage;
-import org.cellocad.common.target.TargetConfiguration;
-import org.cellocad.common.target.TargetUtils;
+import org.cellocad.common.runtime.environment.RuntimeEnv;
+import org.cellocad.common.stage.StageConfiguration;
+import org.cellocad.common.stage.StageUtils;
 import org.cellocad.common.target.data.TargetData;
 import org.cellocad.common.target.data.TargetDataUtils;
-import org.cellocad.common.target.runtime.environment.TargetArgString;
-import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
-import org.cellocad.sbolgenerator.data.PartType;
 import org.cellocad.sbolgenerator.runtime.SGRuntimeObject;
+import org.cellocad.sbolgenerator.runtime.environment.SGArgString;
+import org.cellocad.sbolgenerator.runtime.environment.SGRuntimeEnv;
 import org.cellocad.sbolgenerator.test.common.TestUtils;
 import org.junit.Test;
 
@@ -56,155 +50,32 @@ public class SbolGeneratorTest{
 
 		String tempDir = TestUtils.createTempDirectory().toString();
 
-		String[] args = new String[] {"-verilogFile","foo.v",
-				"-targetDataDir",resourcesFilepath,
-				"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
-				"-configDir",resourcesFilepath,
-				"-configFile","config.json",
-				"-outputDir",tempDir};
+		String[] args = new String[] {
+			"-inputNetlist",resourcesFilepath + Utils.getFileSeparator() + "eugene_netlist.json",
+			"-outputNetlist",tempDir + Utils.getFileSeparator() + "sbolgenerator_netlist.json",
+			"-targetDataDir",resourcesFilepath,
+			"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
+			"-configFile",resourcesFilepath + Utils.getFileSeparator() + "sbolgenerator.json",
+			"-outputDir",tempDir
+		};
 
-		Stage currentStage = null;
-		// RuntimeEnv
-		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
-		runEnv.setName("dnaCompiler");
+		RuntimeEnv runEnv = new SGRuntimeEnv(args);
+		runEnv.setName("SbolGenerator");
 		// Netlist
-		Netlist netlist = generateTestNetlist();
-		// TargetConfiguration
-		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		Netlist netlist = NetlistUtils.getNetlist(runEnv, SGArgString.INPUTNETLIST);
+		// get StageConfiguration
+		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, SGArgString.CONFIGFILE);
 		// get TargetData
-		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
-		// Stages
-		// SbolGenerator
-		currentStage = targetCfg.getStageByName("SbolGenerator");
-		SGRuntimeObject SG = new SGRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, SGArgString.TARGETDATAFILE, SGArgString.TARGETDATADIR);
+		// Execute
+		SGRuntimeObject SG = new SGRuntimeObject(sc, td, netlist, runEnv);
+		SG.setName("SbolGenerator");
 		SG.execute();
+		// Write Netlist
 		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
 				+ Utils.getFileSeparator()
 				+ "sbolgenerator_netlist.json");
 		Utils.deleteDirectory(new File(tempDir));
-	}
-
-	public Netlist generateTestNetlist() {
-		Netlist netlist = new Netlist();
-
-		netlist.setName("sbolGenerator");
-
-		NetlistNode in1 = new NetlistNode();
-		NetlistNode in2 = new NetlistNode();
-		NetlistNode A = new NetlistNode();
-		NetlistNode B = new NetlistNode();
-		NetlistNode C = new NetlistNode();
-		NetlistNode out = new NetlistNode();
-
-		NetlistEdge e1 = new NetlistEdge(in1, A);
-		NetlistEdge e2 = new NetlistEdge(in2, B);
-		NetlistEdge e3 = new NetlistEdge(A, C);
-		NetlistEdge e4 = new NetlistEdge(B, C);
-		NetlistEdge e5 = new NetlistEdge(C, out);
-
-		e1.setName("e1");
-		e2.setName("e2");
-		e3.setName("e3");
-		e4.setName("e4");
-		e5.setName("e5");
-
-		in1.addOutEdge(e1);
-		in2.addOutEdge(e2);
-		A.addInEdge(e1);
-		A.addOutEdge(e3);
-		B.addInEdge(e2);
-		B.addOutEdge(e4);
-		C.addInEdge(e3);
-		C.addInEdge(e4);
-		C.addOutEdge(e5);
-		out.addInEdge(e5);
-
-		in1.setNodeType("TopInput");
-		in2.setNodeType("TopInput");
-		A.setNodeType("NOT");
-		B.setNodeType("NOT");
-		C.setNodeType("NOR");
-		out.setNodeType("TopOutput");
-
-		in1.setName("in1");
-		in2.setName("in2");
-		A.setName("A");
-		B.setName("B");
-		C.setName("C");
-		out.setName("out");
-
-		in1.setGate("pTac");
-		in2.setGate("pTet");
-		A.setGate("A1_AmtR");
-		B.setGate("S2_SrpR");
-		C.setGate("P3_PhlF");
-		out.setGate("YFP");
-
-		CObject pTac = new CObject("pTac",PartType.PROMOTER.ordinal(),0);
-		CObject pTet = new CObject("pTet",PartType.PROMOTER.ordinal(),1);
-		CObject BydvJ = new CObject("BydvJ",PartType.RIBOZYME.ordinal(),2);
-		CObject A1 = new CObject("A1",PartType.RBS.ordinal(),3);
-		CObject AmtR = new CObject("AmtR",PartType.CDS.ordinal(),4);
-		CObject L3S2P55 = new CObject("L3S2P55",PartType.TERMINATOR.ordinal(),5);
-		CObject RiboJ10 = new CObject("RiboJ10",PartType.RIBOZYME.ordinal(),6);
-		CObject S2 = new CObject("S2",PartType.RBS.ordinal(),7);
-		CObject SrpR = new CObject("SrpR",PartType.CDS.ordinal(),8);
-		CObject ECK120029600 = new CObject("ECK120029600",PartType.TERMINATOR.ordinal(),9);
-		CObject RiboJ53 = new CObject("RiboJ53",PartType.RIBOZYME.ordinal(),10);
-		CObject P3 = new CObject("P3",PartType.RBS.ordinal(),11);
-		CObject PhlF = new CObject("PhlF",PartType.CDS.ordinal(),12);
-		CObject ECK120033737 = new CObject("ECK120033737",PartType.TERMINATOR.ordinal(),13);
-		CObject pPhlF = new CObject("pPhlF",PartType.PROMOTER.ordinal(),14);
-		CObject pSrpR = new CObject("pSrpR",PartType.PROMOTER.ordinal(),15);
-		CObject pAmtR = new CObject("pAmtR",PartType.PROMOTER.ordinal(),16);
-
-		CObjectCollection<CObject> parts = null;
-		parts = new CObjectCollection<CObject>();
-		parts.add(pTac);
-		in1.setParts(parts);
-		parts = new CObjectCollection<CObject>();
-		parts.add(pTet);
-		in2.setParts(parts);
-		parts = new CObjectCollection<CObject>();
-		parts.add(BydvJ);
-		parts.add(A1);
-		parts.add(AmtR);
-		parts.add(L3S2P55);
-		parts.add(pAmtR);
-		A.setParts(parts);
-		parts = new CObjectCollection<CObject>();
-		parts.add(RiboJ10);
-		parts.add(S2);
-		parts.add(SrpR);
-		parts.add(ECK120029600);
-		parts.add(pSrpR);
-		B.setParts(parts);
-		parts = new CObjectCollection<CObject>();
-		parts.add(RiboJ53);
-		parts.add(P3);
-		parts.add(PhlF);
-		parts.add(ECK120033737);
-		parts.add(pPhlF);
-		C.setParts(parts);
-
-		in1.setVertexType(VertexType.SOURCE);
-		in2.setVertexType(VertexType.SOURCE);
-		out.setVertexType(VertexType.SINK);
-
-		netlist.addVertex(in1);
-		netlist.addVertex(in2);
-		netlist.addVertex(A);
-		netlist.addVertex(B);
-		netlist.addVertex(C);
-		netlist.addVertex(out);
-
-		netlist.addEdge(e1);
-		netlist.addEdge(e2);
-		netlist.addEdge(e3);
-		netlist.addEdge(e4);
-		netlist.addEdge(e5);
-
-		return netlist;
 	}
 
 }

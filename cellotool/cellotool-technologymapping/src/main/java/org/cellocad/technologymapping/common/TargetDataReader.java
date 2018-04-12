@@ -280,19 +280,37 @@ public class TargetDataReader {
 		CObjectCollection<Part> parts = getParts(td);
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("input_sensors",i);
+
 			Gate g = new Gate();
+
+			// name
+			String name = (String)json.get("promoter");
+			if (name != null)
+				g.setName(name);
+
+			// promoter
+			Part promoter = parts.findCObjectByName(name);
+			if (promoter != null) {
+				g.setPromoter(promoter);
+			}
+
+			// parts
+			JSONArray array = (JSONArray)json.get("parts");
+			CObjectCollection<Part> inputParts = new CObjectCollection<>();
+			for (Object obj : array) {
+				Part part = parts.findCObjectByName((String)obj);
+				if (part != null) {
+					inputParts.add(part);
+				}
+			}
+			g.setParts(inputParts);
+
+			// response function
 			ResponseFunction<LinearFunction> rf = new ResponseFunction<>();
 			LinearFunction lf = new LinearFunction();
 			rf.setCurve(lf);
 			g.setResponseFunction(rf);
-			String name = (String)json.get("promoter");
-			if (name != null) {g.setName(name);}
-			Part part = parts.findCObjectByName(name);
-			if (part != null) {
-				CObjectCollection<Part> promoter = new CObjectCollection<>();
-				promoter.add(part);
-				g.setParts(promoter);
-			}
+
 			gates.add(g);
 		}
 		return gates;
@@ -304,13 +322,15 @@ public class TargetDataReader {
 		CObjectCollection<Part> parts = getParts(td);
 		for (int i = 0; i < num; i++) {
 			JSONObject json = td.getJSONObjectAtIdx("output_reporters",i);
+
 			Gate g = new Gate();
-			ResponseFunction<LinearFunction> rf = new ResponseFunction<>();
-			LinearFunction lf = new LinearFunction(getUnitConversion(td),0.0);
-			rf.setCurve(lf);
-			g.setResponseFunction(rf);
+
+			// name
 			String name = (String)json.get("name");
-			if (name != null) {g.setName(name);}
+			if (name != null)
+				g.setName(name);
+
+			// parts
 			JSONArray jsonParts = (JSONArray)json.get("parts");
 			CObjectCollection<Part> outputParts = new CObjectCollection<>();
 			for (Object obj : jsonParts) {
@@ -320,6 +340,12 @@ public class TargetDataReader {
 				}
 			}
 			g.setParts(outputParts);
+
+			ResponseFunction<LinearFunction> rf = new ResponseFunction<>();
+			LinearFunction lf = new LinearFunction(getUnitConversion(td),0.0);
+			rf.setCurve(lf);
+			g.setResponseFunction(rf);
+
 			gates.add(g);
 		}
 		return gates;
@@ -359,9 +385,9 @@ public class TargetDataReader {
 		return map;
 	}
 
-	public static final Map< String, Pair<String,CObjectCollection<Part>> > getGateParts(TargetData td) {
+	public static final Map< String, Pair<Part,CObjectCollection<Part>> > getGateParts(TargetData td) {
 		CObjectCollection<Part> parts = getParts(td);
-		Map< String, Pair<String,CObjectCollection<Part>> > gatePartsMap = new HashMap<>();
+		Map< String, Pair<Part,CObjectCollection<Part>> > gatePartsMap = new HashMap<>();
 		Integer num = td.getNumJSONObject("gate_parts");
 		for (int i = 0; i < num; i++) {
 			CObjectCollection<Part> gateParts = new CObjectCollection<>();
@@ -370,9 +396,9 @@ public class TargetDataReader {
 			for ( Object obj : jsonGateParts ) {
 				gateParts.add(parts.findCObjectByName(obj.toString()));
 			}
-			gateParts.add(parts.findCObjectByName(json.get("promoter").toString()));
+			Part promoter = parts.findCObjectByName(json.get("promoter").toString());
 			gatePartsMap.put(json.get("gate_name").toString(),
-					new Pair<String,CObjectCollection<Part>>(json.get("promoter").toString(),gateParts));
+							 new Pair<Part,CObjectCollection<Part>>(promoter,gateParts));
 
 		}
 		return gatePartsMap;
@@ -381,7 +407,7 @@ public class TargetDataReader {
 	public static final CObjectCollection<Gate> getGates(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
 
-		Map<String,Pair<String,CObjectCollection<Part>>> gateParts = getGateParts(td);
+		Map<String,Pair<Part,CObjectCollection<Part>>> gateParts = getGateParts(td);
 		Map<String,ResponseFunction<?>> responseFunctions = getGateResponseFunctions(td);
 		CObjectCollection<Toxicity> toxicities = getGateToxicityData(td);
 		CObjectCollection<Cytometry> cytometries = getGateCytometryData(td);
@@ -402,7 +428,7 @@ public class TargetDataReader {
 			String group = (String)json.get("group_name");
 			g.setGroup(group);
 
-			String promoter = gateParts.get(name).getFirst();
+			Part promoter = gateParts.get(name).getFirst();
 			g.setPromoter(promoter);
 
 			CObjectCollection<Part> parts = gateParts.get(name).getSecond();

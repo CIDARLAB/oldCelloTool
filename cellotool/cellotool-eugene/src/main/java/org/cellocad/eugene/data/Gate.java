@@ -32,6 +32,7 @@ import org.cellocad.common.CObjectCollection;
 public class Gate extends CObject{
 
 	private CObjectCollection<Part> parts;
+	private Part promoter;
 
 	/**
 	 * @return the parts
@@ -45,6 +46,20 @@ public class Gate extends CObject{
 	 */
 	public void setParts(CObjectCollection<Part> parts) {
 		this.parts = parts;
+	}
+
+	/**
+	 * @return the promoter
+	 */
+	public Part getPromoter() {
+		return promoter;
+	}
+
+	/**
+	 * @param promoter the promoter to set
+	 */
+	public void setPromoter(Part promoter) {
+		this.promoter = promoter;
 	}
 
 }

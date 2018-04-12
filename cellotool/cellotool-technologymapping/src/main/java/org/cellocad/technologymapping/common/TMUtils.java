@@ -31,6 +31,7 @@ import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.netlist.Netlist;
 import org.cellocad.common.netlist.NetlistNode;
+import org.cellocad.technologymapping.common.netlist.TMEdge;
 import org.cellocad.technologymapping.common.netlist.TMNetlist;
 import org.cellocad.technologymapping.common.netlist.TMNode;
 import org.cellocad.technologymapping.data.Gate;
@@ -103,6 +104,11 @@ public class TMUtils{
 			if (n != null) {
 				node.setGate(n.getGate().getName());
 				CObjectCollection<CObject> parts = new CObjectCollection<>();
+				for (int j = 0; j < n.getNumInEdge(); j++) {
+					TMEdge e = n.getInEdgeAtIdx(j);
+					TMNode upstream = e.getSrc();
+					parts.add(upstream.getGate().getPromoter());
+				}
 				for (Part p : n.getGate().getParts()) {
 					parts.add((CObject) p);
 				}

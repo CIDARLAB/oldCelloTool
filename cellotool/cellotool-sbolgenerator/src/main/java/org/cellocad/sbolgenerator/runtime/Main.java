@@ -45,7 +45,7 @@ public class Main {
 		RuntimeEnv runEnv = new SGRuntimeEnv(args);
 		runEnv.setName("SBOLGenerator");
 		// Read Netlist
-		Netlist netlist = new Netlist();
+		Netlist netlist = NetlistUtils.getNetlist(runEnv, SGArgString.INPUTNETLIST);
 		// get StageConfiguration
 		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, SGArgString.CONFIGFILE);
 		// get TargetData

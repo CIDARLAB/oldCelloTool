@@ -23,19 +23,16 @@ package org.cellocad.technologymapping.test;
 import java.io.File;
 
 import org.cellocad.common.Utils;
-import org.cellocad.common.graph.AbstractVertex.VertexType;
 import org.cellocad.common.netlist.Netlist;
-import org.cellocad.common.netlist.NetlistEdge;
-import org.cellocad.common.netlist.NetlistNode;
 import org.cellocad.common.netlist.NetlistUtils;
-import org.cellocad.common.stage.Stage;
-import org.cellocad.common.target.TargetConfiguration;
-import org.cellocad.common.target.TargetUtils;
+import org.cellocad.common.runtime.environment.RuntimeEnv;
+import org.cellocad.common.stage.StageConfiguration;
+import org.cellocad.common.stage.StageUtils;
 import org.cellocad.common.target.data.TargetData;
 import org.cellocad.common.target.data.TargetDataUtils;
-import org.cellocad.common.target.runtime.environment.TargetArgString;
-import org.cellocad.common.target.runtime.environment.TargetRuntimeEnv;
 import org.cellocad.technologymapping.runtime.TMRuntimeObject;
+import org.cellocad.technologymapping.runtime.environment.TMArgString;
+import org.cellocad.technologymapping.runtime.environment.TMRuntimeEnv;
 import org.cellocad.technologymapping.test.common.TestUtils;
 import org.junit.Test;
 
@@ -58,178 +55,31 @@ public class TechnologyMappingTest{
 
 		String tempDir = TestUtils.createTempDirectory().toString();
 
-		String[] args = new String[] {"-verilogFile","foo.v",
-				"-targetDataDir",resourcesFilepath,
-				"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
-				"-configDir",resourcesFilepath,
-				"-configFile","config.json",
-				"-outputDir",tempDir};
+		String[] args = new String[] {
+			"-inputNetlist",resourcesFilepath + Utils.getFileSeparator() + "logicsynthesis_netlist.json",
+			"-outputNetlist",tempDir + Utils.getFileSeparator() + "technologymapping_netlist.json",
+			"-targetDataDir",resourcesFilepath,
+			"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",
+			"-configFile",resourcesFilepath + Utils.getFileSeparator() + "technologymapping.json",
+			"-outputDir",tempDir
+		};
 
-		Stage currentStage = null;
-		// RuntimeEnv
-		TargetRuntimeEnv runEnv = new TargetRuntimeEnv(args);
-		runEnv.setName("dnaCompiler");
-		// TargetConfiguration
-		TargetConfiguration targetCfg = TargetUtils.getTargetConfiguration(runEnv, TargetArgString.TARGETCONFIGFILE, TargetArgString.TARGETCONFIGDIR);
+		RuntimeEnv runEnv = new TMRuntimeEnv(args);
+		runEnv.setName("TechnologyMapping");
+		// Read Netlist
+		Netlist netlist = NetlistUtils.getNetlist(runEnv, TMArgString.INPUTNETLIST);
+		// get StageConfiguration
+		StageConfiguration sc = StageUtils.getStageConfiguration(runEnv, TMArgString.CONFIGFILE);
 		// get TargetData
-		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TargetArgString.TARGETDATAFILE, TargetArgString.TARGETDATADIR);
-		// Stages
-		// TechnologyMapping
-		currentStage = targetCfg.getStageByName("TechnologyMapping");
-		TMRuntimeObject TM = new TMRuntimeObject(currentStage.getStageConfiguration(), td, netlist, runEnv);
+		TargetData td = TargetDataUtils.getTargetTargetData(runEnv, TMArgString.TARGETDATAFILE, TMArgString.TARGETDATADIR);
+		// Execute
+		TMRuntimeObject TM = new TMRuntimeObject(sc, td, netlist, runEnv);
+		TM.setName("TechnologyMapping");
 		TM.execute();
 		NetlistUtils.writeJSONForNetlist(netlist, runEnv.getOptionValue("outputDir")
 				+ Utils.getFileSeparator()
 				+ "technologymapping_netlist.json");
 		Utils.deleteDirectory(new File(tempDir));
-	}
-
-	public Netlist generateTestNetlist() {
-		Netlist netlist = new Netlist();
-
-		netlist.setName("technologyMapping");
-
-		NetlistNode in1 = new NetlistNode();
-		NetlistNode in2 = new NetlistNode();
-		NetlistNode A = new NetlistNode();
-		NetlistNode B = new NetlistNode();
-		NetlistNode C = new NetlistNode();
-		NetlistNode out = new NetlistNode();
-
-		NetlistEdge e1 = new NetlistEdge(in1, A);
-		NetlistEdge e2 = new NetlistEdge(in2, B);
-		NetlistEdge e3 = new NetlistEdge(A, C);
-		NetlistEdge e4 = new NetlistEdge(B, C);
-		NetlistEdge e5 = new NetlistEdge(C, out);
-
-		e1.setName("e1");
-		e2.setName("e2");
-		e3.setName("e3");
-		e4.setName("e4");
-		e5.setName("e5");
-
-		in1.addOutEdge(e1);
-		in2.addOutEdge(e2);
-		A.addInEdge(e1);
-		A.addOutEdge(e3);
-		B.addInEdge(e2);
-		B.addOutEdge(e4);
-		C.addInEdge(e3);
-		C.addInEdge(e4);
-		C.addOutEdge(e5);
-		out.addInEdge(e5);
-
-		in1.setNodeType("TopInput");
-		in2.setNodeType("TopInput");
-		A.setNodeType("NOT");
-		B.setNodeType("NOT");
-		C.setNodeType("NOR");
-		out.setNodeType("TopOutput");
-
-		in1.setName("in1");
-		in2.setName("in2");
-		A.setName("A");
-		B.setName("B");
-		C.setName("C");
-		out.setName("out");
-
-		in1.setVertexType(VertexType.SOURCE);
-		in2.setVertexType(VertexType.SOURCE);
-		out.setVertexType(VertexType.SINK);
-
-		netlist.addVertex(in1);
-		netlist.addVertex(in2);
-		netlist.addVertex(A);
-		netlist.addVertex(B);
-		netlist.addVertex(C);
-		netlist.addVertex(out);
-
-		netlist.addEdge(e1);
-		netlist.addEdge(e2);
-		netlist.addEdge(e3);
-		netlist.addEdge(e4);
-		netlist.addEdge(e5);
-
-		return netlist;
-	}
-
-	public Netlist generateTestSequentialNetlist() {
-		Netlist netlist = new Netlist();
-
-		netlist.setName("technologyMapping");
-
-		NetlistNode in1 = new NetlistNode();
-		NetlistNode in2 = new NetlistNode();
-		NetlistNode A = new NetlistNode();
-		NetlistNode B = new NetlistNode();
-		NetlistNode C = new NetlistNode();
-		NetlistNode out1 = new NetlistNode();
-		NetlistNode out2 = new NetlistNode();
-
-		NetlistEdge e1 = new NetlistEdge(in1, A);
-		NetlistEdge e2 = new NetlistEdge(in2, B);
-		NetlistEdge e3 = new NetlistEdge(A, C);
-		NetlistEdge e4 = new NetlistEdge(B, C);
-		NetlistEdge e5 = new NetlistEdge(C, out1);
-		NetlistEdge e6 = new NetlistEdge(C, out2);
-
-		e1.setName("e1");
-		e2.setName("e2");
-		e3.setName("Y:e3:S");
-		e4.setName("Y:e4:R");
-		e5.setName("Q:e5");
-		e6.setName("P:e6");
-
-		in1.addOutEdge(e1);
-		in2.addOutEdge(e2);
-		A.addInEdge(e1);
-		A.addOutEdge(e3);
-		B.addInEdge(e2);
-		B.addOutEdge(e4);
-		C.addInEdge(e3);
-		C.addInEdge(e4);
-		C.addOutEdge(e5);
-		C.addOutEdge(e6);
-		out1.addInEdge(e5);
-		out2.addInEdge(e6);
-
-		in1.setNodeType("TopInput");
-		in2.setNodeType("TopInput");
-		A.setNodeType("NOT");
-		B.setNodeType("NOT");
-		C.setNodeType("SR");
-		out1.setNodeType("TopOutput");
-		out2.setNodeType("TopOutput");
-
-		in1.setName("in1");
-		in2.setName("in2");
-		A.setName("A");
-		B.setName("B");
-		C.setName("C");
-		out1.setName("out1");
-		out2.setName("out2");
-
-		in1.setVertexType(VertexType.SOURCE);
-		in2.setVertexType(VertexType.SOURCE);
-		out1.setVertexType(VertexType.SINK);
-		out2.setVertexType(VertexType.SINK);
-
-		netlist.addVertex(in1);
-		netlist.addVertex(in2);
-		netlist.addVertex(A);
-		netlist.addVertex(B);
-		netlist.addVertex(C);
-		netlist.addVertex(out1);
-		netlist.addVertex(out2);
-
-		netlist.addEdge(e1);
-		netlist.addEdge(e2);
-		netlist.addEdge(e3);
-		netlist.addEdge(e4);
-		netlist.addEdge(e5);
-		netlist.addEdge(e6);
-
-		return netlist;
 	}
 
 }
