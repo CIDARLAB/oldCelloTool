@@ -66,7 +66,9 @@ public class RoadblockChecker extends CObject{
 		int num = this.getTMNetlist().getNumVertex();
 		for (int i = 0; i < num; i++) {
 			TMNode node = this.getTMNetlist().getVertexAtIdx(i);
-			if (this.getNumRoadblocks(node) > 0) {
+			if (!node.getNodeType().equals("DummyOutput")
+				&&
+				this.getNumRoadblocks(node) > 0) {
 				rtn++;
 			}
 		}
