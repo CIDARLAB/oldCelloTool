@@ -78,19 +78,17 @@ public class LogicSimulator extends Simulator{
 
 		Iterator<List<Boolean>> it = inputLogic.iterator();
 		for (TMNode node : netlist.getInputNodes()) {
-			node.setLogic(it.next());
+			List<Boolean> logic = it.next();
+			for (int i = 0; i < node.getNumOutEdge(); i++) {
+				TMEdge e = node.getOutEdgeAtIdx(i);
+				e.setLogic(logic);
+			}
 		}
 
 		UpstreamDFS<TMNode,TMEdge,TMNetlist> dfs = new UpstreamDFS<>(netlist);
 		TMNode node = null;
 		while ((node = dfs.getNextVertex()) != null) {
-			if (node.getNodeType().equals("TopInput")) {
-				List<Boolean> logic = it.next();
-				for (int i = 0; i < node.getNumOutEdge(); i++) {
-					TMEdge e = node.getOutEdgeAtIdx(i);
-					e.setLogic(logic);
-				}
-			} else {
+			if (!node.getNodeType().equals("TopInput")) {
 				Map<String,List<Boolean>> inputs = new HashMap<>();
 				for (int i = 0; i < node.getNumInEdge(); i++) {
 					TMEdge e = node.getInEdgeAtIdx(i);
