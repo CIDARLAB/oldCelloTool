@@ -96,7 +96,6 @@ public class LogicSimulator extends Simulator{
 				}
 
 				List<Boolean> logic = null;
-				System.out.println(inputs);
 
 				if (node.getNodeType().equals("SR")
 					||
@@ -163,10 +162,6 @@ public class LogicSimulator extends Simulator{
 					e.setLogic(p);
 				}
 			}
-			System.out.println(s);
-			System.out.println(r);
-			System.out.println(q);
-			System.out.println(p);
 		} else if (node.getNodeType().equals("DLATCH")) {
 			List<Boolean> d = null;
 			List<Boolean> e = null;

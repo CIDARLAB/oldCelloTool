@@ -1,0 +1,81 @@
+{
+	"name": "LS",
+	"nodes": 
+	[
+		{
+			"name": "in1",
+			"nodeType": "TopInput",
+			"vertexType": "SOURCE",
+			"partitionID": -1
+		},
+		{
+			"name": "in2",
+			"nodeType": "TopInput",
+			"vertexType": "SOURCE",
+			"partitionID": -1
+		},
+		{
+			"name": "A",
+			"nodeType": "NOT",
+			"vertexType": "NONE",
+			"partitionID": -1
+		},
+		{
+			"name": "B",
+			"nodeType": "NOT",
+			"vertexType": "NONE",
+			"partitionID": -1
+		},
+		{
+			"name": "C",
+			"nodeType": "SR",
+			"vertexType": "NONE",
+			"partitionID": -1
+		},
+		{
+			"name": "out1",
+			"nodeType": "TopOutput",
+			"vertexType": "SINK",
+			"partitionID": -1
+		},
+		{
+			"name": "out2",
+			"nodeType": "TopOutput",
+			"vertexType": "SINK",
+			"partitionID": -1
+		}
+	],
+	"edges": 
+	[
+		{
+			"name": "e1",
+			"src": "in1",
+			"dst": "A"
+		},
+		{
+			"name": "e2",
+			"src": "in2",
+			"dst": "B"
+		},
+		{
+			"name": "Y:e3:S",
+			"src": "A",
+			"dst": "C"
+		},
+		{
+			"name": "Y:e4:R",
+			"src": "B",
+			"dst": "C"
+		},
+		{
+			"name": "Q:e5",
+			"src": "C",
+			"dst": "out1"
+		},
+		{
+			"name": "P:e6",
+			"src": "C",
+			"dst": "out2"
+		}
+	]
+}

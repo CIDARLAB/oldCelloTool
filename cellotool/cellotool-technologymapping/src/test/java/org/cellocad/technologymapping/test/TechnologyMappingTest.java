@@ -46,17 +46,17 @@ public class TechnologyMappingTest{
 
 	@Test
 	public void test() {
-		runDnacompiler(generateTestNetlist());
-		runDnacompiler(generateTestSequentialNetlist());
+		realTest("logicsynthesis_netlist.json");
+		realTest("logicsynthesis_sequential_netlist.json");
 	}
 
-	private void runDnacompiler(Netlist netlist) {
+	private void realTest(String netlistName) {
 		String resourcesFilepath = TestUtils.getResourcesFilepath()	+ Utils.getFileSeparator();
 
 		String tempDir = TestUtils.createTempDirectory().toString();
 
 		String[] args = new String[] {
-			"-inputNetlist",resourcesFilepath + Utils.getFileSeparator() + "logicsynthesis_netlist.json",
+			"-inputNetlist",resourcesFilepath + Utils.getFileSeparator() + netlistName,
 			"-outputNetlist",tempDir + Utils.getFileSeparator() + "technologymapping_netlist.json",
 			"-targetDataDir",resourcesFilepath,
 			"-targetDataFile","Eco1C1G1T0-synbiohub.UCF.json",

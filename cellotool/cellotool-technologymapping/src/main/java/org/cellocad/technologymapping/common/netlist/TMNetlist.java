@@ -100,7 +100,7 @@ public class TMNetlist extends GraphTemplate<TMNode,TMEdge>{
 				//vertex.addInEdge(edge);
 				addEdgeToInEdge(vertex, edge);
 			}
-			if (vertex.getNodeType() == "TopOutput") {
+			if (vertex.getNodeType().equals("TopOutput")) {
 				TMNode node = new TMNode();
 				node.setNodeType("DummyOutput");
 				TMEdge edge = new TMEdge(vertex,node);
