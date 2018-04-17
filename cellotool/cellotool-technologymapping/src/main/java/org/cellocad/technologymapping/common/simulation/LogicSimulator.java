@@ -91,7 +91,6 @@ public class LogicSimulator extends Simulator{
 				}
 
 				List<Boolean> logic = null;
-				System.out.println(inputs);
 
 				if (node.getNodeType().equals("TopOutput")) {
 					logic = getOutputLogic(inputs);
