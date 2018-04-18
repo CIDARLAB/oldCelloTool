@@ -29,12 +29,18 @@ package org.cellocad.eugene.common;
  */
 public class EUUtils {
 
+	/**
+	 * @return The file path of the class.
+	 */
 	static public String getFilepath(){
 		String rtn = "";
 		rtn = EUUtils.class.getClassLoader().getResource(".").getPath();
 		return rtn;
 	}
 
+	/**
+	 * @return The path to the class resources.
+	 */
 	static public String getResourcesFilepath(){
 		String rtn = "";
 		rtn += EUUtils.getFilepath();

@@ -36,10 +36,20 @@ public enum PartType {
 
 	private final String partType;
 
+	/**
+	 * Create a new PartType enum from a string literal.
+	 *
+	 * @param partType The part type string.
+	 */
 	PartType(String partType) {
 		this.partType = partType;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Object#toString()
+	 */
 	public String toString() {
 		return partType;
 	}

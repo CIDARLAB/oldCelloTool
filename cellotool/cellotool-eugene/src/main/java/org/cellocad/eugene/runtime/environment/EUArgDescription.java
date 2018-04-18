@@ -31,7 +31,7 @@ import org.cellocad.common.stage.runtime.environment.StageArgDescription;
 public class EUArgDescription extends StageArgDescription{
 
 	/*
-	 * Placement
+	 * Eugene
 	 */
 	final static public String CONFIGFILE_DESCRIPTION = "config file for Eugene (EU)";
 	final static public String INPUTNETLIST_DESCRIPTION = "input netlist file for Eugene (EU)";

@@ -35,6 +35,14 @@ import org.cellocad.common.target.data.TargetData;
  */
 public abstract class EUAlgorithm extends Algorithm{
 
+	/**
+	 * Run the algorithm.
+	 *
+	 * @param netlist The netlist.
+	 * @param targetData The target data.
+	 * @param AProfile The algorithm profile.
+	 * @param runtimeEnv The runtime environment.
+	 */
 	public void execute(
 			final Netlist netlist,
 			final TargetData targetData,
@@ -62,30 +70,58 @@ public abstract class EUAlgorithm extends Algorithm{
 	/*
 	 * Getter and Setter
 	 */
+	/**
+	 * @param netlist The netlist to set.
+	 */
 	private void setNetlist (final Netlist netlist) {
 		this.netlist = netlist;
 	}
+
+	/**
+	 * @return The netlist.
+	 */
 	protected Netlist getNetlist() {
 		return this.netlist;
 	}
 
+	/**
+	 * @param targetData The target data to set.
+	 */
 	private void setTargetData (final TargetData targetData) {
 		this.targetData = targetData;
 	}
+
+	/**
+	 * @return The target data.
+	 */
 	protected TargetData getTargetData() {
 		return this.targetData;
 	}
 
+	/**
+	 * @param AProfile The algorithm profile to set.
+	 */
 	private void setAlgorithmProfile (final AlgorithmProfile AProfile) {
 		this.AProfile = AProfile;
 	}
+
+	/**
+	 * @return The algorithm profile.
+	 */
 	protected AlgorithmProfile getAlgorithmProfile() {
 		return this.AProfile;
 	}
 
+	/**
+	 * @param runtimeEnv The runtime environment to set.
+	 */
 	private void setRuntimeEnv (final RuntimeEnv runtimeEnv) {
 		this.runtimeEnv = runtimeEnv;
 	}
+
+	/**
+	 * @return The runtime environment.
+	 */
 	protected RuntimeEnv getRuntimeEnv() {
 		return this.runtimeEnv;
 	}

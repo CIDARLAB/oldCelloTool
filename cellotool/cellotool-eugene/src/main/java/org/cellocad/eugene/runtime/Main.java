@@ -39,7 +39,7 @@ import org.cellocad.eugene.runtime.environment.EURuntimeEnv;
 public class Main {
 
 	/**
-	 * @param args
+	 * @param args The arguments to the stage.
 	 */
 	public static void main(String[] args) {
 		RuntimeEnv runEnv = new EURuntimeEnv(args);

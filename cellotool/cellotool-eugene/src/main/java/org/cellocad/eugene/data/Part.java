@@ -35,37 +35,43 @@ public class Part extends CObject{
 	private Direction direction;
 
 	/**
-	 * @return the partType
+	 * @return The type of the part.
 	 */
 	public PartType getPartType() {
 		return partType;
 	}
 
 	/**
-	 * @param partType the partType to set
+	 * @param partType The part type to set.
 	 */
 	public void setPartType(PartType partType) {
 		this.partType = partType;
 	}
 
 	/**
-	 * @return the sequence
+	 * @return The part sequence.
 	 */
 	public String getSequence() {
 		return sequence;
 	}
 
 	/**
-	 * @param sequence the sequence to set
+	 * @param sequence The part sequence to set.
 	 */
 	public void setSequence(String sequence) {
 		this.sequence = sequence;
 	}
 
+	/**
+	 * @return The part direction.
+	 */
 	public Direction getDirection() {
 		return direction;
 	}
 
+	/**
+	 * @param direction The part direction to set.
+	 */
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}

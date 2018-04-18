@@ -32,10 +32,20 @@ public enum Direction {
 
 	private final String direction;
 
+	/**
+	 * Create a new Direction enum from a string literal.
+	 *
+	 * @param direction The direction string.
+	 */
 	private Direction(String direction) {
 		this.direction = direction;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Object#toString()
+	 */
 	public String toString() {
 		return direction;
 	}

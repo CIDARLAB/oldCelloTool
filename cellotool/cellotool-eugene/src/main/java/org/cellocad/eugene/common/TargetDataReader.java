@@ -41,6 +41,12 @@ import org.json.simple.JSONObject;
  */
 public class TargetDataReader {
 
+	/**
+	 * Get the part rules from the target data.
+	 *
+	 * @param td The TargetData from which to extract part rules.
+	 * @return The part rules.
+	 */
 	public static final Collection<String> getPartRules(TargetData td) {
 		Collection<String> partRules = new HashSet<String>();
 		Integer num = td.getNumJSONObject("eugene_rules");
@@ -54,6 +60,12 @@ public class TargetDataReader {
 		return partRules;
 	}
 
+	/**
+	 * Get the gate rules from the target data.
+	 *
+	 * @param td The TargetData from which to extract gate rules.
+	 * @return The gate rules.
+	 */
 	public static final Collection<String> getGateRules(TargetData td) {
 		Collection<String> gateRules = new HashSet<String>();
 		Integer num = td.getNumJSONObject("eugene_rules");
@@ -67,6 +79,12 @@ public class TargetDataReader {
 		return gateRules;
 	}
 
+	/**
+	 * Get the parts library from the target data.
+	 *
+	 * @param td The TargetData from which to extract the parts library.
+	 * @return The parts library.
+	 */
 	public static final CObjectCollection<Part> getParts(TargetData td) {
 		CObjectCollection<Part> parts = new CObjectCollection<Part>();
 		Integer num = td.getNumJSONObject("parts");
@@ -82,7 +100,13 @@ public class TargetDataReader {
 		return parts;
 	}
 
-public static final CObjectCollection<Gate> getInputSensors(TargetData td) {
+	/**
+	 * Get the input sensor "gates" from the target data.
+	 *
+	 * @param td The TargetData from which to extract the input sensors.
+	 * @return The input sensors.
+	 */
+	public static final CObjectCollection<Gate> getInputSensors(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
 		Integer num = td.getNumJSONObject("input_sensors");
 		CObjectCollection<Part> parts = getParts(td);
@@ -118,6 +142,12 @@ public static final CObjectCollection<Gate> getInputSensors(TargetData td) {
 		return gates;
 	}
 
+	/**
+	 * Get the output reporter "gates" from the target data.
+	 *
+	 * @param td The TargetData from which to extract the output reporters.
+	 * @return The output reporters.
+	 */
 	public static final CObjectCollection<Gate> getOutputReporters(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
 		Integer num = td.getNumJSONObject("output_reporters");
@@ -148,6 +178,12 @@ public static final CObjectCollection<Gate> getInputSensors(TargetData td) {
 		return gates;
 	}
 
+	/**
+	 * Get the parts that comprise each gate from the target data.
+	 *
+	 * @param td The TargetData from which to extract the gate parts.
+	 * @return A map from a gate name to a collection of parts.
+	 */
 	public static final Map< String, CObjectCollection<Part> > getGateParts(TargetData td) {
 		CObjectCollection<Part> parts = getParts(td);
 		Map< String, CObjectCollection<Part> > gatePartsMap = new HashMap<>();
@@ -165,6 +201,12 @@ public static final CObjectCollection<Gate> getInputSensors(TargetData td) {
 		return gatePartsMap;
 	}
 
+	/**
+	 * Get the gates from the target data.
+	 *
+	 * @param td The TargetData from which to extract the gates.
+	 * @return The gates.
+	 */
 	public static final CObjectCollection<Gate> getGates(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
 		Integer num = td.getNumJSONObject("gates");

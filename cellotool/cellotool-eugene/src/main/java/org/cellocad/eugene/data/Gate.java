@@ -35,28 +35,28 @@ public class Gate extends CObject{
 	private Part promoter;
 
 	/**
-	 * @return the parts
+	 * @return The parts that comprise the gate.
 	 */
 	public CObjectCollection<Part> getParts() {
 		return parts;
 	}
 
 	/**
-	 * @param parts the parts to set
+	 * @param parts The parts to set for the gate.
 	 */
 	public void setParts(CObjectCollection<Part> parts) {
 		this.parts = parts;
 	}
 
 	/**
-	 * @return the promoter
+	 * @return The promoter that the gate regulates.
 	 */
 	public Part getPromoter() {
 		return promoter;
 	}
 
 	/**
-	 * @param promoter the promoter to set
+	 * @param promoter The regulable promoter to set.
 	 */
 	public void setPromoter(Part promoter) {
 		this.promoter = promoter;
