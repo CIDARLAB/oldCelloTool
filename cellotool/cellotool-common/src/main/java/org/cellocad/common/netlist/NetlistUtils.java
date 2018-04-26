@@ -30,13 +30,13 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.cellocad.common.Utils;
-import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.runtime.environment.RuntimeEnv;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonWriter;
 
 /**
  * @author: Vincent Mirian
@@ -81,11 +81,14 @@ public class NetlistUtils {
 		try {
 			OutputStream outputStream = new FileOutputStream(filename);
 			Writer outputStreamWriter = new OutputStreamWriter(outputStream);
-			outputStreamWriter.write(JSONUtils.getStartEntryString());
-			netlist.writeJSON(1, outputStreamWriter);
-			outputStreamWriter.write(JSONUtils.getEndEntryString());
-			outputStreamWriter.close();
-			outputStream.close();
+			JsonWriter writer = new JsonWriter(outputStreamWriter);
+			writer.setIndent("    ");
+			writer.beginObject();
+			netlist.writeJSON(writer);
+			writer.endObject();
+			writer.close();
+			// outputStreamWriter.close();
+			// outputStream.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -21,11 +21,9 @@
 package org.cellocad.common.netlist;
 
 import java.io.IOException;
-import java.io.Writer;
 
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
-import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.graph.AbstractVertex;
 import org.cellocad.common.graph.graph.VertexTemplate;
 import org.cellocad.common.profile.ProfileUtils;
@@ -33,6 +31,7 @@ import org.cellocad.common.profile.ProfileUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 
 /**
  * @author: Vincent Mirian
@@ -226,58 +225,48 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	/*
 	 * Write
 	 */
-	protected String getJSONHeader(){
-		String rtn = "";
+	protected void writeJSONHeader(JsonWriter writer) throws IOException {
 		// name
-		rtn += JSONUtils.getEntryToString("name", this.getName());
+		writer.name("name").value(this.getName());
 		// NodeType
-		rtn += JSONUtils.getEntryToString("nodeType", this.getNodeType());
+		writer.name("nodeType").value(this.getNodeType());
 		// NodeType
-		rtn += JSONUtils.getEntryToString("vertexType", this.getVertexType().name());
+		writer.name("vertexType").value(this.getVertexType().name());
 		// partitionID
-		rtn += JSONUtils.getEntryToString("partitionID", this.getPartitionID());
+		writer.name("partitionID").value(this.getPartitionID());
 		// gate
 		if (this.getGate() != null) {
-			rtn += JSONUtils.getEntryToString("gate", this.getGate());
+			writer.name("gate").value(this.getGate());
 		}
+		writer.flush();
 		// parts
 		if (this.getParts() != null
 				&&
 				this.getParts().size() > 0)
 		{
-			rtn += JSONUtils.getStartArrayWithMemberString("parts");
+			writer.name("parts");
+			writer.beginArray();
 			for (CObject p : this.getParts()) {
-				String str = "";
-				String entryStr = "";
-				str += JSONUtils.getStartEntryString();
-				entryStr += JSONUtils.getEntryToString("name",p.getName());
-				entryStr += JSONUtils.getEntryToString("type",p.getType());
-				entryStr += JSONUtils.getEntryToString("idx",p.getIdx());
-				entryStr = JSONUtils.addIndent(1,entryStr);
-				str += entryStr;
-				str += JSONUtils.getEndEntryString();
-				entryStr = JSONUtils.addIndent(1,str);
-				rtn += entryStr;
+				writer.beginObject();
+				writer.name("name").value(p.getName());
+				writer.name("type").value(p.getType());
+				writer.name("idx").value(p.getIdx());
+				writer.endObject();
 			}
-			rtn += JSONUtils.getEndArrayString();
+			writer.endArray();
+			writer.flush();
 		}
-		return rtn;
 	}
 
-	protected String getJSONFooter(){
-		String rtn = "";
-		return rtn;
+	protected void writeJSONFooter(JsonWriter writer) throws IOException {
 	}
 
-	public void writeJSON(int indent, final Writer os) throws IOException {
-		String str = null;
+	public void writeJSON(final JsonWriter writer) throws IOException {
 		//header
-		str = this.getJSONHeader();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		this.writeJSONHeader(writer);
+		writer.flush();
 		//footer
-		str = this.getJSONFooter();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		this.writeJSONFooter(writer);
+		writer.flush();
 	}
 }

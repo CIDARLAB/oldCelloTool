@@ -21,14 +21,13 @@
 package org.cellocad.common.netlist;
 
 import java.io.IOException;
-import java.io.Writer;
 
-import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.graph.graph.GraphTemplate;
 import org.cellocad.common.profile.ProfileUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 
 /**
  * @author: Vincent Mirian
@@ -116,56 +115,43 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 	/*
 	 * WriteJSON
 	 */
-	protected String getJSONHeader(){
-		String rtn = "";
+	protected void writeJSONHeader(JsonWriter writer) throws IOException {
 		// name
-		rtn += JSONUtils.getEntryToString("name", this.getName());
-		return rtn;
+		writer.name("name").value(this.getName());
 	}
 
-	protected String getJSONFooter(){
-		String rtn = "";
-		return rtn;
+	protected void writeJSONFooter(JsonWriter writer) throws IOException {
 	}
 
-	public void writeJSON(int indent, Writer os) throws IOException {
-		String str = null;
+	public void writeJSON(JsonWriter writer) throws IOException {
 		//header
-		str = this.getJSONHeader();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		this.writeJSONHeader(writer);
+		writer.flush();
 		// nodes
-		str = JSONUtils.getStartArrayWithMemberString("nodes");
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		writer.name("nodes");
+		writer.beginArray();
 		for (int i = 0; i < this.getNumVertex(); i++){
-			str = JSONUtils.addIndent(indent + 1, JSONUtils.getStartEntryString());
-			os.write(str);
-			this.getVertexAtIdx(i).writeJSON(indent + 2, os);
-			str = JSONUtils.addIndent(indent + 1, JSONUtils.getEndEntryString());
-			os.write(str);
+			writer.beginObject();
+			this.getVertexAtIdx(i).writeJSON(writer);
+			writer.endObject();
+			writer.flush();
 		}
-		str = JSONUtils.getEndArrayString();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		writer.endArray();
+		writer.flush();
 		// edges
-		str = JSONUtils.getStartArrayWithMemberString("edges");
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		writer.name("edges");
+		writer.beginArray();
 		for (int i = 0; i < this.getNumEdge(); i++){
-			str = JSONUtils.addIndent(indent + 1, JSONUtils.getStartEntryString());
-			os.write(str);
-			this.getEdgeAtIdx(i).writeJSON(indent + 2, os);
-			str = JSONUtils.addIndent(indent + 1, JSONUtils.getEndEntryString());
-			os.write(str);
+			writer.beginObject();
+			this.getEdgeAtIdx(i).writeJSON(writer);
+			writer.endObject();
+			writer.flush();
 		}
-		str = JSONUtils.getEndArrayString();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		writer.endArray();
+		writer.flush();
 		//footer
-		str = this.getJSONFooter();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		this.writeJSONFooter(writer);
+		writer.flush();
 	}
 
 	@Override
