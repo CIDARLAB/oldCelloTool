@@ -23,8 +23,9 @@ package org.cellocad.common.target;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.profile.ProfileObject;
 import org.cellocad.common.stage.Stage;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -38,35 +39,35 @@ public class TargetConfiguration extends ProfileObject{
 		this.stages = new CObjectCollection<Stage>();
 	}
 
-	public TargetConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
+	public TargetConfiguration(final JsonObject JObj, final String TargetConfigurationDir){
 		super(JObj);
 		init();
 		parse(JObj, TargetConfigurationDir);
 	}
 
-	public TargetConfiguration(final JSONObject JObj){
+	public TargetConfiguration(final JsonObject JObj){
 		this(JObj, "");
 	}
 
 	/*
 	 * Parse
 	 */
-	private void parseStages(final JSONObject JObj, final String TargetConfigurationDir){
-		JSONArray jsonArr;
+	private void parseStages(final JsonObject JObj, final String TargetConfigurationDir){
+		JsonArray jsonArr;
 		// parse PartitionProfile
-		jsonArr = (JSONArray) JObj.get("stages");
+		jsonArr = JObj.getAsJsonArray("stages");
 		if (jsonArr == null) {
 			throw new RuntimeException("'stages' missing in TargetInfo!");
 		}
 		for (int i = 0; i < jsonArr.size(); i++)
 		{
-			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 			Stage S = new Stage(jsonObj, TargetConfigurationDir);
 			this.addStage(S);
 		}
 	}
 
-	private void parse(final JSONObject JObj, final String TargetConfigurationDir){
+	private void parse(final JsonObject JObj, final String TargetConfigurationDir){
 		this.parseStages(JObj, TargetConfigurationDir);
 	}
 

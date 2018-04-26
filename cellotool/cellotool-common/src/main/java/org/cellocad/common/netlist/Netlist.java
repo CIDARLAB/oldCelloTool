@@ -21,13 +21,13 @@
 package org.cellocad.common.netlist;
 
 import java.io.IOException;
-import java.io.Writer;
 
-import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.graph.graph.GraphTemplate;
 import org.cellocad.common.profile.ProfileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 
 /**
  * @author: Vincent Mirian
@@ -42,7 +42,7 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 		super();
 	}
 
-	public Netlist (final JSONObject JObj) {
+	public Netlist (final JsonObject JObj) {
 		this();
 		this.parse(JObj);
 	}
@@ -50,28 +50,28 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 	/*
 	 * Parse
 	 */
-	private void parseName(final JSONObject JObj){
+	private void parseName(final JsonObject JObj){
 		String name = ProfileUtils.getString(JObj, "name");
 		if (name != null) {
 			this.setName(name);
 		}
 	}
 
-	private void parseNetlistNodes(final JSONObject JObj){
-		JSONArray jsonArr;
-		jsonArr = (JSONArray) JObj.get("nodes");
+	private void parseNetlistNodes(final JsonObject JObj){
+		JsonArray jsonArr;
+		jsonArr = JObj.getAsJsonArray("nodes");
 		if (jsonArr == null) {
 			throw new RuntimeException("'nodes' missing in Netlist!");
 		}
 		for (int i = 0; i < jsonArr.size(); i++)
 		{
-			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 			NetlistNode node = new NetlistNode(jsonObj);
 			this.addVertex(node);
 		}
 	}
 
-	private NetlistNode getNetlistNode(final JSONObject JObj, final String str){
+	private NetlistNode getNetlistNode(final JsonObject JObj, final String str){
 		NetlistNode rtn = null;
 		String name = null;
 		name = ProfileUtils.getString(JObj, str);
@@ -85,16 +85,16 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 		return rtn;
 	}
 
-	private void parseNetlistEdges(final JSONObject JObj){
-		JSONArray jsonArr;
+	private void parseNetlistEdges(final JsonObject JObj){
+		JsonArray jsonArr;
 		NetlistNode node = null;
-		jsonArr = (JSONArray) JObj.get("edges");
+		jsonArr = JObj.getAsJsonArray("edges");
 		if (jsonArr == null) {
 			throw new RuntimeException("'edges' missing in Netlist!");
 		}
 		for (int i = 0; i < jsonArr.size(); i++)
 		{
-			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 			NetlistEdge edge = new NetlistEdge(jsonObj);
 			this.addEdge(edge);
 			node = getNetlistNode(jsonObj, "src");
@@ -106,7 +106,7 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 		}
 	}
 
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		this.parseName(JObj);
 		this.parseNetlistNodes(JObj);
 		this.parseNetlistEdges(JObj);
@@ -115,56 +115,43 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 	/*
 	 * WriteJSON
 	 */
-	protected String getJSONHeader(){
-		String rtn = "";
+	protected void writeJSONHeader(JsonWriter writer) throws IOException {
 		// name
-		rtn += JSONUtils.getEntryToString("name", this.getName());
-		return rtn;
+		writer.name("name").value(this.getName());
 	}
 
-	protected String getJSONFooter(){
-		String rtn = "";
-		return rtn;
+	protected void writeJSONFooter(JsonWriter writer) throws IOException {
 	}
 
-	public void writeJSON(int indent, Writer os) throws IOException {
-		String str = null;
+	public void writeJSON(JsonWriter writer) throws IOException {
 		//header
-		str = this.getJSONHeader();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		this.writeJSONHeader(writer);
+		writer.flush();
 		// nodes
-		str = JSONUtils.getStartArrayWithMemberString("nodes");
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		writer.name("nodes");
+		writer.beginArray();
 		for (int i = 0; i < this.getNumVertex(); i++){
-			str = JSONUtils.addIndent(indent + 1, JSONUtils.getStartEntryString());
-			os.write(str);
-			this.getVertexAtIdx(i).writeJSON(indent + 2, os);
-			str = JSONUtils.addIndent(indent + 1, JSONUtils.getEndEntryString());
-			os.write(str);
+			writer.beginObject();
+			this.getVertexAtIdx(i).writeJSON(writer);
+			writer.endObject();
+			writer.flush();
 		}
-		str = JSONUtils.getEndArrayString();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		writer.endArray();
+		writer.flush();
 		// edges
-		str = JSONUtils.getStartArrayWithMemberString("edges");
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		writer.name("edges");
+		writer.beginArray();
 		for (int i = 0; i < this.getNumEdge(); i++){
-			str = JSONUtils.addIndent(indent + 1, JSONUtils.getStartEntryString());
-			os.write(str);
-			this.getEdgeAtIdx(i).writeJSON(indent + 2, os);
-			str = JSONUtils.addIndent(indent + 1, JSONUtils.getEndEntryString());
-			os.write(str);
+			writer.beginObject();
+			this.getEdgeAtIdx(i).writeJSON(writer);
+			writer.endObject();
+			writer.flush();
 		}
-		str = JSONUtils.getEndArrayString();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		writer.endArray();
+		writer.flush();
 		//footer
-		str = this.getJSONFooter();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		this.writeJSONFooter(writer);
+		writer.flush();
 	}
 
 	@Override

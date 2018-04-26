@@ -41,8 +41,10 @@ import org.cellocad.technologymapping.data.Part;
 import org.cellocad.technologymapping.data.PartType;
 import org.cellocad.technologymapping.data.ResponseFunction;
 import org.cellocad.technologymapping.data.Toxicity;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Timothy Jones
@@ -54,12 +56,12 @@ public class TargetDataReader {
 
 	public static final Collection<String> getRoadblockRules(TargetData td) {
 		Collection<String> rtn = new HashSet<String>();
-		Integer num = td.getNumJSONObject("eugene_rules");
+		Integer num = td.getNumJsonObject("eugene_rules");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("eugene_rules",i);
-			JSONArray jsonPartRules = (JSONArray) json.get("eugene_part_rules");
-			for (Object obj : jsonPartRules) {
-				rtn.add((String)obj);
+			JsonObject json = td.getJsonObjectAtIdx("eugene_rules",i);
+			JsonArray jsonPartRules = json.getAsJsonArray("eugene_part_rules");
+			for (JsonElement obj : jsonPartRules) {
+				rtn.add(obj.getAsString());
 			}
 		}
 		return rtn;
@@ -178,28 +180,28 @@ public class TargetDataReader {
 
 	public static final CObjectCollection<Cytometry> getGateCytometryData(TargetData td) {
 		CObjectCollection<Cytometry> rtn = new CObjectCollection<>();
-		Integer num = td.getNumJSONObject("gate_cytometry");
+		Integer num = td.getNumJsonObject("gate_cytometry");
 		for (int i = 0; i < num; i++) {
 			Map<Double,Histogram> map = new HashMap<>();
 
-			JSONObject json = td.getJSONObjectAtIdx("gate_cytometry",i);
+			JsonObject json = td.getJsonObjectAtIdx("gate_cytometry",i);
 
-			JSONArray data = (JSONArray)json.get("cytometry_data");
+			JsonArray data = json.getAsJsonArray("cytometry_data");
 
-			for (Object obj : data) {
-				JSONObject o = (JSONObject)obj;
-				Double input = (Double)o.get("input");
+			for (JsonElement obj : data) {
+				JsonObject o = obj.getAsJsonObject();
+				Double input = o.get("input").getAsDouble();
 
 				List<Double> bins = new ArrayList<>();
-				JSONArray binsArr = (JSONArray)o.get("output_bins");
-				for (Object b : binsArr) {
-					bins.add((Double)b);
+				JsonArray binsArr = o.getAsJsonArray("output_bins");
+				for (JsonElement b : binsArr) {
+					bins.add(b.getAsDouble());
 				}
 
 				List<Double> counts = new ArrayList<>();
-				JSONArray countsArr = (JSONArray)o.get("output_counts");
-				for (Object b : countsArr) {
-					counts.add((Double)b);
+				JsonArray countsArr = o.getAsJsonArray("output_counts");
+				for (JsonElement b : countsArr) {
+					counts.add(b.getAsDouble());
 				}
 
 				Histogram h = new Histogram(bins,counts);
@@ -207,7 +209,7 @@ public class TargetDataReader {
 			}
 
 			Cytometry c = new Cytometry(map);
-			c.setName((String)json.get("gate_name"));
+			c.setName(json.get("gate_name").getAsString());
 			rtn.add(c);
 		}
 		return rtn;
@@ -215,35 +217,35 @@ public class TargetDataReader {
 
 	public static final CObjectCollection<Toxicity> getGateToxicityData(TargetData td) {
 		CObjectCollection<Toxicity> rtn = new CObjectCollection<>();
-		Integer num = td.getNumJSONObject("gate_toxicity");
+		Integer num = td.getNumJsonObject("gate_toxicity");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("gate_toxicity",i);
+			JsonObject json = td.getJsonObjectAtIdx("gate_toxicity",i);
 
-			JSONArray inputJson = (JSONArray)json.get("input");
+			JsonArray inputJson = json.getAsJsonArray("input");
 			List<Double> input = new ArrayList<>();
-			for (Object obj : inputJson) {
-				input.add((Double)obj);
+			for (JsonElement obj : inputJson) {
+				input.add(obj.getAsDouble());
 			}
 
-			JSONArray growthJson = (JSONArray)json.get("growth");
+			JsonArray growthJson = json.getAsJsonArray("growth");
 			List<Double> growth = new ArrayList<>();
-			for (Object obj : growthJson) {
-				growth.add((Double)obj);
+			for (JsonElement obj : growthJson) {
+				growth.add(obj.getAsDouble());
 			}
 
 			Toxicity t = new Toxicity(input,growth);
-			t.setName((String)json.get("gate_name"));
+			t.setName(json.get("gate_name").getAsString());
 			rtn.add(t);
 		}
 		return rtn;
 	}
 
 	public static final Double getUnitConversion(TargetData td) {
-		Integer num = td.getNumJSONObject("genetic_locations");
+		Integer num = td.getNumJsonObject("genetic_locations");
 		if (num > 0) {
-			JSONObject json = td.getJSONObjectAtIdx("genetic_locations",0);
-			JSONArray loc = (JSONArray)json.get("output_module_location");
-			return (Double)((JSONObject)loc.get(0)).get("unit_conversion");
+			JsonObject json = td.getJsonObjectAtIdx("genetic_locations",0);
+			JsonArray loc = json.getAsJsonArray("output_module_location");
+			return loc.get(0).getAsJsonObject().get("unit_conversion").getAsDouble();
 		} else {
 			return 1.0;
 		}
@@ -251,13 +253,13 @@ public class TargetDataReader {
 
 	public static final CObjectCollection<Part> getParts(TargetData td) {
 		CObjectCollection<Part> parts = new CObjectCollection<Part>();
-		Integer num = td.getNumJSONObject("parts");
+		Integer num = td.getNumJsonObject("parts");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("parts",i);
+			JsonObject json = td.getJsonObjectAtIdx("parts",i);
 			Part p = new Part();
-			p.setName(json.get("name").toString());
-			p.setType(PartType.valueOf(json.get("type").toString().toUpperCase()).ordinal());
-			p.setPartType(PartType.valueOf(json.get("type").toString().toUpperCase()));
+			p.setName(json.get("name").getAsString());
+			p.setType(PartType.valueOf(json.get("type").getAsString().toUpperCase()).ordinal());
+			p.setPartType(PartType.valueOf(json.get("type").getAsString().toUpperCase()));
 			parts.add(p);
 		}
 		return parts;
@@ -265,26 +267,26 @@ public class TargetDataReader {
 
 	public static final Map<String,Pair<Double,Double>> getInputPromoterActivities(TargetData td) {
 		Map<String,Pair<Double,Double>> map = new HashMap<>();
-		Integer num = td.getNumJSONObject("input_sensors");
+		Integer num = td.getNumJsonObject("input_sensors");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("input_sensors",i);
-			map.put((String)json.get("promoter"),
-					new Pair<Double,Double>((Double)json.get("rpu_low"),(Double)json.get("rpu_high")));
+			JsonObject json = td.getJsonObjectAtIdx("input_sensors",i);
+			map.put(json.get("promoter").getAsString(),
+					new Pair<Double,Double>(json.get("rpu_low").getAsDouble(),json.get("rpu_high").getAsDouble()));
 		}
 		return map;
 	}
 
 	public static final CObjectCollection<Gate> getInputSensors(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
-		Integer num = td.getNumJSONObject("input_sensors");
+		Integer num = td.getNumJsonObject("input_sensors");
 		CObjectCollection<Part> parts = getParts(td);
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("input_sensors",i);
+			JsonObject json = td.getJsonObjectAtIdx("input_sensors",i);
 
 			Gate g = new Gate();
 
 			// name
-			String name = (String)json.get("promoter");
+			String name = json.get("promoter").getAsString();
 			if (name != null)
 				g.setName(name);
 
@@ -295,10 +297,10 @@ public class TargetDataReader {
 			}
 
 			// parts
-			JSONArray array = (JSONArray)json.get("parts");
+			JsonArray array = json.getAsJsonArray("parts");
 			CObjectCollection<Part> inputParts = new CObjectCollection<>();
-			for (Object obj : array) {
-				Part part = parts.findCObjectByName((String)obj);
+			for (JsonElement obj : array) {
+				Part part = parts.findCObjectByName(obj.getAsString());
 				if (part != null) {
 					inputParts.add(part);
 				}
@@ -318,23 +320,23 @@ public class TargetDataReader {
 
 	public static final CObjectCollection<Gate> getOutputReporters(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
-		Integer num = td.getNumJSONObject("output_reporters");
+		Integer num = td.getNumJsonObject("output_reporters");
 		CObjectCollection<Part> parts = getParts(td);
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("output_reporters",i);
+			JsonObject json = td.getJsonObjectAtIdx("output_reporters",i);
 
 			Gate g = new Gate();
 
 			// name
-			String name = (String)json.get("name");
+			String name = json.get("name").getAsString();
 			if (name != null)
 				g.setName(name);
 
 			// parts
-			JSONArray jsonParts = (JSONArray)json.get("parts");
+			JsonArray jsonParts = json.getAsJsonArray("parts");
 			CObjectCollection<Part> outputParts = new CObjectCollection<>();
-			for (Object obj : jsonParts) {
-				Part part = parts.findCObjectByName((String)obj);
+			for (JsonElement obj : jsonParts) {
+				Part part = parts.findCObjectByName(obj.getAsString());
 				if (part != null) {
 					outputParts.add(part);
 				}
@@ -353,22 +355,22 @@ public class TargetDataReader {
 
 	public static final Map<String,ResponseFunction<?>> getGateResponseFunctions(TargetData td) {
 		Map<String,ResponseFunction<?>> map = new HashMap<>();
-		Integer num = td.getNumJSONObject("response_functions");
+		Integer num = td.getNumJsonObject("response_functions");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("response_functions",i);
+			JsonObject json = td.getJsonObjectAtIdx("response_functions",i);
 			// could have an equation parser, or 'equation_type' field in target data
-			if (((String)json.get("equation")).equals("ymin+(ymax-ymin)/(1.0+(x/K)^n)")) {
+			if ((json.get("equation").getAsString()).equals("ymin+(ymax-ymin)/(1.0+(x/K)^n)")) {
 				ResponseFunction<HillFunction> rf = new ResponseFunction<>();
-				rf.setName((String)json.get("gate_name"));
+				rf.setName(json.get("gate_name").getAsString());
 				HillFunction hf = new HillFunction();
-				JSONObject variables = (JSONObject) ((JSONArray) json.get("variables")).get(0);
-				rf.setOnThreshold((Double)variables.get("on_threshold"));
-				rf.setOffThreshold((Double)variables.get("off_threshold"));
-				JSONArray parameters = (JSONArray) json.get("parameters");
-				for (Object obj : parameters) {
-					JSONObject jsonObj = (JSONObject) obj;
-					String name = (String)jsonObj.get("name");
-					Double value = (Double)jsonObj.get("value");
+				JsonObject variables = json.getAsJsonArray("variables").get(0).getAsJsonObject();
+				rf.setOnThreshold(variables.get("on_threshold").getAsDouble());
+				rf.setOffThreshold(variables.get("off_threshold").getAsDouble());
+				JsonArray parameters = json.getAsJsonArray("parameters");
+				for (JsonElement obj : parameters) {
+					JsonObject jsonObj = obj.getAsJsonObject();
+					String name = jsonObj.get("name").getAsString();
+					Double value = jsonObj.get("value").getAsDouble();
 					if (name.equals("ymax"))
 						hf.setYmax(value);
 					if (name.equals("ymin"))
@@ -379,7 +381,7 @@ public class TargetDataReader {
 						hf.setN(value);
 				}
 				rf.setCurve(hf);
-				map.put((String)json.get("gate_name"),rf);
+				map.put(json.get("gate_name").getAsString(),rf);
 			}
 		}
 		return map;
@@ -388,16 +390,19 @@ public class TargetDataReader {
 	public static final Map< String, Pair<Part,CObjectCollection<Part>> > getGateParts(TargetData td) {
 		CObjectCollection<Part> parts = getParts(td);
 		Map< String, Pair<Part,CObjectCollection<Part>> > gatePartsMap = new HashMap<>();
-		Integer num = td.getNumJSONObject("gate_parts");
+		Integer num = td.getNumJsonObject("gate_parts");
 		for (int i = 0; i < num; i++) {
 			CObjectCollection<Part> gateParts = new CObjectCollection<>();
-			JSONObject json = td.getJSONObjectAtIdx("gate_parts",i);
-			JSONArray jsonGateParts = (JSONArray) (((JSONObject) ((JSONArray) json.get("expression_cassettes")).get(0)).get("cassette_parts"));
-			for ( Object obj : jsonGateParts ) {
-				gateParts.add(parts.findCObjectByName(obj.toString()));
+			JsonObject json = td.getJsonObjectAtIdx("gate_parts",i);
+			JsonArray jsonGateParts =
+				 json.getAsJsonArray("expression_cassettes")
+				 .get(0).getAsJsonObject()
+				 .getAsJsonArray("cassette_parts");
+			for ( JsonElement obj : jsonGateParts ) {
+				gateParts.add(parts.findCObjectByName(obj.getAsString()));
 			}
-			Part promoter = parts.findCObjectByName(json.get("promoter").toString());
-			gatePartsMap.put(json.get("gate_name").toString(),
+			Part promoter = parts.findCObjectByName(json.get("promoter").getAsString());
+			gatePartsMap.put(json.get("gate_name").getAsString(),
 							 new Pair<Part,CObjectCollection<Part>>(promoter,gateParts));
 
 		}
@@ -412,20 +417,20 @@ public class TargetDataReader {
 		CObjectCollection<Toxicity> toxicities = getGateToxicityData(td);
 		CObjectCollection<Cytometry> cytometries = getGateCytometryData(td);
 
-		Integer num = td.getNumJSONObject("gates");
+		Integer num = td.getNumJsonObject("gates");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("gates",i);
+			JsonObject json = td.getJsonObjectAtIdx("gates",i);
 			Gate g = new Gate();
 
-			String name = (String)json.get("gate_name");
+			String name = json.get("gate_name").getAsString();
 			g.setName(name);
 
-			String type = (String)json.get("gate_type");
+			String type = json.get("gate_type").getAsString();
 			if (type != null) {
 				g.setType(GateType.valueOf(type.toUpperCase()).ordinal());
 			}
 
-			String group = (String)json.get("group_name");
+			String group = json.get("group_name").getAsString();
 			g.setGroup(group);
 
 			Part promoter = gateParts.get(name).getFirst();

@@ -21,16 +21,17 @@
 package org.cellocad.common.netlist;
 
 import java.io.IOException;
-import java.io.Writer;
 
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
-import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.graph.AbstractVertex;
 import org.cellocad.common.graph.graph.VertexTemplate;
 import org.cellocad.common.profile.ProfileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 
 /**
  * @author: Vincent Mirian
@@ -56,7 +57,7 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		this.setGate(other.getGate());
 	}
 
-	public NetlistNode(final JSONObject JObj){
+	public NetlistNode(final JsonObject JObj){
 		this();
 		this.parse(JObj);
 	}
@@ -64,21 +65,21 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	/*
 	 * Parse
 	 */
-	private void parseName(final JSONObject JObj){
+	private void parseName(final JsonObject JObj){
 		String name = ProfileUtils.getString(JObj, "name");
 		if (name != null) {
 			this.setName(name);
 		}
 	}
 
-	private void parseNodeType(final JSONObject JObj){
+	private void parseNodeType(final JsonObject JObj){
 		String value = ProfileUtils.getString(JObj, "nodeType");
 		if (value != null) {
 			this.setNodeType(value);
 		}
 	}
 
-	private void parseVertexType(final JSONObject JObj){
+	private void parseVertexType(final JsonObject JObj){
 		String value = ProfileUtils.getString(JObj, "vertexType");
 		if (value != null) {
 			if (value.equals(AbstractVertex.VertexType.SOURCE.name())) {
@@ -91,33 +92,33 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		}
 	}
 
-	private void parsePartitionID(final JSONObject JObj){
+	private void parsePartitionID(final JsonObject JObj){
 		Integer value = ProfileUtils.getInteger(JObj, "partitionID");
 		if (value != null) {
 			this.setPartitionID(value.intValue());
 		}
 	}
 
-	private void parseGate(final JSONObject JObj){
+	private void parseGate(final JsonObject JObj){
 		String value = ProfileUtils.getString(JObj, "gate");
 		if (value != null) {
 			this.setGate(value);
 		}
 	}
 
-	private void parseParts(final JSONObject JObj){
-		Object value = ProfileUtils.getObject(JObj, "parts");
+	private void parseParts(final JsonObject JObj){
+		JsonElement value = ProfileUtils.getJsonElement(JObj, "parts");
 		if (value != null) {
-			JSONArray array = (JSONArray) value;
+			JsonArray array = value.getAsJsonArray();
 			CObjectCollection<CObject> parts = new CObjectCollection<>();
-			for (Object obj : array) {
-				parts.add(this.parsePart((JSONObject)obj));
+			for (JsonElement obj : array) {
+				parts.add(this.parsePart(obj.getAsJsonObject()));
 			}
 			this.setParts(parts);
 		}
 	}
 
-	private CObject parsePart(final JSONObject JObj){
+	private CObject parsePart(final JsonObject JObj){
 		CObject obj = new CObject();
 		String name = ProfileUtils.getString(JObj, "name");
 		if (name != null) {
@@ -134,7 +135,7 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 		return obj;
 	}
 
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		this.parseName(JObj);
 		this.parseNodeType(JObj);
 		this.parseVertexType(JObj);
@@ -224,58 +225,48 @@ public class NetlistNode extends VertexTemplate<NetlistEdge>{
 	/*
 	 * Write
 	 */
-	protected String getJSONHeader(){
-		String rtn = "";
+	protected void writeJSONHeader(JsonWriter writer) throws IOException {
 		// name
-		rtn += JSONUtils.getEntryToString("name", this.getName());
+		writer.name("name").value(this.getName());
 		// NodeType
-		rtn += JSONUtils.getEntryToString("nodeType", this.getNodeType());
+		writer.name("nodeType").value(this.getNodeType());
 		// NodeType
-		rtn += JSONUtils.getEntryToString("vertexType", this.getVertexType().name());
+		writer.name("vertexType").value(this.getVertexType().name());
 		// partitionID
-		rtn += JSONUtils.getEntryToString("partitionID", this.getPartitionID());
+		writer.name("partitionID").value(this.getPartitionID());
 		// gate
 		if (this.getGate() != null) {
-			rtn += JSONUtils.getEntryToString("gate", this.getGate());
+			writer.name("gate").value(this.getGate());
 		}
+		writer.flush();
 		// parts
 		if (this.getParts() != null
 				&&
 				this.getParts().size() > 0)
 		{
-			rtn += JSONUtils.getStartArrayWithMemberString("parts");
+			writer.name("parts");
+			writer.beginArray();
 			for (CObject p : this.getParts()) {
-				String str = "";
-				String entryStr = "";
-				str += JSONUtils.getStartEntryString();
-				entryStr += JSONUtils.getEntryToString("name",p.getName());
-				entryStr += JSONUtils.getEntryToString("type",p.getType());
-				entryStr += JSONUtils.getEntryToString("idx",p.getIdx());
-				entryStr = JSONUtils.addIndent(1,entryStr);
-				str += entryStr;
-				str += JSONUtils.getEndEntryString();
-				entryStr = JSONUtils.addIndent(1,str);
-				rtn += entryStr;
+				writer.beginObject();
+				writer.name("name").value(p.getName());
+				writer.name("type").value(p.getType());
+				writer.name("idx").value(p.getIdx());
+				writer.endObject();
 			}
-			rtn += JSONUtils.getEndArrayString();
+			writer.endArray();
+			writer.flush();
 		}
-		return rtn;
 	}
 
-	protected String getJSONFooter(){
-		String rtn = "";
-		return rtn;
+	protected void writeJSONFooter(JsonWriter writer) throws IOException {
 	}
 
-	public void writeJSON(int indent, final Writer os) throws IOException {
-		String str = null;
+	public void writeJSON(final JsonWriter writer) throws IOException {
 		//header
-		str = this.getJSONHeader();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		this.writeJSONHeader(writer);
+		writer.flush();
 		//footer
-		str = this.getJSONFooter();
-		str = JSONUtils.addIndent(indent, str);
-		os.write(str);
+		this.writeJSONFooter(writer);
+		writer.flush();
 	}
 }

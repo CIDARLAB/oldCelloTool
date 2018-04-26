@@ -20,8 +20,8 @@
  */
 package org.cellocad.common.profile;
 
-import org.cellocad.common.Utils;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -31,123 +31,90 @@ import org.json.simple.JSONObject;
  */
 public class ProfileUtils {
 
-	public static Boolean getBoolean(final JSONObject JObj, final String member) {
+	public static Boolean getBoolean(final JsonObject JObj, final String member) {
 		Boolean rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isBoolean(value)
-				) {
-			rtn = (Boolean) value;
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsBoolean();
 		}
 		return rtn;
 	}
 
-	public static Byte getByte(final JSONObject JObj, final String member) {
+	public static Byte getByte(final JsonObject JObj, final String member) {
 		Byte rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isLong(value)
-				) {
-			Long temp = (Long) value;
-			rtn = (Byte) temp.byteValue();
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsByte();
 		}
 		return rtn;
 	}
 
-	public static Character getCharacter(final JSONObject JObj, final String member) {
+	public static Character getCharacter(final JsonObject JObj, final String member) {
 		Character rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isString(value)
-				) {
-			String data = (String) value;
-			if (data.length() > 0)
-				rtn = data.charAt(0);
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsCharacter();
 		}
 		return rtn;
 	}
 
-	public static Short getShort(final JSONObject JObj, final String member) {
+	public static Short getShort(final JsonObject JObj, final String member) {
 		Short rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isLong(value)
-				) {
-			Long temp = (Long) value;
-			rtn = (Short) temp.shortValue();
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsShort();
 		}
 		return rtn;
 	}
 
-	public static Integer getInteger(final JSONObject JObj, final String member) {
+	public static Integer getInteger(final JsonObject JObj, final String member) {
 		Integer rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isLong(value)
-				) {
-			Long temp = (Long) value;
-			rtn = (Integer) temp.intValue();
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsInt();
 		}
 		return rtn;
 	}
 
-	public static Long getLong(final JSONObject JObj, final String member) {
+	public static Long getLong(final JsonObject JObj, final String member) {
 		Long rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isLong(value)
-				) {
-			rtn = (Long) value;
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsLong();
 		}
 		return rtn;
 	}
 
-	public static Float getFloat(final JSONObject JObj, final String member) {
+	public static Float getFloat(final JsonObject JObj, final String member) {
 		Float rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isDouble(value)
-				) {
-			Double temp = (Double) value;
-			rtn = (Float) temp.floatValue();
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsFloat();
 		}
 		return rtn;
 	}
 
-	public static Double getDouble(final JSONObject JObj, final String member) {
+	public static Double getDouble(final JsonObject JObj, final String member) {
 		Double rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isDouble(value)
-				) {
-			rtn = (Double) value;
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsDouble();
 		}
 		return rtn;
 	}
 
-	public static String getString(final JSONObject JObj, final String member) {
+	public static String getString(final JsonObject JObj, final String member) {
 		String rtn = null;
-		Object value = ProfileUtils.getObject(JObj, member);
-		if (
-				(value != null)
-				&& Utils.isString(value)
-				) {
-			rtn = (String) value;
+		JsonElement value = ProfileUtils.getJsonElement(JObj, member);
+		if (value != null) {
+			rtn = value.getAsString();
 		}
 		return rtn;
 	}
 
-	public static Object getObject(final JSONObject JObj, final String member) {
-		Object rtn = null;
-		rtn = (Object) JObj.get(member);
+	public static JsonElement getJsonElement(final JsonObject JObj, final String member) {
+		JsonElement rtn = null;
+		rtn = JObj.get(member);
 		return rtn;
 	}
 }

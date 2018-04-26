@@ -31,8 +31,10 @@ import org.cellocad.common.target.data.TargetData;
 import org.cellocad.sbolgenerator.data.Gate;
 import org.cellocad.sbolgenerator.data.Part;
 import org.cellocad.sbolgenerator.data.PartType;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Timothy Jones
@@ -52,18 +54,18 @@ public class TargetDataReader {
 
 	public static final CObjectCollection<Part> getParts(TargetData td) {
 		CObjectCollection<Part> parts = new CObjectCollection<Part>();
-		Integer num = td.getNumJSONObject("parts");
+		Integer num = td.getNumJsonObject("parts");
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("parts",i);
+			JsonObject json = td.getJsonObjectAtIdx("parts",i);
 			Part p = new Part();
-			p.setName(json.get("name").toString());
-			p.setType(PartType.valueOf(json.get("type").toString().toUpperCase()).ordinal());
-			p.setPartType(PartType.valueOf(json.get("type").toString().toUpperCase()));
-			p.setSequence(json.get("dnasequence").toString());
-			String partUri = (String) json.get("uri");
+			p.setName(json.get("name").getAsString());
+			p.setType(PartType.valueOf(json.get("type").getAsString().toUpperCase()).ordinal());
+			p.setPartType(PartType.valueOf(json.get("type").getAsString().toUpperCase()));
+			p.setSequence(json.get("dnasequence").getAsString());
+			JsonElement partUri = json.get("uri");
 			if ( partUri != null ) {
 				try {
-					p.setUri(new URI(partUri.toString()));
+					p.setUri(new URI(partUri.getAsString()));
 				} catch (URISyntaxException e) {
 					e.printStackTrace();
 				}
@@ -76,34 +78,40 @@ public class TargetDataReader {
 	public static final Map< String, CObjectCollection<Part> > getGateParts(TargetData td) {
 		CObjectCollection<Part> parts = getParts(td);
 		Map< String, CObjectCollection<Part> > gatePartsMap = new HashMap<>();
-		Integer num = td.getNumJSONObject("gate_parts");
+		Integer num = td.getNumJsonObject("gate_parts");
 		for (int i = 0; i < num; i++) {
 			CObjectCollection<Part> gateParts = new CObjectCollection<>();
-			JSONObject json = td.getJSONObjectAtIdx("gate_parts",i);
-			JSONArray jsonGateParts = (JSONArray) (((JSONObject) ((JSONArray) json.get("expression_cassettes")).get(0)).get("cassette_parts"));
-			for ( Object obj : jsonGateParts ) {
-				gateParts.add(parts.findCObjectByName(obj.toString()));
+			JsonObject json = td.getJsonObjectAtIdx("gate_parts",i);
+			JsonArray jsonGateParts =
+				json.getAsJsonArray("expression_cassettes")
+				.get(0).getAsJsonObject()
+				.getAsJsonArray("cassette_parts");
+			for ( JsonElement obj : jsonGateParts ) {
+				gateParts.add(parts.findCObjectByName(obj.getAsString()));
 			}
-			gateParts.add(parts.findCObjectByName(json.get("promoter").toString()));
-			gatePartsMap.put(json.get("gate_name").toString(),gateParts);
+			gateParts.add(parts.findCObjectByName(json.get("promoter").getAsString()));
+			gatePartsMap.put(json.get("gate_name").getAsString(),gateParts);
 		}
 		return gatePartsMap;
 	}
 
 	public static final CObjectCollection<Gate> getGates(TargetData td) {
 		CObjectCollection<Gate> gates = new CObjectCollection<>();
-		Integer num = td.getNumJSONObject("gates");
+		Integer num = td.getNumJsonObject("gates");
 		Map< String, CObjectCollection<Part> > gateParts = getGateParts(td);
 		for (int i = 0; i < num; i++) {
-			JSONObject json = td.getJSONObjectAtIdx("gates",i);
+			JsonObject json = td.getJsonObjectAtIdx("gates",i);
 			Gate g = new Gate();
-			String name = json.get("gate_name").toString();
+			String name = json.get("gate_name").getAsString();
 			g.setName(name);
 			g.setParts(gateParts.get(name));
-			try {
-				g.setUri(new URI(json.get("uri").toString()));
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
+			JsonElement uri = json.get("uri");
+			if ( uri != null ) {
+				try {
+					g.setUri(new URI(uri.getAsString()));
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
 			}
 			gates.add(g);
 		}

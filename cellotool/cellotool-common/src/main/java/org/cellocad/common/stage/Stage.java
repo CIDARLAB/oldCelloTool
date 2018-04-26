@@ -28,9 +28,11 @@ import java.io.Reader;
 import org.cellocad.common.Utils;
 import org.cellocad.common.profile.ProfileObject;
 import org.cellocad.common.profile.ProfileUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * @author: Vincent Mirian
@@ -43,22 +45,22 @@ public class Stage extends ProfileObject{
 	private void init() {
 	}
 
-	public Stage(final JSONObject JObj, final String TargetConfigurationDir){
+	public Stage(final JsonObject JObj, final String TargetConfigurationDir){
 		super(JObj);
 		init();
 		parse(JObj, TargetConfigurationDir);
 	}
 
-	public Stage(final JSONObject JObj){
+	public Stage(final JsonObject JObj){
 		this(JObj, "");
 	}
 	/*
 	 * Parse
 	 */
-	private void parseStageConfiguration(final JSONObject JObj, final String TargetConfigurationDir){
+	private void parseStageConfiguration(final JsonObject JObj, final String TargetConfigurationDir){
 		// parse StageConfiguration
 		Reader configFileReader = null;
-		JSONObject jsonObj = null;
+		JsonObject jsonObj = null;
 		String configFilename = null;
 		// type
 		String type = ProfileUtils.getString(JObj, "configuration_type");
@@ -79,18 +81,18 @@ public class Stage extends ProfileObject{
 				throw new RuntimeException("Error with file: " + configFilename);
 			}
 			// Create JSON object from File Reader
-			JSONParser parser = new JSONParser();
+			JsonParser parser = new JsonParser();
 			try{
-				jsonObj = (JSONObject) parser.parse(configFileReader);
-			} catch (IOException e) {
+				jsonObj = parser.parse(configFileReader).getAsJsonObject();
+			} catch (JsonIOException e) {
 				throw new RuntimeException("File IO Exception for: " + configFilename + ".");
-			} catch (ParseException e) {
+			} catch (JsonSyntaxException e) {
 				throw new RuntimeException("Parser Exception for: " + configFilename + ".");
 			}
 		}
 		else if (type.equalsIgnoreCase("data")) {
 			// configData
-			jsonObj = (JSONObject) ProfileUtils.getObject(JObj, "configuration_data");
+			jsonObj = ProfileUtils.getJsonElement(JObj, "configuration_data").getAsJsonObject();
 		}
 		else {
 			throw new RuntimeException("Value of type unknown for stage configuration " + this.getName() + ".");
@@ -107,7 +109,7 @@ public class Stage extends ProfileObject{
 		}
 	}
 
-	private void parse(final JSONObject JObj, final String TargetConfigurationDir){
+	private void parse(final JsonObject JObj, final String TargetConfigurationDir){
 		this.parseStageConfiguration(JObj, TargetConfigurationDir);
 	}
 

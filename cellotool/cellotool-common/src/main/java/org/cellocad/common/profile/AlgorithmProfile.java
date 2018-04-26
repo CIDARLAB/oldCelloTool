@@ -26,9 +26,9 @@ import java.util.Map;
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Pair;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -38,7 +38,7 @@ import org.json.simple.JSONObject;
  */
 public class AlgorithmProfile extends ProfileObject {
 
-	public AlgorithmProfile(final JSONObject JObj){
+	public AlgorithmProfile(final JsonObject JObj){
 		super(JObj);
 		if (types == null){
 			AlgorithmProfile.types = new CObjectCollection<CObject>();
@@ -131,7 +131,7 @@ public class AlgorithmProfile extends ProfileObject {
 	/*
 	 * Parse
 	 */
-	private void parseType(final JSONObject JObj){
+	private void parseType(final JsonObject JObj){
 		String type = (String) ProfileUtils.getString(JObj, "type");
 		if (type == null){
 			throw new RuntimeException("Type not specified for AlgorithmProfile " + this.getName() +".");
@@ -149,7 +149,7 @@ public class AlgorithmProfile extends ProfileObject {
 		this.setType(cObj.getIdx());
 	}
 
-	private void parseParameter(final JSONObject JObj){
+	private void parseParameter(final JsonObject JObj){
 		//name
 		String name = (String) ProfileUtils.getString(JObj, "name");
 		if (name == null){
@@ -161,7 +161,7 @@ public class AlgorithmProfile extends ProfileObject {
 			throw new RuntimeException("Type not specified for parameter " + name + ".");
 		}
 		// value
-		Object value = ProfileUtils.getObject(JObj, "value");
+		Object value = ProfileUtils.getJsonElement(JObj, "value");
 		if (value == null){
 			throw new RuntimeException("Value not specified for parameter " + name + ".");
 		}
@@ -217,15 +217,15 @@ public class AlgorithmProfile extends ProfileObject {
 		}
 	}
 
-	private void parseParameters(final JSONObject JObj){
-		JSONArray jsonArr = (JSONArray) JObj.get("parameters");
+	private void parseParameters(final JsonObject JObj){
+		JsonArray jsonArr = JObj.getAsJsonArray("parameters");
 		for (int i = 0; i < jsonArr.size(); i++){
-			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 			parseParameter(jsonObj);
 		}
 	}
 
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		// name
 		// parseName(JObj);
 		// type

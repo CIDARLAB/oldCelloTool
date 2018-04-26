@@ -23,7 +23,8 @@ package org.cellocad.partition.profile;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.profile.CapacityCollectionProfile;
 import org.cellocad.common.profile.CapacityProfile;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -33,7 +34,7 @@ import org.json.simple.JSONObject;
  */
 public class BlockProfile extends CapacityCollectionProfile {
 
-	public BlockProfile(final JSONObject JObj,
+	public BlockProfile(final JsonObject JObj,
 			final CObjectCollection<CapacityProfile> Capacity){
 		super(JObj, Capacity);
 	}

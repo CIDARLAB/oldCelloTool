@@ -24,7 +24,8 @@ import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.profile.CapacityCollectionProfile;
 import org.cellocad.common.profile.CapacityProfile;
 import org.cellocad.common.profile.ProfileUtils;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -34,7 +35,7 @@ import org.json.simple.JSONObject;
  */
 public class InterBlockProfile extends CapacityCollectionProfile {
 
-	public InterBlockProfile(final JSONObject JObj,
+	public InterBlockProfile(final JsonObject JObj,
 			final CObjectCollection<BlockProfile> Blocks,
 			final CObjectCollection<CapacityProfile> Capacity){
 		super(JObj, Capacity);
@@ -45,7 +46,7 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 	/*
 	 * Parse
 	 */
-	private void parseSource(final JSONObject JObj, final CObjectCollection<BlockProfile> Blocks){
+	private void parseSource(final JsonObject JObj, final CObjectCollection<BlockProfile> Blocks){
 		String sourceName = ProfileUtils.getString(JObj, "source");
 		if (sourceName != null) {
 			BlockProfile source = Blocks.findCObjectByName(sourceName);
@@ -59,7 +60,7 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 		}
 	}
 
-	private void parseDestination(final JSONObject JObj, final CObjectCollection<BlockProfile> Blocks){
+	private void parseDestination(final JsonObject JObj, final CObjectCollection<BlockProfile> Blocks){
 		String destinationName = ProfileUtils.getString(JObj, "destination");
 		if (destinationName != null) {
 			BlockProfile destination = Blocks.findCObjectByName(destinationName);
@@ -73,7 +74,7 @@ public class InterBlockProfile extends CapacityCollectionProfile {
 		}
 	}
 
-	private void parse(final JSONObject JObj, final CObjectCollection<BlockProfile> Blocks){
+	private void parse(final JsonObject JObj, final CObjectCollection<BlockProfile> Blocks){
 		// source
 		parseSource(JObj, Blocks);
 		// destination

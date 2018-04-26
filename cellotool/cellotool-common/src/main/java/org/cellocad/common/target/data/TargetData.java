@@ -27,8 +27,9 @@ import java.util.Map;
 
 import org.cellocad.common.CObject;
 import org.cellocad.common.profile.ProfileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -39,53 +40,53 @@ import org.json.simple.JSONObject;
 public class TargetData extends CObject{
 
 	private void init() {
-		collectionTypeData = new HashMap< String, List<JSONObject> >();
+		collectionTypeData = new HashMap< String, List<JsonObject> >();
 	}
 
-	public TargetData(final JSONArray JArray, final String TargetDataDir){
+	public TargetData(final JsonArray JArray, final String TargetDataDir){
 		super();
 		init();
 		parse(JArray, TargetDataDir);
 	}
 
-	public TargetData(final JSONArray JArray){
+	public TargetData(final JsonArray JArray){
 		this(JArray, "");
 	}
 
-	private void parse(final JSONArray JArray, final String TargetDataDir){
+	private void parse(final JsonArray JArray, final String TargetDataDir){
 		for (int i = 0; i < JArray.size(); i++) {
-			JSONObject JObj = (JSONObject) JArray.get(i);
+			JsonObject JObj = JArray.get(i).getAsJsonObject();
 			String collection = ProfileUtils.getString(JObj, "collection");
-			List<JSONObject> temp = this.getCollectionTypeData().get(collection);
+			List<JsonObject> temp = this.getCollectionTypeData().get(collection);
 			if (temp == null) {
-				temp = new ArrayList<JSONObject>();
+				temp = new ArrayList<JsonObject>();
 				this.getCollectionTypeData().put(collection, temp);
 			}
 			temp.add(JObj);
 		}
 	}
 
-	public JSONObject getJSONObjectAtIdx(String type, int index) {
-		JSONObject rtn = null;
-		List<JSONObject> temp = this.getCollectionTypeData().get(type);
+	public JsonObject getJsonObjectAtIdx(String type, int index) {
+		JsonObject rtn = null;
+		List<JsonObject> temp = this.getCollectionTypeData().get(type);
 		if (temp != null) {
 			rtn = temp.get(index);
 		}
 		return rtn;
 	}
 
-	public int getNumJSONObject(String type) {
+	public int getNumJsonObject(String type) {
 		int rtn = 0;
-		List<JSONObject> temp = this.getCollectionTypeData().get(type);
+		List<JsonObject> temp = this.getCollectionTypeData().get(type);
 		if (temp != null) {
 			rtn = temp.size();
 		}
 		return rtn;
 	}
 
-	protected Map< String, List<JSONObject> > getCollectionTypeData() {
+	protected Map< String, List<JsonObject> > getCollectionTypeData() {
 		return this.collectionTypeData;
 	}
 
-	Map< String, List<JSONObject> > collectionTypeData;
+	Map< String, List<JsonObject> > collectionTypeData;
 }

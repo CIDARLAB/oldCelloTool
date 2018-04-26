@@ -22,15 +22,14 @@ package org.cellocad.partition.profile;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 
 import org.cellocad.common.CObject;
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.profile.AlgorithmProfile;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * @author: Vincent Mirian
@@ -62,48 +61,44 @@ public class PartitionerProfileParser extends CObject {
 	 * Parse
 	 */
 	private void parse(final String filename){
-		JSONParser parser = new JSONParser();
+		JsonParser parser = new JsonParser();
 		try{
-			JSONObject jsonTop = (JSONObject) parser.parse(new FileReader(filename));
-			JSONArray jsonArr;
+			JsonObject jsonTop = parser.parse(new FileReader(filename)).getAsJsonObject();
+			JsonArray jsonArr;
 			// parse PartitionProfile
-			jsonArr = (JSONArray) jsonTop.get("PartitionProfiles");
+			jsonArr = jsonTop.getAsJsonArray("PartitionProfiles");
 			if (jsonArr == null) {
 				throw new RuntimeException("PartitionProfiles missing in " + filename + ".");
 			}
 			for (int i = 0; i < jsonArr.size(); i++)
 			{
-				JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+				JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 				PartitionProfile P = new PartitionProfile(jsonObj);
 				pProfiles.add(P);
 			}
 			// parse AlgorithmProfile
-			jsonArr = (JSONArray) jsonTop.get("AlgorithmProfiles");
+			jsonArr = jsonTop.getAsJsonArray("AlgorithmProfiles");
 			if (jsonArr == null) {
 				throw new RuntimeException("AlgorithmProfiles missing in " + filename + ".");
 			}
 			for (int i = 0; i < jsonArr.size(); i++)
 			{
-				JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+				JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 				AlgorithmProfile A = new AlgorithmProfile(jsonObj);
 				aProfiles.add(A);
 			}
 			// parse PartitionerProfile
-			jsonArr = (JSONArray) jsonTop.get("PartitionerProfiles");
+			jsonArr = jsonTop.getAsJsonArray("PartitionerProfiles");
 			if (jsonArr == null) {
 				throw new RuntimeException("PartitionerProfiles missing in " + filename + ".");
 			}
 			for (int i = 0; i < jsonArr.size(); i++)
 			{
-				JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+				JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 				PartitionerProfile PP = new PartitionerProfile(pProfiles, aProfiles, jsonObj);
 				profiles.add(PP);
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
