@@ -22,8 +22,9 @@ package org.cellocad.common.profile;
 
 import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -37,7 +38,7 @@ public class CapacityCollectionProfile extends ProfileObject {
 		this.myCapacity = new CObjectCollection<CapacityProfile>();
 	}
 
-	public CapacityCollectionProfile(final JSONObject JObj,
+	public CapacityCollectionProfile(final JsonObject JObj,
 			final CObjectCollection<CapacityProfile> Capacity){
 		super(JObj);
 		this.capacity = Capacity;
@@ -49,8 +50,8 @@ public class CapacityCollectionProfile extends ProfileObject {
 	/*
 	 * Parse
 	 */
-	private void parseCapacity(final JSONObject JObj){
-		JSONArray jsonArr = (JSONArray) JObj.get("capacity");
+	private void parseCapacity(final JsonObject JObj){
+		JsonArray jsonArr = JObj.getAsJsonArray("capacity");
 		if (jsonArr != null) {
 			for (int i = 0; i < jsonArr.size(); i++) {
 				Object jsonObj = (Object) jsonArr.get(i);
@@ -68,7 +69,7 @@ public class CapacityCollectionProfile extends ProfileObject {
 		}
 	}
 
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		// name
 		// parseName(JObj);
 		// capacity

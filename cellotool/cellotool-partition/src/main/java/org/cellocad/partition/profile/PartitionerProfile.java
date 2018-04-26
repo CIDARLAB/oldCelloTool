@@ -24,7 +24,8 @@ import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.profile.AlgorithmProfile;
 import org.cellocad.common.profile.ProfileObject;
 import org.cellocad.common.profile.ProfileUtils;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -37,7 +38,7 @@ public class PartitionerProfile extends ProfileObject {
 
 	public PartitionerProfile(final CObjectCollection<PartitionProfile> PProfiles,
 			final CObjectCollection<AlgorithmProfile> AProfiles,
-			final JSONObject JObj){
+			final JsonObject JObj){
 		super(JObj);
 		parse(PProfiles, AProfiles, JObj);
 	}
@@ -45,7 +46,7 @@ public class PartitionerProfile extends ProfileObject {
 	/*
 	 * Parse
 	 */
-	private void parsePartitionProfile(final CObjectCollection<PartitionProfile> PProfiles, final JSONObject JObj){
+	private void parsePartitionProfile(final CObjectCollection<PartitionProfile> PProfiles, final JsonObject JObj){
 		PartitionProfile PPObj;
 		String PartitionProfile = ProfileUtils.getString(JObj, "PartitionProfile");
 		if (PartitionProfile == null) {
@@ -58,7 +59,7 @@ public class PartitionerProfile extends ProfileObject {
 		this.setPProfile(PPObj);
 	}
 
-	private void parseAlgorithmProfile(final CObjectCollection<AlgorithmProfile> AProfiles, final JSONObject JObj){
+	private void parseAlgorithmProfile(final CObjectCollection<AlgorithmProfile> AProfiles, final JsonObject JObj){
 		AlgorithmProfile APObj;
 		String AlgorithmProfile = ProfileUtils.getString(JObj, "AlgorithmProfile");
 		if (AlgorithmProfile == null) {
@@ -73,7 +74,7 @@ public class PartitionerProfile extends ProfileObject {
 
 	private void parse(final CObjectCollection<PartitionProfile> PProfiles,
 			final CObjectCollection<AlgorithmProfile> AProfiles,
-			final JSONObject JObj){
+			final JsonObject JObj){
 		// name
 		// this.parseName(JObj);
 		// PartitionProfile

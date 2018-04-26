@@ -26,8 +26,9 @@ import java.io.Writer;
 import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.graph.graph.GraphTemplate;
 import org.cellocad.common.profile.ProfileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -42,7 +43,7 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 		super();
 	}
 
-	public Netlist (final JSONObject JObj) {
+	public Netlist (final JsonObject JObj) {
 		this();
 		this.parse(JObj);
 	}
@@ -50,28 +51,28 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 	/*
 	 * Parse
 	 */
-	private void parseName(final JSONObject JObj){
+	private void parseName(final JsonObject JObj){
 		String name = ProfileUtils.getString(JObj, "name");
 		if (name != null) {
 			this.setName(name);
 		}
 	}
 
-	private void parseNetlistNodes(final JSONObject JObj){
-		JSONArray jsonArr;
-		jsonArr = (JSONArray) JObj.get("nodes");
+	private void parseNetlistNodes(final JsonObject JObj){
+		JsonArray jsonArr;
+		jsonArr = JObj.getAsJsonArray("nodes");
 		if (jsonArr == null) {
 			throw new RuntimeException("'nodes' missing in Netlist!");
 		}
 		for (int i = 0; i < jsonArr.size(); i++)
 		{
-			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 			NetlistNode node = new NetlistNode(jsonObj);
 			this.addVertex(node);
 		}
 	}
 
-	private NetlistNode getNetlistNode(final JSONObject JObj, final String str){
+	private NetlistNode getNetlistNode(final JsonObject JObj, final String str){
 		NetlistNode rtn = null;
 		String name = null;
 		name = ProfileUtils.getString(JObj, str);
@@ -85,16 +86,16 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 		return rtn;
 	}
 
-	private void parseNetlistEdges(final JSONObject JObj){
-		JSONArray jsonArr;
+	private void parseNetlistEdges(final JsonObject JObj){
+		JsonArray jsonArr;
 		NetlistNode node = null;
-		jsonArr = (JSONArray) JObj.get("edges");
+		jsonArr = JObj.getAsJsonArray("edges");
 		if (jsonArr == null) {
 			throw new RuntimeException("'edges' missing in Netlist!");
 		}
 		for (int i = 0; i < jsonArr.size(); i++)
 		{
-			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 			NetlistEdge edge = new NetlistEdge(jsonObj);
 			this.addEdge(edge);
 			node = getNetlistNode(jsonObj, "src");
@@ -106,7 +107,7 @@ public class Netlist extends GraphTemplate<NetlistNode, NetlistEdge>{
 		}
 	}
 
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		this.parseName(JObj);
 		this.parseNetlistNodes(JObj);
 		this.parseNetlistEdges(JObj);

@@ -21,7 +21,8 @@
 package org.cellocad.common.profile;
 
 import org.cellocad.common.CObject;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -35,14 +36,14 @@ public class ProfileObject extends CObject{
 
 	}
 
-	protected ProfileObject(final JSONObject JObj){
+	protected ProfileObject(final JsonObject JObj){
 		this.parseName(JObj);
 	}
 
 	/*
 	 * Parse
 	 */
-	protected void parseName(final JSONObject JObj){
+	protected void parseName(final JsonObject JObj){
 		// name
 		String name = (String) ProfileUtils.getString(JObj, "name");
 		if (name == null) {

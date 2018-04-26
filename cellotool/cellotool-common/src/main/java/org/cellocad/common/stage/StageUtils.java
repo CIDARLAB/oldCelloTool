@@ -27,9 +27,11 @@ import java.io.Reader;
 
 import org.cellocad.common.Utils;
 import org.cellocad.common.runtime.environment.RuntimeEnv;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * @author: Vincent Mirian
@@ -44,7 +46,7 @@ public class StageUtils {
 		StageConfiguration rtn = null;
 		String configFilename = runEnv.getOptionValue(configFile);
 		Reader configFileReader = null;
-		JSONObject jsonTop = null;
+		JsonObject jsonTop = null;
 		// Create File Reader
 		try {
 			configFileReader = new FileReader(configFilename);
@@ -52,12 +54,12 @@ public class StageUtils {
 			throw new RuntimeException("Error with file: " + configFilename);
 		}
 		// Create JSON object from File Reader
-		JSONParser parser = new JSONParser();
+		JsonParser parser = new JsonParser();
 		try{
-			jsonTop = (JSONObject) parser.parse(configFileReader);
-		} catch (IOException e) {
+			jsonTop = parser.parse(configFileReader).getAsJsonObject();
+		} catch (JsonIOException e) {
 			throw new RuntimeException("File IO Exception for: " + configFilename + ".");
-		} catch (ParseException e) {
+		} catch (JsonSyntaxException e) {
 			throw new RuntimeException("Parser Exception for: " + configFilename + ".");
 		}
 		// Create TargetInfo object

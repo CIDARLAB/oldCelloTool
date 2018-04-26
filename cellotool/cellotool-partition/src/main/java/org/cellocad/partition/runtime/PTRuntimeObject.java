@@ -41,7 +41,8 @@ import org.cellocad.partition.graph.PEdge;
 import org.cellocad.partition.graph.PGraph;
 import org.cellocad.partition.graph.PNode;
 import org.cellocad.partition.profile.PartitionProfile;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -156,9 +157,9 @@ public class PTRuntimeObject extends RuntimeObject{
 
 	protected PartitionProfile getPartitionProfile(TargetData td) {
 		PartitionProfile rtn = null;
-		JSONObject JObj = this.getTargetData().getJSONObjectAtIdx("PartitionProfile", 0);
+		JsonObject JObj = this.getTargetData().getJsonObjectAtIdx("PartitionProfile", 0);
 		if (JObj != null) {
-			JSONObject PPObj = (JSONObject)JObj.get("PartitionProfile");
+			JsonObject PPObj = JObj.get("PartitionProfile").getAsJsonObject();
 			rtn = new PartitionProfile(PPObj);
 		}
 		else {

@@ -176,15 +176,45 @@ public class Utils {
 		return rtn;
 	}
 
+	static public boolean isByte(final Object Obj) {
+		boolean rtn = false;
+		rtn = (Obj instanceof Byte);
+		return rtn;
+	}
+
+	static public boolean isCharacter(final Object Obj) {
+		boolean rtn = false;
+		rtn = (Obj instanceof Character);
+		return rtn;
+	}
+
 	static public boolean isLong(final Object Obj) {
 		boolean rtn = false;
 		rtn = (Obj instanceof Long);
 		return rtn;
 	}
 
+	static public boolean isShort(final Object Obj) {
+		boolean rtn = false;
+		rtn = (Obj instanceof Short);
+		return rtn;
+	}
+
+	static public boolean isInteger(final Object Obj) {
+		boolean rtn = false;
+		rtn = (Obj instanceof Integer);
+		return rtn;
+	}
+
 	static public boolean isDouble(final Object Obj) {
 		boolean rtn = false;
 		rtn = (Obj instanceof Double);
+		return rtn;
+	}
+
+	static public boolean isFloat(final Object Obj) {
+		boolean rtn = false;
+		rtn = (Obj instanceof Float);
 		return rtn;
 	}
 

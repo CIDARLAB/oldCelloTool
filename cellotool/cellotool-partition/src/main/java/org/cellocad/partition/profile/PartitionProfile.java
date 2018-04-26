@@ -24,8 +24,9 @@ import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
 import org.cellocad.common.profile.CapacityProfile;
 import org.cellocad.common.profile.ProfileObject;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -44,7 +45,7 @@ public class PartitionProfile extends ProfileObject {
 		interBlocks = new CObjectCollection<InterBlockProfile>();
 	}
 
-	public PartitionProfile(final JSONObject JObj){
+	public PartitionProfile(final JsonObject JObj){
 		super(JObj);
 		init();
 		this.parse(JObj);
@@ -54,9 +55,9 @@ public class PartitionProfile extends ProfileObject {
 	/*
 	 * Parse
 	 */
-	private void parseCapacityUnits(final JSONObject JObj, final CObjectCollection<ProfileObject> CapacityUnits){
+	private void parseCapacityUnits(final JsonObject JObj, final CObjectCollection<ProfileObject> CapacityUnits){
 		// CapacityUnits
-		JSONArray jsonArr = (JSONArray) JObj.get("Capacity_Units");
+		JsonArray jsonArr = JObj.getAsJsonArray("Capacity_Units");
 		if (jsonArr != null) {
 			for (int i = 0; i < jsonArr.size(); i++){
 				Object jObj = jsonArr.get(i);
@@ -71,46 +72,46 @@ public class PartitionProfile extends ProfileObject {
 		}
 	}
 
-	private void parseCapacity(final JSONObject JObj,
+	private void parseCapacity(final JsonObject JObj,
 			final CObjectCollection<ProfileObject> CapacityUnits,
 			final CObjectCollection<CapacityProfile> Capacity){
 		// Capacity
-		JSONArray jsonArr = (JSONArray) JObj.get("Capacity");
+		JsonArray jsonArr = JObj.getAsJsonArray("Capacity");
 		if (jsonArr != null) {
 			for (int i = 0; i < jsonArr.size(); i++){
-				JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+				JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 				CapacityProfile capacity = new CapacityProfile(jsonObj, CapacityUnits);
 				Capacity.add(capacity);
 			}
 		}
 	}
 
-	private void parseBlocks(final JSONObject JObj){
+	private void parseBlocks(final JsonObject JObj){
 		// blocks
-		JSONArray jsonArr = (JSONArray) JObj.get("Blocks");
+		JsonArray jsonArr = JObj.getAsJsonArray("Blocks");
 		if (jsonArr == null) {
 			throw new RuntimeException("Blocks not specified for " + this.getName() + ".");
 		}
 		for (int i = 0; i < jsonArr.size(); i++){
-			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 			BlockProfile BP = new BlockProfile(jsonObj, blockCapacity);
 			blocks.add(BP);
 		}
 	}
 
-	private void parseInterBlocks(final JSONObject JObj){
+	private void parseInterBlocks(final JsonObject JObj){
 		// interBlocks
-		JSONArray jsonArr = (JSONArray) JObj.get("InterBlocks");
+		JsonArray jsonArr = JObj.getAsJsonArray("InterBlocks");
 		for (int i = 0; i < jsonArr.size(); i++){
-			JSONObject jsonObj = (JSONObject) jsonArr.get(i);
+			JsonObject jsonObj = jsonArr.get(i).getAsJsonObject();
 			InterBlockProfile IBP = new InterBlockProfile(jsonObj, blocks, interBlockCapacity);
 			interBlocks.add(IBP);
 		}
 	}
 
-	private void parseBlocksInformation(final JSONObject JObj){
+	private void parseBlocksInformation(final JsonObject JObj){
 		// blocks
-		JSONObject jsonObj = (JSONObject) JObj.get("Blocks");
+		JsonObject jsonObj = JObj.get("Blocks").getAsJsonObject();
 		if (jsonObj == null) {
 			throw new RuntimeException("Blocks not specified for " + this.getName() + ".");
 		}
@@ -122,9 +123,9 @@ public class PartitionProfile extends ProfileObject {
 		this.parseBlocks(jsonObj);
 	}
 
-	private void parseInterBlocksInformation(final JSONObject JObj){
+	private void parseInterBlocksInformation(final JsonObject JObj){
 		// interBlocks
-		JSONObject jsonObj = (JSONObject) JObj.get("InterBlocks");
+		JsonObject jsonObj = JObj.get("InterBlocks").getAsJsonObject();
 		if (jsonObj != null) {
 			// capacityUnits
 			this.parseCapacityUnits(jsonObj, interBlockCapacityUnits);
@@ -135,7 +136,7 @@ public class PartitionProfile extends ProfileObject {
 		}
 	}
 
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		// name
 		// parseName(JObj);
 		// blocks

@@ -32,9 +32,11 @@ import java.io.Writer;
 import org.cellocad.common.Utils;
 import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.runtime.environment.RuntimeEnv;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 /**
  * @author: Vincent Mirian
@@ -49,7 +51,7 @@ public class NetlistUtils {
 		Netlist rtn = null;
 		String inputNetlistFilename = runEnv.getOptionValue(inputNetlist);
 		Reader inputNetlistReader = null;
-		JSONObject jsonTop = null;
+		JsonObject jsonTop = null;
 		// Create File Reader
 		try {
 			inputNetlistReader = new FileReader(inputNetlistFilename);
@@ -57,12 +59,12 @@ public class NetlistUtils {
 			throw new RuntimeException("Error with file: " + inputNetlistFilename);
 		}
 		// Create JSON object from File Reader
-		JSONParser parser = new JSONParser();
+		JsonParser parser = new JsonParser();
 		try{
-			jsonTop = (JSONObject) parser.parse(inputNetlistReader);
-		} catch (IOException e) {
+			jsonTop = parser.parse(inputNetlistReader).getAsJsonObject();
+		} catch (JsonIOException e) {
 			throw new RuntimeException("File IO Exception for: " + inputNetlistFilename + ".");
-		} catch (ParseException e) {
+		} catch (JsonSyntaxException e) {
 			throw new RuntimeException("Parser Exception for: " + inputNetlistFilename + ".");
 		}
 		// Create TargetInfo object

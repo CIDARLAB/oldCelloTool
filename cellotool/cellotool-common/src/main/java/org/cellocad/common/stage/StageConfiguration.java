@@ -22,7 +22,8 @@ package org.cellocad.common.stage;
 
 import org.cellocad.common.profile.AlgorithmProfile;
 import org.cellocad.common.profile.ProfileObject;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -35,7 +36,7 @@ public class StageConfiguration extends ProfileObject{
 	private void init() {
 	}
 
-	public StageConfiguration(final JSONObject JObj){
+	public StageConfiguration(final JsonObject JObj){
 		super(JObj);
 		init();
 		parse(JObj);
@@ -44,17 +45,17 @@ public class StageConfiguration extends ProfileObject{
 	/*
 	 * Parse
 	 */
-	private void parseAlgorihtmProfile(final JSONObject JObj){
-		JSONObject jsonObj;
+	private void parseAlgorihtmProfile(final JsonObject JObj){
+		JsonObject jsonObj;
 		// parse AlgorithmProfile
-		jsonObj = (JSONObject) JObj.get("AlgorithmProfile");
+		jsonObj = JObj.getAsJsonObject("AlgorithmProfile");
 		if (jsonObj == null) {
 			throw new RuntimeException("'AlgorithmProfile' missing in StageConfiguration!");
 		}
 		this.setAlgorithmProfile(new AlgorithmProfile(jsonObj));
 	}
 
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		this.parseAlgorihtmProfile(JObj);
 	}
 

@@ -27,7 +27,8 @@ import org.cellocad.common.Utils;
 import org.cellocad.common.JSON.JSONUtils;
 import org.cellocad.common.graph.graph.EdgeTemplate;
 import org.cellocad.common.profile.ProfileUtils;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -52,7 +53,7 @@ public class NetlistEdge extends EdgeTemplate<NetlistNode>{
 		this.setDst(other.getDst());
 	}
 
-	public NetlistEdge(final JSONObject JObj){
+	public NetlistEdge(final JsonObject JObj){
 		this();
 		this.parse(JObj);
 	}
@@ -60,13 +61,13 @@ public class NetlistEdge extends EdgeTemplate<NetlistNode>{
 	/*
 	 * Parse
 	 */
-	private void parseName(final JSONObject JObj){
+	private void parseName(final JsonObject JObj){
 		String name = ProfileUtils.getString(JObj, "name");
 		if (name != null) {
 			this.setName(name);
 		}
 	}
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		this.parseName(JObj);
 	}
 

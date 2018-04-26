@@ -24,8 +24,9 @@ import org.cellocad.common.CObjectCollection;
 import org.cellocad.common.Utils;
 import org.cellocad.common.capacity.LowerBoundType;
 import org.cellocad.common.capacity.UpperBoundType;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * @author: Vincent Mirian
@@ -46,7 +47,7 @@ public class CapacityProfile extends ProfileObject{
 		this.myCapacityUnits = new CObjectCollection<ProfileObject>();
 	}
 
-	public CapacityProfile(final JSONObject JObj, final CObjectCollection<ProfileObject> CapacityUnits){
+	public CapacityProfile(final JsonObject JObj, final CObjectCollection<ProfileObject> CapacityUnits){
 		super(JObj);
 		init();
 		reset();
@@ -58,8 +59,8 @@ public class CapacityProfile extends ProfileObject{
 	/*
 	 * Parse
 	 */
-	private void parseUnits(final JSONObject JObj){
-		JSONArray jsonArr = (JSONArray) JObj.get("units");
+	private void parseUnits(final JsonObject JObj){
+		JsonArray jsonArr = JObj.getAsJsonArray("units");
 		if (jsonArr == null) {
 			throw new RuntimeException("Units not specified for capacity " + this.getName());
 		}
@@ -78,7 +79,7 @@ public class CapacityProfile extends ProfileObject{
 		}
 	}
 
-	private void parseLowerBound(final JSONObject JObj){
+	private void parseLowerBound(final JsonObject JObj){
 		Integer IntegerValue = ProfileUtils.getInteger(JObj, "lower_bound");
 		if (IntegerValue != null) {
 			int value = IntegerValue.intValue();
@@ -86,7 +87,7 @@ public class CapacityProfile extends ProfileObject{
 		}
 	}
 
-	private void parseLowerBoundType(final JSONObject JObj){
+	private void parseLowerBoundType(final JsonObject JObj){
 		String StringValue = ProfileUtils.getString(JObj, "lower_bound_type");
 		if (StringValue != null) {
 			LowerBoundType boundType = LowerBoundType.getBoundType(StringValue);
@@ -96,7 +97,7 @@ public class CapacityProfile extends ProfileObject{
 		}
 	}
 
-	private void parseUpperBound(final JSONObject JObj){
+	private void parseUpperBound(final JsonObject JObj){
 		Integer IntegerValue = ProfileUtils.getInteger(JObj, "upper_bound");
 		if (IntegerValue == null) {
 			throw new RuntimeException("UpperBound not specified for capacity " + this.getName());
@@ -107,7 +108,7 @@ public class CapacityProfile extends ProfileObject{
 		}
 	}
 
-	private void parseUpperBoundType(final JSONObject JObj){
+	private void parseUpperBoundType(final JsonObject JObj){
 		String StringValue = ProfileUtils.getString(JObj, "upper_bound_type");
 		if (StringValue != null) {
 			UpperBoundType boundType = UpperBoundType.getBoundType(StringValue);
@@ -117,7 +118,7 @@ public class CapacityProfile extends ProfileObject{
 		}
 	}
 
-	private void parse(final JSONObject JObj){
+	private void parse(final JsonObject JObj){
 		// name
 		// parseName(JObj);
 		// units
