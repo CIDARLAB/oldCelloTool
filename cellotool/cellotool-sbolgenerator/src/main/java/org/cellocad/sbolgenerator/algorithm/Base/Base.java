@@ -70,7 +70,7 @@ public class Base extends SGAlgorithm{
 	protected void setDefaultParameterValues() {
 		this.setRepositoryType(RepositoryType.SYNBIOHUB);
 		try {
-			URL url = new URL("https://synbiohub.utah.edu/");
+			URL url = new URL("https://synbiohub.programmingbiology.org/");
 			this.setRepositoryUrl(url);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -132,7 +132,7 @@ public class Base extends SGAlgorithm{
 		}
 		logInfo("modeling component interactions");
 		try {
-			SBOLDocument sbolDocument = generateModel(this.getRepositoryUrl().toString(),this.getSbolDocument());
+			SBOLDocument sbolDocument = generateModel(this.getRepositoryUrl().toString(),this.getSbolDocument(),netlist.getName());
 			this.setSbolDocument(sbolDocument);
 		} catch (IOException | SBOLValidationException | SBOLConversionException | VPRException | VPRTripleStoreException | URISyntaxException e) {
 			e.printStackTrace();
@@ -253,6 +253,7 @@ public class Base extends SGAlgorithm{
 	 * Perform VPR model generation.
 	 * @param selectedRepo - The specified synbiohub repository the user wants VPR model generator to connect to.
 	 * @param generatedModel - The file to generate the model from.
+	 * @param name - The top level design name.
 	 * @return The generated model.
 	 * @throws SBOLValidationException
 	 * @throws IOException - Unable to read or write the given SBOLDocument
@@ -260,10 +261,10 @@ public class Base extends SGAlgorithm{
 	 * @throws VPRException - Unable to perform VPR Model Generation on the given SBOLDocument.
 	 * @throws VPRTripleStoreException - Unable to perform VPR Model Generation on the given SBOLDocument.
 	 */
-	public static SBOLDocument generateModel(String selectedRepo, SBOLDocument generatedModel) throws SBOLValidationException, IOException, SBOLConversionException, VPRException, VPRTripleStoreException, URISyntaxException
+	public static SBOLDocument generateModel(String selectedRepo, SBOLDocument generatedModel, String name) throws SBOLValidationException, IOException, SBOLConversionException, VPRException, VPRTripleStoreException, URISyntaxException
 	{
 		URI endpoint = new URL(new URL(selectedRepo),"/sparql").toURI();
-		SBOLInteractionAdder_GeneCentric interactionAdder = new SBOLInteractionAdder_GeneCentric(endpoint);
+		SBOLInteractionAdder_GeneCentric interactionAdder = new SBOLInteractionAdder_GeneCentric(endpoint,name);
 		interactionAdder.addInteractions(generatedModel);
 		return generatedModel;
 	}
