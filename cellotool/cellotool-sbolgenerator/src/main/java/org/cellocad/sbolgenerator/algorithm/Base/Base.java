@@ -75,6 +75,7 @@ public class Base extends SGAlgorithm{
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		this.setDeduceIteractions(true);
 		this.setSbolFilename(this.getRuntimeEnv().getOptionValue("outputDir")
 				+ Utils.getFileSeparator()
 				+ this.getNetlist().getName() + ".xml");
@@ -84,6 +85,7 @@ public class Base extends SGAlgorithm{
 	protected void setParameterValues() {
 		String url = null;
 		String type = null;
+		Boolean vpr = null;
 
 		try {
 			Pair<Boolean,String> param = this.getAlgorithmProfile().getStringParameter("repository_url");
@@ -92,6 +94,10 @@ public class Base extends SGAlgorithm{
 		try {
 			Pair<Boolean,String> param = this.getAlgorithmProfile().getStringParameter("repository_type");
 			if (param.getFirst()) {type = param.getSecond();}
+		} catch (NullPointerException e) {}
+		try {
+			Pair<Boolean,Boolean> param = this.getAlgorithmProfile().getBooleanParameter("deduce_interactions");
+			if (param.getFirst()) {vpr = param.getSecond();}
 		} catch (NullPointerException e) {}
 
 		if (url != null) {
@@ -106,6 +112,10 @@ public class Base extends SGAlgorithm{
 			this.setRepositoryType(RepositoryType.SYNBIOHUB);
 		} else {
 			throw new RuntimeException("Unknown repository type.");
+		}
+
+		if (vpr != null) {
+			this.setDeduceIteractions(vpr);
 		}
 
 		this.setPartLibrary(TargetDataReader.getParts(this.getTargetData()));
@@ -130,12 +140,14 @@ public class Base extends SGAlgorithm{
 		} catch (SynBioHubException | SBOLValidationException e) {
 			e.printStackTrace();
 		}
-		logInfo("modeling component interactions");
-		try {
-			SBOLDocument sbolDocument = generateModel(this.getRepositoryUrl().toString(),this.getSbolDocument(),netlist.getName());
-			this.setSbolDocument(sbolDocument);
-		} catch (IOException | SBOLValidationException | SBOLConversionException | VPRException | VPRTripleStoreException | URISyntaxException e) {
-			e.printStackTrace();
+		if (this.getDeduceIteractions() && this.getRepositoryType() == RepositoryType.SYNBIOHUB) {
+			logInfo("modeling component interactions");
+			try {
+				SBOLDocument sbolDocument = generateModel(this.getRepositoryUrl().toString(),this.getSbolDocument(),netlist.getName());
+				this.setSbolDocument(sbolDocument);
+			} catch (IOException | SBOLValidationException | SBOLConversionException | VPRException | VPRTripleStoreException | URISyntaxException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -301,6 +313,20 @@ public class Base extends SGAlgorithm{
 	}
 
 	/**
+	 * @return Whether the stage should use virtualparts to set interactions. Applies for SynBioHub only.
+	 */
+	public Boolean getDeduceIteractions() {
+		return deduceIteractions;
+	}
+
+	/**
+	 * @param Set whether to use virtualparts to add interactions to the SBOL. Applies for SynBioHub only.
+	 */
+	public void setDeduceIteractions(Boolean deduceIteractions) {
+		this.deduceIteractions = deduceIteractions;
+	}
+
+	/**
 	 * @return the partLibrary
 	 */
 	public CObjectCollection<Part> getPartLibrary() {
@@ -358,6 +384,7 @@ public class Base extends SGAlgorithm{
 
 	private RepositoryType repositoryType;
 	private URL repositoryUrl;
+	private Boolean deduceIteractions;
 	private CObjectCollection<Part> partLibrary;
 	private CObjectCollection<Gate> gateLibrary;
 	private SBOLDocument sbolDocument;
